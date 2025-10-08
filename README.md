@@ -10,10 +10,10 @@ ll
   StevenDev
 - Sara Mesa Pacheco:
   s.mesa.2023@alumnos.urjc.es
-  usuario github
+  saramp13
 - Claudia Morago Amigo:
   c.morago.2023@alumnos.urjc.es
-  usuario github
+  ClauuGithub
 - Iris Muñoz Montero:
   i.munoz.2023@alumnos.urjc.es
   iris-mm
