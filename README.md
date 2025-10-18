@@ -1,6 +1,6 @@
-# G13 - NombreDelJuego
+# G13 - Crepusculones
 ## Descripción de la temática del juego
-ll
+Juego multijugador 1 vs 1 con temática de Halloween. Ambos jugadores se enfrentan para ver quién consigue la mayor cantidad de puntos. Deben recoger los caramelos del suelo y llevarlos a su base. Se pueden robar entre ellos y sabotearse. 
 ## Integrantes del equipo de desarrollo  
 - Marta de Miguel Tapia:
   m.demiguel.2023@alumnos.urjc.es
