@@ -29,6 +29,7 @@ A continuación se presentan dos personajes diseñados y la pantalla de inicio:
 ![Pantalla de inicio](/imagenes/pantalla_de_inicio.jpeg)
 También se ha creado un logo para la empresa ficticia de la que se forma parte:
 ![Logo empresa](/imagenes/logo_empresa.png)
+El estilo artístico está inspirado en los juegos clásicos  de 8 bits. Culturalmente se basa en la temática de Halloween, y hace un guiño a algunas obras de la cultura pop como la película _Crepúsculo_ o el videojuego _Minecraft_.
 
 ## Sonido
 Los sonidos y la música son estilo 8 bits. Busca fomentar partidas entretenidas y acciones impulsivas con música frenética y sonidos satisfactorios.
@@ -61,3 +62,10 @@ Se han planeado dos diagramas de flujo. Uno de ellos muestra cómo el jugador pu
 ![Jugabilidad](/imagenes/ddf_2.jpeg)
 
 ## Referencias
+[Película Crepúsculo](https://es.wikipedia.org/wiki/Crep%C3%BAsculo_(pel%C3%ADcula_de_2008))    
+[Zombi del videojuego Minecraft](https://minecraft.fandom.com/es/wiki/Zombi)     
+[Videojuego de laberintos Bomberman](https://es.wikipedia.org/wiki/Bomberman)   
+[Juego de Google Halloween 2022](https://doodles.google/doodle/halloween-2022/)    
+
+
+
