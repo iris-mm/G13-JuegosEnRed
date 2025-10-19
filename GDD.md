@@ -60,3 +60,4 @@ Se han planeado dos diagramas de flujo. Uno de ellos muestra cómo el jugador pu
 
 ![Jugabilidad](/imagenes/ddf_2.jpeg)
 
+## Referencias
