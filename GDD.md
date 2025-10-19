@@ -7,6 +7,16 @@ Integrantes:
 * Claudia Morago Amigo
 * Iris Muñoz Montero
 
+**ÍNDICE**
+  * [Aspectos generales](#aspectos-generales)
+  * [Imagen y diseño visual](#imagen-y-dise-o-visual)
+  * [Sonido](#sonido)
+  * [Jugabilidad](#jugabilidad)
+  * [Narrativa](#narrativa)
+  * [Comunicación](#comunicaci-n)
+  * [Diagramas de flujo](#diagramas-de-flujo)
+  * [Referencias](#referencias)
+
 ## Aspectos generales
 Ambientado en Halloween, _Crepusculones_ es un juego de fiesta, acción y estrategia con  multijugador local y en línea 1 vs 1 con vista cenital. Dirigido a un público de entre 13 y 24 años, el juego busca ser un pasatiempo divertido para los jugadores que busquen adrenalina y diversión con un compañero.
 
@@ -49,3 +59,4 @@ Se han planeado dos diagramas de flujo. Uno de ellos muestra cómo el jugador pu
 ![Escenas](/imagenes/ddf_1.jpeg)
 
 ![Jugabilidad](/imagenes/ddf_2.jpeg)
+
