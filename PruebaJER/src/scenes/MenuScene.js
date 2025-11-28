@@ -1,6 +1,11 @@
 import Phaser from 'phaser';
+//importar imagenes
 // @ts-ignore
 import menuBackground from '../assets/pantalla_de_inicio.jpeg';
+// @ts-ignore
+import buttonBackground from '../assets/boton piedra.png';
+//importar clases
+import { Button } from '../entities/Button.js';
 
 export class MenuScene extends Phaser.Scene {
     constructor() {
@@ -8,8 +13,8 @@ export class MenuScene extends Phaser.Scene {
     }
 
     preload() {
-        // Carga la imagen desde el import
-        this.load.image('menuBackground', menuBackground);
+        this.load.image('menuBackground', menuBackground); 
+        this.load.image('buttonBackground', buttonBackground);
     }
 
     create() {
@@ -21,6 +26,18 @@ export class MenuScene extends Phaser.Scene {
             fontSize: '64px',
             color: '#ffffff'
         }).setOrigin(0.5);
+
+        // Botón Jugar usando la clase Button
+        new Button(
+            this,
+            400,
+            300,
+            'buttonBackground',  
+            'Jugar',
+            { fontSize: '24px', color: '#ffffff' },
+            () => { this.scene.start('GameScene'); }
+        );
+
 
         // Botón Jugar
         const localBtn = this.add.text(400, 320, 'Jugar', {
