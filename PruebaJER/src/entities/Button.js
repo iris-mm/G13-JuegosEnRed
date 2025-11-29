@@ -4,8 +4,8 @@ export class Button {
 
         this.style = {
             fontFamily: 'ButtonsFont', 
-            fontSize: '24px',            
-            color: '#00ff00',
+            fontSize: '29px',            
+            color: '#ffffffff',
             ...style
         };
 
@@ -14,10 +14,18 @@ export class Button {
 
         this.container = scene.add.container(x, y, [this.image, this.text]);
         this.container.setSize(this.image.width, this.image.height);
+        //this.container.setScale(1.5); // escalar fondo y texto
+
 
         this.container.setInteractive({ useHandCursor: true })
-            .on('pointerover', () => this.image.setTint(0xffff00)) // hover amarillo
-            .on('pointerout', () => this.image.clearTint())
+            .on('pointerover', () => {
+                this.image.setTint(0xffff00); 
+                this.text.setColor('#ffff00'); 
+            })
+            .on('pointerout', () => {
+                this.image.clearTint(); 
+                this.text.setColor('#ffffffff'); 
+            })
             .on('pointerdown', callback);
     }
 
