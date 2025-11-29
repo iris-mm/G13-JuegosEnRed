@@ -55,12 +55,6 @@ export class MenuScene extends Phaser.Scene {
             () => { this.scene.start('GameScene'); }
         );
 
-        // Carga las fuentes
-        document.fonts.ready.then(() => {
-        // @ts-ignore
-        this.playButton.label.setFontFamily('ButtonsFont');
-        });
-
 
         /*// Botón Jugar
         const localBtn = this.add.text(400, 320, 'Jugar', {
