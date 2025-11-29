@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+
+//importar imagenes
 // @ts-ignore
 import floor from '../../assets/stone_tile.png';
 // @ts-ignore
@@ -8,6 +10,8 @@ import leaves from '../../assets/leaves_overlay.png';
 // @ts-ignore
 import candySprite from '../../assets/sprites/caramelo.png';
 
+//importar clases
+import { TimerController } from '../timer/TimerController.js';
 import { EntitiesController } from '../game/controllers/EntitiesController.js';
 import { Candy } from '../game/items/Candy.js';
 
@@ -36,7 +40,8 @@ export class GameScene extends Phaser.Scene {
         // this.physics.add.collider(player, boundary);
 
         const leaves = this.add.image(600, 400, 'leaves')
-        .setScale(3);
+        .setScale(3)
+        .setAlpha(0.75);
 
         //Bases de jugadores. Cuando se colisione con ellas + tengan caramelo, se hará callback!
             // Base azul izquierda - PLAYER 1
@@ -52,6 +57,12 @@ export class GameScene extends Phaser.Scene {
         // Añadir colider cuando player esté hecho y la función de añadir punto también!
         // this.physics.add.overlap(this.player1, blueBase, addPoint);
         // this.physics.add.overlap(this.player2, redBase, addPoint);
+    
+        //Temporizador
+        const timerText = this.add.text(600, 100, "45", {fontSize: "48px",color: "#ffffff"})
+        .setOrigin(0.5, 0.5);
+        this.countdown = new TimerController(this, timerText);
+        this.countdown.start();
 
         //Acceder a escena de Pausa al pulsar ESC
         this.input.keyboard.on('keydown-ESC', () => {
@@ -68,6 +79,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     update(){
+        this.countdown.update();
         this.entitiesController.Update();
     }
 }
