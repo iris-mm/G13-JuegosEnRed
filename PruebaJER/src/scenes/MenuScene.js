@@ -1,9 +1,11 @@
 import Phaser from 'phaser';
+
 //importar imagenes
 // @ts-ignore
 import menuBackground from '../assets/pantalla_de_inicio.jpeg';
 // @ts-ignore
 import buttonBackground from '../assets/boton piedra.png';
+
 //importar clases
 import { Button } from '../entities/Button.js';
 
