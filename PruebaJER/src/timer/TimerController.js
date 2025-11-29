@@ -2,6 +2,10 @@ export class TimerController{
     constructor (scene, text){
         this.scene = scene;
         this.text = text;
+
+        //Cuenta de rondas
+        this.cycles = 0;        // cuántas veces ha terminado
+        this.maxCycles = 3;     // máximo de repeticiones
     }
 
     start(duration = 45000){
@@ -14,7 +18,9 @@ export class TimerController{
         {delay:duration, 
         loop: false,
         callback: () => {
-            // Timer terminado: reiniciar con 15 segundos menos
+            this.cycles++;
+            if (this.cycles >= this.maxCycles){return;}
+            // Timer terminado: reiniciar con 10 segundos menos
             const nextDuration = Math.max(0, this.duration - 10000);
             this.start(nextDuration);
         }});
