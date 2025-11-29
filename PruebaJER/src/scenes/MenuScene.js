@@ -1,9 +1,11 @@
 import Phaser from 'phaser';
+
 //importar imagenes
 // @ts-ignore
 import menuBackground from '../../assets/fondo menus.png';
 // @ts-ignore
 import buttonBackground from '../../assets/boton piedra.png';
+
 //importar clases
 import { Button } from '../entities/Button.js';
 
@@ -30,7 +32,7 @@ export class MenuScene extends Phaser.Scene {
         // botones usando la clase Button
         const playButton = new Button(
             this,
-            400,
+            220,
             300,
             'buttonBackground',  
             'Jugar',
@@ -39,20 +41,20 @@ export class MenuScene extends Phaser.Scene {
 
         const settingsButton = new Button(
             this,
-            400,
+            220,
             400,
             'buttonBackground',  
             'Opciones',
-            () => { this.scene.start('GameScene'); }
+            () => { this.scene.start('ConfigScene'); }
         );
         
-        const exitButton = new Button(
+        const creditsButton = new Button(
             this,
-            400,
+            220,
             500,
             'buttonBackground',  
-            'Salir',
-            () => { this.scene.start('GameScene'); }
+            'Créditos',
+            () => { this.scene.start('CreditsScene'); }
         );
 
 
