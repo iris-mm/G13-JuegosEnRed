@@ -2,6 +2,8 @@ import Phaser from 'phaser';
 import { MenuScene } from './scenes/MenuScene.js';
 import { GameScene } from './scenes/GameScene.js';
 import { PauseScene } from './scenes/PauseScene.js';
+import { CreditsScene } from './scenes/CreditsScene.js';
+import { ConfigScene } from './scenes/ConfigScene.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -15,8 +17,9 @@ const config = {
             debug: false
         }
     },
-    scene: [MenuScene, GameScene, PauseScene],
+    scene: [MenuScene, GameScene, PauseScene, CreditsScene, ConfigScene],
     backgroundColor: '#47ddffff',
+    pixelArt: true
 }
 
 const game = new Phaser.Game(config);

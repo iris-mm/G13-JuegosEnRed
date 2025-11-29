@@ -38,5 +38,15 @@ module.exports = {
   ],
   resolve: {
     extensions: ['.js']
-  }
+  },
+  module: {
+    rules: [
+      // Manejar imágenes (png, jpg, jpeg, gif, svg)
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        type: 'asset/resource'
+      }
+      // Si se necesita se puede añadir (CSS, audio, etc.)
+    ]
+  },
 };
