@@ -5,6 +5,11 @@ import floor from '../../assets/stone_tile.png';
 import game_boundary from '../../assets/game_boundary.png';
 // @ts-ignore
 import leaves from '../../assets/leaves_overlay.png';
+// @ts-ignore
+import candySprite from '../../assets/sprites/caramelo.png';
+
+import { EntitiesController } from '../game/controllers/EntitiesController.js';
+import { Candy } from '../game/items/Candy.js';
 
 export class GameScene extends Phaser.Scene {
     constructor() {
@@ -15,6 +20,7 @@ export class GameScene extends Phaser.Scene {
         this.load.image('floor', floor);
         this.load.image('game_boundary', game_boundary);
         this.load.image('leaves', leaves);
+        this.load.image('candy', candySprite);
     }
 
     create(){
@@ -52,9 +58,16 @@ export class GameScene extends Phaser.Scene {
             this.scene.pause();
             this.scene.launch('PauseScene');
         });
+
+        //  Controlador de entidades, lista de entidades que actualiza en 'update'
+        this.entitiesController = new EntitiesController();
+
+        //  Candy
+        this.candy = new Candy(100, 100, candySprite);
+        this.entitiesController.AddEntity(this.candy);
     }
 
     update(){
-
+        this.entitiesController.Update();
     }
 }
