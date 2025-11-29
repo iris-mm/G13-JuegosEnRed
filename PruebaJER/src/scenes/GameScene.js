@@ -63,7 +63,7 @@ export class GameScene extends Phaser.Scene {
         this.entitiesController = new EntitiesController();
 
         //  Candy
-        this.candy = new Candy(100, 100, candySprite);
+        this.candy = new Candy(0.2, 'candy', this);
         this.entitiesController.AddEntity(this.candy);
     }
 
