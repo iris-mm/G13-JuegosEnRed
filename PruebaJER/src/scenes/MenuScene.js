@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 //importar imagenes
 // @ts-ignore
-import menuBackground from '../../assets/pantalla_de_inicio.jpeg';
+import menuBackground from '../../assets/fondo menus.png';
 // @ts-ignore
 import buttonBackground from '../../assets/boton piedra.png';
 //importar clases
@@ -28,25 +28,33 @@ export class MenuScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // botones usando la clase Button
-        //esperar a que la fuente se cargue
-        document.fonts.ready.then(() => {
-            const playButton = new Button(
-                this, 400, 300, 'buttonBackground', 'Jugar', () => {
-                this.scene.start('GameScene');
-            });
+        const playButton = new Button(
+            this,
+            400,
+            300,
+            'buttonBackground',  
+            'Jugar',
+            () => { this.scene.start('GameScene'); }
+        );
 
-            const settingsButton = new Button(
-                this, 400, 400, 'buttonBackground', 'Opciones', () => {
-                console.log('Abrir opciones');
-            });
-
-            const exitButton = new Button(
-                this, 400, 500, 'buttonBackground', 'Salir', () => {
-                console.log('Salir del juego');
-            });
-        });
-
+        const settingsButton = new Button(
+            this,
+            400,
+            400,
+            'buttonBackground',  
+            'Opciones',
+            () => { this.scene.start('GameScene'); }
+        );
         
+        const exitButton = new Button(
+            this,
+            400,
+            500,
+            'buttonBackground',  
+            'Salir',
+            () => { this.scene.start('GameScene'); }
+        );
+
 
         /*// Botón Jugar
         const localBtn = this.add.text(400, 320, 'Jugar', {
