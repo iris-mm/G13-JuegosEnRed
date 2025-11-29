@@ -46,6 +46,12 @@ export class GameScene extends Phaser.Scene {
         // Añadir colider cuando player esté hecho y la función de añadir punto también!
         // this.physics.add.overlap(this.player1, blueBase, addPoint);
         // this.physics.add.overlap(this.player2, redBase, addPoint);
+
+        //Acceder a escena de Pausa al pulsar ESC
+        this.input.keyboard.on('keydown-ESC', () => {
+            this.scene.pause();
+            this.scene.launch('PauseScene');
+        });
     }
 
     update(){
