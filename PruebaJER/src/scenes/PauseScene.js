@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 //importar imagenes
 // @ts-ignore
-import menuPause from '../../assets/menuPausa.png';
+import menuPause from '../../assets/menuPause2.png';
 // @ts-ignore
 import buttonBackground from '../../assets/boton piedra.png';
 //importar clases Button
@@ -28,14 +28,14 @@ export class PauseScene extends Phaser.Scene {
         
         
         // Botón de "Reanudar"
-        const resumeButton = new Button(this, 600, 475, 'buttonBackground', 'Reanudar', () => {
+        const resumeButton = new Button(this, 600, 300, 'buttonBackground', 'Reanudar', () => {
             this.scene.stop(); // Detener la escena de pausa
             this.scene.resume('GameScene'); // Reanudar la escena del juego
         });
          
 
         //Botón volver al menú principal
-        const menuButton = new Button(this, 600, 575, 'buttonBackground', 'Menú', () => {
+        const menuButton = new Button(this, 600, 400, 'buttonBackground', 'Menú', () => {
             this.scene.stop('GameScene'); // Detener la escena del juego
             this.scene.start('MenuScene'); // Ir al menú principal
         });
