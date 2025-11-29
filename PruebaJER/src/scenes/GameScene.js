@@ -9,11 +9,28 @@ import game_boundary from '../../assets/game_boundary.png';
 import leaves from '../../assets/leaves_overlay.png';
 // @ts-ignore
 import candySprite from '../../assets/sprites/caramelo.png';
+// @ts-ignore
+import vampiresaFront from '../../assets/sprites/vampiresa_front.png';
+// @ts-ignore
+import vampiresaback from '../../assets/sprites/vampiresa_back.png';
+// @ts-ignore
+import vampiresaLeft from '../../assets/sprites/vampiresa_left.png';
+// @ts-ignore
+import vampiresaRight from '../../assets/sprites/vampiresa_right.png';
+// @ts-ignore
+import zombiFront from '../../assets/sprites/zombi_front.png';
+// @ts-ignore
+import zombiBack from '../../assets/sprites/zombi_back.png';
+// @ts-ignore
+import zombiLeft from '../../assets/sprites/zombi_left.png';
+// @ts-ignore
+import zombiRight from '../../assets/sprites/zombi_right.png';
 
 //importar clases
 import { TimerController } from '../timer/TimerController.js';
 import { EntitiesController } from '../game/controllers/EntitiesController.js';
 import { Candy } from '../game/items/Candy.js';
+import { Player } from '../game/player/playerController.js';
 
 export class GameScene extends Phaser.Scene {
     constructor() {
@@ -21,10 +38,21 @@ export class GameScene extends Phaser.Scene {
     }
     
     preload(){
+        //Game
         this.load.image('floor', floor);
         this.load.image('game_boundary', game_boundary);
         this.load.image('leaves', leaves);
+        //Items
         this.load.image('candy', candySprite);
+        //Players
+        this.load.image('vampiresa front', vampiresaFront);
+        this.load.image('vampiresa back', vampiresaback);
+        this.load.image('vampiresa left',  vampiresaLeft);
+        this.load.image('vampiresa right', vampiresaRight);
+        this.load.image('zombi front',  zombiFront);
+        this.load.image('zombi back', zombiBack);
+        this.load.image('zombi left',  zombiLeft);
+        this.load.image('zombi right', zombiRight);
     }
 
     create(){
@@ -76,6 +104,23 @@ export class GameScene extends Phaser.Scene {
         //  Candy
         this.candy = new Candy(0.2, 'candy', this);
         this.entitiesController.AddEntity(this.candy);
+
+        //Players
+        this.keys1 = this.input.keyboard.addKeys({ //P1
+            up: 'W',
+            down: 'S',
+            left: 'A',
+            right: 'D'
+        });
+
+        this.keys2 = this.input.keyboard.createCursorKeys(); //P2
+
+        this.player1 = new Player(100, 100, 0.4, 'vampiresa', this, this.keys1);
+        this.player2 = new Player(200, 100, 0.4, 'zombi', this, this.keys2);
+
+        this.entitiesController.AddEntity(this.player1);
+        this.entitiesController.AddEntity(this.player2);
+
     }
 
     update(){
