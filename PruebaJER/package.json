@@ -11,12 +11,11 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "game",
-    "pong"
+    "game"
   ],
   "author": "Claudia Morago Amigo",
   "license": "Apache-2.0",
-  "description": "A pong game with Phaser3",
+  "description": "",
   "dependencies": {
     "express": "^5.1.0",
     "phaser": "^3.90.0"
