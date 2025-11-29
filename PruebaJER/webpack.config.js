@@ -18,6 +18,18 @@ module.exports = {
   externals: {
     phaser: 'Phaser'
   },
+
+  module: {
+    rules: [
+      // Manejar imágenes (png, jpg, jpeg, gif, svg)
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        type: 'asset/resource'
+      }
+      // Si se necesita se puede añadir (CSS, audio, etc.)
+    ]
+  },
+
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
