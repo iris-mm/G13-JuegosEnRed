@@ -23,6 +23,7 @@ export class GameScene extends Phaser.Scene {
         .setOrigin(0,0) 
         .setScale(3) 
         .setDepth(0);
+<<<<<<< Updated upstream
         
         const boundary = this.physics.add.image(600, 400, 'game_boundary') // 1200/2 y 800/2 para que esté en el centro
         .setScale(3)
@@ -32,6 +33,14 @@ export class GameScene extends Phaser.Scene {
         const leaves = this.add.image(600, 400, 'leaves')
         .setScale(3);
 
+=======
+        const boundary = this.physics.add.image(600, 400, 'game_boundary') // 1200/2 y 800/2 para que esté en el centro
+        .setScale(3)
+        .setImmovable(true);
+        const leaves = this.add.image(600, 400, 'leaves')
+        .setScale(3);
+        
+>>>>>>> Stashed changes
         //Bases de jugadores. Cuando se colisione con ellas + tengan caramelo, se hará callback!
             // Base azul izquierda - PLAYER 1
             // Base roja derecha - PLAYER 2
@@ -46,10 +55,13 @@ export class GameScene extends Phaser.Scene {
         // Añadir colider cuando player esté hecho y la función de añadir punto también!
         // this.physics.add.overlap(this.player1, blueBase, addPoint);
         // this.physics.add.overlap(this.player2, redBase, addPoint);
+<<<<<<< Updated upstream
 
     }
 
     update(){
 
+=======
+>>>>>>> Stashed changes
     }
 }
