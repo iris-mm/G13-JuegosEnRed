@@ -6,7 +6,7 @@ export class Entity{
 
         this.scene = scene;
 
-        this.gameObject = scene.add.image(x, y, sprite)
+        this.gameObject = scene.physics.add.image(x, y, sprite)
         this.gameObject.setScale(scale);
     }
 
