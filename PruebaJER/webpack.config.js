@@ -21,12 +21,10 @@ module.exports = {
 
   module: {
     rules: [
-      // Manejar imágenes (png, jpg, jpeg, gif, svg)
-      {
-        test: /\.(png|jpe?g|gif|svg)$/i,
-        type: 'asset/resource'
-      }
-      // Si se necesita se puede añadir (CSS, audio, etc.)
+      //manejar imágenes
+      { test: /\.(png|jpe?g|gif|svg)$/i, type: 'asset/resource' },
+      //manejar fuentes
+      { test: /\.(woff2?|ttf|otf|eot)$/i, type: 'asset/resource' }
     ]
   },
 
@@ -38,15 +36,5 @@ module.exports = {
   ],
   resolve: {
     extensions: ['.js']
-  },
-  module: {
-    rules: [
-      // Manejar imágenes (png, jpg, jpeg, gif, svg)
-      {
-        test: /\.(png|jpe?g|gif|svg)$/i,
-        type: 'asset/resource'
-      }
-      // Si se necesita se puede añadir (CSS, audio, etc.)
-    ]
   },
 };

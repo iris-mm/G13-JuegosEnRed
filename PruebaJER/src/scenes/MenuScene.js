@@ -28,36 +28,25 @@ export class MenuScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // botones usando la clase Button
-        const playButton = new Button(
-            this,
-            400,
-            300,
-            'buttonBackground',  
-            'Jugar',
-            { fontSize: '24px', color: '#ffffff' },
-            () => { this.scene.start('GameScene'); }
-        );
+        //esperar a que la fuente se cargue
+        document.fonts.ready.then(() => {
+            const playButton = new Button(
+                this, 400, 300, 'buttonBackground', 'Jugar', () => {
+                this.scene.start('GameScene');
+            });
 
-        const settingsButton = new Button(
-            this,
-            400,
-            400,
-            'buttonBackground',  
-            'Opciones',
-            { fontSize: '24px', color: '#ffffff' },
-            () => { this.scene.start('GameScene'); }
-        );
+            const settingsButton = new Button(
+                this, 400, 400, 'buttonBackground', 'Opciones', () => {
+                console.log('Abrir opciones');
+            });
+
+            const exitButton = new Button(
+                this, 400, 500, 'buttonBackground', 'Salir', () => {
+                console.log('Salir del juego');
+            });
+        });
+
         
-        const exitButton = new Button(
-            this,
-            400,
-            500,
-            'buttonBackground',  
-            'Salir',
-            { fontSize: '24px', color: '#ffffff' },
-            () => { this.scene.start('GameScene'); }
-        );
-
 
         /*// Botón Jugar
         const localBtn = this.add.text(400, 320, 'Jugar', {
