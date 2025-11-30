@@ -12,6 +12,7 @@ Integrantes:
   * [Imagen y diseño visual](#imagen-y-dise-o-visual)
   * [Sonido](#sonido)
   * [Jugabilidad](#jugabilidad)
+  * [Controles](#controles)
   * [Narrativa](#narrativa)
   * [Comunicación](#comunicaci-n)
   * [Diagramas de flujo](#diagramas-de-flujo)
@@ -47,6 +48,11 @@ Las mecánicas son similares a Captura la bandera. Varios objetos aparecerán en
 
 El jugador ganador será el que consiga el mayor número de caramelos al final de la partida.
 
+## Controles
+El juego está diseñado para que puedan jugar 2 jugadores en local, con el mismo teclado
+* Jugador izquierda: usará W A S D para moverse y E para recoger los caramelos
+* Jugador derecha: usará las flechas del teclado y O para recoger los caramelos
+
 ## Narrativa
 Un año más llega la noche de Halloween al pequeño pueblo de Nocturnia. Como cada año, los muertos salen de sus tumbas, los monstruos abandonan sus escondites y los niños salen en la búsqueda de caramelos. 
 En el centro del pueblo brilla con intensidad el Foco del Crepúsculo, un artefacto legendario capaz de repeler cualquier entidad maligna. Mientras el foco brille el pueblo estará protegido, pero los monstruos no se lo van a poner fácil.
@@ -69,7 +75,10 @@ Se han planeado dos diagramas de flujo. Uno de ellos muestra cómo el jugador pu
 [Película Crepúsculo](https://es.wikipedia.org/wiki/Crep%C3%BAsculo_(pel%C3%ADcula_de_2008))    
 [Zombi del videojuego Minecraft](https://minecraft.fandom.com/es/wiki/Zombi)     
 [Videojuego de laberintos Bomberman](https://es.wikipedia.org/wiki/Bomberman)   
-[Juego de Google Halloween 2022](https://doodles.google/doodle/halloween-2022/)    
+[Juego de Google Halloween 2022](https://doodles.google/doodle/halloween-2022/)          
+[Assets de Halloween](https://craftpix.net/freebies/free-halloween-decorations-characters-and-items-pixel-art/?srsltid=AfmBOorreBU5S1y4a6NEnGLx1VxytknQ80rhrRatrEtu-gE1UsJa5OCL)
+
+
 
 
 
