@@ -25,6 +25,7 @@ Ambientado en Halloween, _Crepusculones_ es un juego de fiesta, acción y estrat
 ## Imagen y diseño visual
 El estilo del juego es Pixel Art 2D. Se busca una estética pequeña pero detallada, con sprites simples y reconocibles.
 Se usará una paleta de colores fríos y oscuros para dar la estética de misterio, a excepción de algunos elementos,  como los caramelos o los personajes,  que tendrán colores más vivos, con la finalidad de que destaquen sobre el fondo. 
+<br>
 A continuación, se presentan los dos personajes diseñados y los objetos implementados en el juego:
 <br>
 ![Personaje 1](/imagenes/vampiresa_front.png)
@@ -70,19 +71,21 @@ Para lanzar los objetos, se debe presionar la tecla para recoger y estar andando
 
 ## Narrativa
 Un año más llega la noche de Halloween al pequeño pueblo de Nocturnia. Como cada año, los muertos salen de sus tumbas, los monstruos abandonan sus escondites y los niños salen en la búsqueda de caramelos. 
+<br>
 En el centro del pueblo brilla con intensidad el Foco del Crepúsculo, un artefacto legendario capaz de repeler cualquier entidad maligna. Mientras el foco brille el pueblo estará protegido, pero los monstruos no se lo van a poner fácil.
+<br>
 Cansados de vivir escondidos en las sombras, Fer, el alfa de los licántropos, y Selenya, la condesa de los vampiros, intentarán robar el foco y sumir a Nocturnia en absoluta penumbra. 
+<br>
 Frente a ellos, dos intrépidos amigos defenderán la luz, llevándose algún caramelo por el camino: Luna, una valiente niña disfrazada de fantasma, y Noel, un niño asustadizo disfrazado de zombi.
+<br>
 ¿Podrán defender el pueblo? ¿O por una vez vencerán los monstruos? 
 
 ## Comunicación
-<br>
 El juego va a ser promocionado mediante las redes sociales como TikTok, Instagram y Twitter. Se enseñarán clips del proceso de desarrollo y de mini partidas para generar interés. También se alentará a los jugadores a compartir sus experiencias jugando bajo el eslogan: “¿Defenderás al pueblo? ¿O vencerán los monstruos?”, se realizarán campañas de votos para elegir equipos favoritos (licántropos, vampiros, fantasmas o zombis) y se promoverá compartir los resultados de las partidas o duelos para decidir equipos ganadores. En resumen se va a basar la promoción del juego en una estrategia de creación de comunidad orgánica en redes sociales. 
 La campaña de lanzamiento inicial del juego “Crepusculones: sólo un monstruo puede ganar” consiste en votaciones semanales para elegir los equipos más fuertes, contadores que muestran los equipos en cabeza y eventos especiales para decidir victorias finales. También se considera hacer retos especiales como: “Gana con más de 10 caramelos” o “Gana sin que te roben”.
 <br>
-<br>
 Mediante esta estrategia se espera crear expectación a la salida del juego, generar viralidad y mantener la comunidad atraída.
-<br>
+
 
 ## Diagramas de flujo
 Se han planeado dos diagramas de flujo. Uno de ellos muestra cómo el jugador puede moverse entre las escenas planteadas para el juego y otra muestra de forma visual la jugabilidad. 
@@ -98,14 +101,13 @@ Se han planeado dos diagramas de flujo. Uno de ellos muestra cómo el jugador pu
 [Assets de Halloween](https://craftpix.net/freebies/free-halloween-decorations-characters-and-items-pixel-art/?srsltid=AfmBOorreBU5S1y4a6NEnGLx1VxytknQ80rhrRatrEtu-gE1UsJa5OCL)
 
 ## Assets
-<br>
 Personajes, escenario y objetos realizados por el equipo.
-<br>
 <br>
 Pantallas de menú, pausa, ajustes y créditos han sido realizadas con assets gratuitos de Canva.
 <br>
 Música del juego ha sido seleccionada de FreeSound.
 <br>
+
 
 
 
