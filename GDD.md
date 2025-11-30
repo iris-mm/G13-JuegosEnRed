@@ -26,6 +26,7 @@ Ambientado en Halloween, _Crepusculones_ es un juego de fiesta, acción y estrat
 El estilo del juego es Pixel Art 2D. Se busca una estética pequeña pero detallada, con sprites simples y reconocibles.
 Se usará una paleta de colores fríos y oscuros para dar la estética de misterio, a excepción de algunos elementos,  como los caramelos o los personajes,  que tendrán colores más vivos, con la finalidad de que destaquen sobre el fondo. 
 A continuación, se presentan los dos personajes diseñados y los objetos implementados en el juego:
+<br>
 ![Personaje 1](/imagenes/vampiresa_front.png)
 ![Personaje 2](/imagenes/zombie_front.png)
 ![Caramelo](/imagenes/caramelo.png)
@@ -33,16 +34,21 @@ A continuación, se presentan los dos personajes diseñados y los objetos implem
 ![Calabaza 2](/imagenes/obj_calabaza_2.png)
 ![Calabaza 3](/imagenes/obj_calabaza_3.png)
 ![Piedra](/imagenes/obj_piedra.png)
+<br>
 
 Además de los personajes, también se han diseñado las pantallas:
+<br>
 ![Pantalla de inicio](/imagenes/pantalla_de_inicio_2.png)
 ![Pantalla de juego](/imagenes/pantalla_de_juego.png)
 ![Pantalla de pausa](/imagenes/pantalla_de_pausa.png)
 ![Pantalla de ajustes](/imagenes/pantalla_de_ajustes.png)
 ![Pantalla de créditos](/imagenes/pantalla_de_creditos.png)
+<br>
 
 También se ha creado un logo para la empresa ficticia de la que se forma parte:
+<br>
 ![Logo empresa](/imagenes/logo_empresa.png)
+<br>
 El estilo artístico está inspirado en los juegos clásicos  de 8 bits. Culturalmente se basa en la temática de Halloween, y hace un guiño a algunas obras de la cultura pop como la película _Crepúsculo_ o el videojuego _Minecraft_.
 
 ## Sonido
@@ -91,4 +97,5 @@ Se han planeado dos diagramas de flujo. Uno de ellos muestra cómo el jugador pu
 Personajes, escenario y objetos realizados por el equipo.
 Pantallas de menú, pausa, ajustes y créditos han sido realizadas con assets gratuitos de Canva.
 Música del juego ha sido seleccionada de FreeSound.
+
 
