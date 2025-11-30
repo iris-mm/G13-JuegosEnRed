@@ -8,22 +8,20 @@ export class Item extends Entity{
 
         scene.physics.add.overlap(scene.player1.gameObject, this.gameObject, () => { scene.player1.GrabItem(this) } );
         scene.physics.add.overlap(scene.player2.gameObject, this.gameObject, () => { scene.player2.GrabItem(this) } );
-
-        this.grabCooldown = 0;
     }
 
     GrabItem(player){
-        if(player == null) this.playerGrabbing = null;
-
+        if(player == null) return;
         if(this.playerGrabbing != null) return;
-        if(this.grabCooldown > 0) return;
 
         this.playerGrabbing = player;
     }
 
-    Update(){
-        if(this.grabCooldown > 0) this.grabCooldown--;
+    ClearPlayer(){
+        this.playerGrabbing = null;
+    }
 
+    Update(){
         if(this.playerGrabbing){
             this.MoveTo(this.playerGrabbing.x, this.playerGrabbing.y - 60)
         }

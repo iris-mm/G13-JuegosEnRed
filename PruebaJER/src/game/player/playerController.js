@@ -17,6 +17,9 @@ export class Player extends Entity {
         this.hasUpdatedItemInteraction = false;
         this.scene.input.keyboard.on(`keydown-${this.grabItemKey}`, () => this.grabItemInputOn = true );
         this.scene.input.keyboard.on(`keyup-${this.grabItemKey}`, () => this.grabItemInputOn = false );
+
+        this.facingX = 0;
+        this.facingY = 0;
     }
 
     Update() {
@@ -28,22 +31,37 @@ export class Player extends Entity {
         this.vx = 0;
         this.vy = 0;
 
+        this.facingX = 0;
+        this.facingY = 0;
+
         if (this.cursors.left.isDown){
             this.vx = -this.speed;
             this.gameObject.setTexture(`${this.characterName} left`);
+            this.facingX = -1;
         } 
         if (this.cursors.right.isDown){
             this.vx = this.speed;
             this.gameObject.setTexture(`${this.characterName} right`);
+            this.facingX = 1;
         } 
         if (this.cursors.up.isDown){
             this.vy = -this.speed;
             this.gameObject.setTexture(`${this.characterName} back`);
+            this.facingY = -1;
         } 
         if (this.cursors.down.isDown){
             this.vy = this.speed;
             this.gameObject.setTexture(`${this.characterName} front`);
+            this.facingY = 1;
         } 
+
+        if(this.knockOutTimer > 0){
+            this.knockOutTimer--
+            this.vx = 0
+            this.vy = 0
+            this.facingX = 0
+            this.facingY = 0
+        }
 
         this.Move(
             this.vx * this.scene.game.loop.delta / 1000,
@@ -67,9 +85,10 @@ export class Player extends Entity {
 
     GrabItem(item){
         if(!this.hasInteractedWithItems) return;
+
         if(this.currentItemGrabbing != null){
             if(this.currentItemGrabbing instanceof ThrowableItem){
-                this.currentItemGrabbing.Throw(this.vx, this.vy);
+                this.currentItemGrabbing.Throw(this.facingX, this.facingY);
                 this.currentItemGrabbing = null;
             }
             return;
@@ -77,5 +96,16 @@ export class Player extends Entity {
 
         this.currentItemGrabbing = item;
         item.GrabItem(this)
+    }
+
+    KnockOut(){
+        if(this.knockOutTimer > 0) return;
+        this.knockOutTimer = 30
+
+        if(this.currentItemGrabbing != null){
+            this.currentItemGrabbing.MoveTo(this.x, this.y)
+            this.currentItemGrabbing.ClearPlayer();
+            this.currentItemGrabbing = null;
+        }
     }
 }
