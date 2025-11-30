@@ -1,6 +1,6 @@
-import { Entity } from "../core/Entity.js";
+import { Item } from "./Item.js";
 
-export class Candy extends Entity{
+export class Candy extends Item{
     constructor(scale, sprite, scene){
         super(-64, -64, scale, sprite, scene);
 
@@ -10,6 +10,8 @@ export class Candy extends Entity{
 
 
     Update(){
+        super.Update();
+
         if(!this.hasSpawned){
             this.spawnTime--;
             if(this.spawnTime < 0){
