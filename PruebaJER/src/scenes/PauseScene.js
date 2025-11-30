@@ -6,7 +6,7 @@ import menuPause from '../../assets/menuPause2.png';
 import buttonBackground from '../../assets/boton piedra.png';
 //importar clases Button
 import { Button } from '../entities/Button.js';
-
+import { AudioManager } from '../game/controllers/AudioManager';
 
 export class PauseScene extends Phaser.Scene {
     constructor() {
@@ -29,7 +29,9 @@ export class PauseScene extends Phaser.Scene {
         bg.displayWidth = 1200;   // ancho del canvas
         bg.displayHeight = 800;  // alto del canvas 
         
-        
+        //Volumen global
+        this.sound.volume = AudioManager.getVolume();
+
         // Botón de "Reanudar"
         const resumeButton = new Button(this, 600, 300, 'buttonBackground', 'Reanudar', () => {
             this.scene.stop(); // Detener la escena de pausa
