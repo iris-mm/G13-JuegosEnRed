@@ -44,8 +44,10 @@ export class MenuScene extends Phaser.Scene {
             250,
             425,
             'buttonBackground',  
-            'Ajustes',
-            () => { this.scene.start('ConfigScene'); }
+            'Opciones',
+            () => { 
+                this.scene.stop('PauseScene'); 
+                this.scene.start('ConfigScene',{ from: 'MenuScene' }); }
         );
         
         const creditsButton = new Button(

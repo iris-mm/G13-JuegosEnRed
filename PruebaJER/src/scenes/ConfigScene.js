@@ -18,6 +18,10 @@ export class ConfigScene extends Phaser.Scene {
         this.load.image('buttonBackground', buttonBackground);
     }
 
+    init(data){
+        this.openedFrom = data?.from||'MenuScene'; //MenuScene o PauseScene
+    }
+
     create(){
         // Fondo centrado y ajustado a 1200x800
         const bg = this.add.image(600, 400, 'menuConfig')
@@ -25,11 +29,24 @@ export class ConfigScene extends Phaser.Scene {
         bg.displayWidth = 1200;
         bg.displayHeight = 800;
 
-        //Botón volver al menú principal
-        const menuButton = new Button(this, 600, 500, 'buttonBackground', 'Menú', () => {
-            this.scene.start('MenuScene'); // Ir al menú principal
-        });
+        //Botón de "Volver" según desde dónde se abrió la escena
+        if(this.openedFrom === 'MenuScene'){
+            //Botón volver al menú principal
+            const menuButton = new Button(this, 600, 500, 'buttonBackground', 'Menú', () => {
+                this.scene.stop(); // Detener la escena de configuración
+                this.scene.stop('PauseScene'); // Asegurarse de detener la escena de pausa si estaba abierta
+                this.scene.start('MenuScene'); // Ir al menú principal
+            });
+        }else if(this.openedFrom === 'PauseScene'){
+            //Botón volver al menú de pausa
+            const pauseButton = new Button(this, 600, 500, 'buttonBackground', 'Volver', () => {
+                this.scene.stop(); // Detener la escena de configuración
+                this.scene.resume('PauseScene'); // Volver a la escena de pausa
+            });
+        }
+
         
+        //Texto de "Volumen"
         this.add.text(500, 350, 'Volumen:', {
             fontSize: '32px',
             color: '#2c2a2aff'
