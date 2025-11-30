@@ -26,8 +26,8 @@ Ambientado en Halloween, _Crepusculones_ es un juego de fiesta, acción y estrat
 El estilo del juego es Pixel Art 2D. Se busca una estética pequeña pero detallada, con sprites simples y reconocibles.
 Se usará una paleta de colores fríos y oscuros para dar la estética de misterio, a excepción de algunos elementos,  como los caramelos,  que tendrán colores más vivos, con la finalidad de que destaquen sobre el fondo. 
 A continuación se presentan los dos personajes diseñados:
-![Personaje 1](/imagenes/vampiresa front.png)
-![Personaje 2](/imagenes/zombi front.png)
+![Personaje 1](/imagenes/vampiresa_front.png)
+![Personaje 2](/imagenes/zombie_front.png)
 Además de los personajes, también se han diseñado las pantallas:
 ![Pantalla de inicio](/imagenes/pantalla_de_inicio_2.jpeg)
 ![Pantalla de juego](/imagenes/pantalla_de_juego.jpeg)
@@ -81,13 +81,6 @@ Se han planeado dos diagramas de flujo. Uno de ellos muestra cómo el jugador pu
 [Assets de Halloween](https://craftpix.net/freebies/free-halloween-decorations-characters-and-items-pixel-art/?srsltid=AfmBOorreBU5S1y4a6NEnGLx1VxytknQ80rhrRatrEtu-gE1UsJa5OCL)
 
 ## Assets
+Personajes, escenario y objetos realizados por el equipo.
 Pantallas de menú, pausa, ajustes y créditos han sido realizadas con assets gratuitos de Canva.
 Música del juego ha sido seleccionada de FreeSound.
-
-
-
-
-
-
-
-
