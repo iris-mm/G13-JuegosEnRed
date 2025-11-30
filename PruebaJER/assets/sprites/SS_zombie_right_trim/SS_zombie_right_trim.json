@@ -1,0 +1,115 @@
+{
+  "frames": [
+    {
+      "filename": "zombie_right_1.png",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 144,
+        "h": 240
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 48,
+        "y": 16,
+        "w": 144,
+        "h": 240
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "zombie_right_3.png",
+      "frame": {
+        "x": 144,
+        "y": 0,
+        "w": 144,
+        "h": 240
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 48,
+        "y": 16,
+        "w": 144,
+        "h": 240
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "zombie_right_2.png",
+      "frame": {
+        "x": 0,
+        "y": 240,
+        "w": 160,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 32,
+        "y": 32,
+        "w": 160,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "zombie_right_4.png",
+      "frame": {
+        "x": 160,
+        "y": 240,
+        "w": 144,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 48,
+        "y": 32,
+        "w": 144,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  ],
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.7",
+    "image": "SS_zombie_right_trim.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 304,
+      "h": 464
+    },
+    "scale": 1
+  }
+}

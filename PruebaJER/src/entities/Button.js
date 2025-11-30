@@ -14,7 +14,7 @@ export class Button {
 
         this.container = scene.add.container(x, y, [this.image, this.text]);
         this.container.setSize(this.image.width, this.image.height);
-        //this.container.setScale(1.5); // escalar fondo y texto
+        this.container.setScale(1.5); // escalar fondo y texto
 
 
         this.container.setInteractive({ useHandCursor: true })

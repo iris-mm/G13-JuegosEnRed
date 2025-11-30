@@ -33,7 +33,7 @@ export class MenuScene extends Phaser.Scene {
         const playButton = new Button(
             this,
             220,
-            300,
+            250,
             'buttonBackground',  
             'Jugar',
             () => { this.scene.start('GameScene'); }
