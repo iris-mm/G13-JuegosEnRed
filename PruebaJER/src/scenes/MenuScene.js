@@ -44,7 +44,7 @@ export class MenuScene extends Phaser.Scene {
             220,
             400,
             'buttonBackground',  
-            'Opciones',
+            'Ajustes',
             () => { this.scene.start('ConfigScene'); }
         );
         
