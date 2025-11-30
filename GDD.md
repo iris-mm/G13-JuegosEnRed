@@ -27,7 +27,7 @@ A continuación se presentan los dos personajes diseñados:
 ![Personaje 1](/imagenes/vampiresa front.png)
 ![Personaje 2](/imagenes/zombi front.png)
 Además de los personajes, también se han diseñado las pantallas:
-![Pantalla de inicio](/imagenes/pantalla_de_inicio.jpeg)
+![Pantalla de menú](/imagenes/pantalla_de_menu.jpeg)
 ![Pantalla de juego](/imagenes/pantalla_de_juego.jpeg)
 ![Pantalla de pausa](/imagenes/pantalla_de_pausa.jpeg)
 ![Pantalla de ajustes](/imagenes/pantalla_de_ajustes.jpeg)
@@ -70,6 +70,7 @@ Se han planeado dos diagramas de flujo. Uno de ellos muestra cómo el jugador pu
 [Zombi del videojuego Minecraft](https://minecraft.fandom.com/es/wiki/Zombi)     
 [Videojuego de laberintos Bomberman](https://es.wikipedia.org/wiki/Bomberman)   
 [Juego de Google Halloween 2022](https://doodles.google/doodle/halloween-2022/)    
+
 
 
 
