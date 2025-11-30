@@ -39,32 +39,32 @@ export class Player extends Entity {
         this.facingX = 0;
         this.facingY = 0;
 
-        if (this.cursors.left.isDown){
-            this.vx = -this.speed;
-            this.gameObject.anims.play(`${this.characterName}_left_anim`, true);
-            moving = true;
-            this.facingX = -1;
-        } 
-        if (this.cursors.right.isDown){
-            this.vx = this.speed;
-            this.gameObject.anims.play(`${this.characterName}_right_anim`, true);
-            moving = true;
-            this.facingX = 1;
-        } 
-        if (this.cursors.up.isDown){
-            this.vy = -this.speed;
-            this.gameObject.anims.play(`${this.characterName}_back_anim`, true);
-            moving = true;
-            this.facingY = -1;
-        } 
-        if (this.cursors.down.isDown){
-            this.vy = this.speed;
-            this.gameObject.anims.play(`${this.characterName}_front_anim`, true);
-            moving = true;
-            this.facingY = 1;
-
-        } 
-        if(!moving){this.gameObject.setTexture(`${this.characterName}_frontEst`)}
+        //Para que soporte las diagonales, primero se detecta la dirección
+        if (this.cursors.left.isDown) {
+             this.vx = -this.speed; this.facingX = -1; moving = true; 
+        }
+        if (this.cursors.right.isDown) {
+             this.vx = this.speed; this.facingX = 1; moving = true; 
+        }
+        if (this.cursors.up.isDown) {
+             this.vy = -this.speed; this.facingY = -1; moving = true; 
+        }
+        if (this.cursors.down.isDown) {
+             this.vy = this.speed; this.facingY = 1; moving = true; 
+        }
+        //y luego se elige la animación del personaje
+        let animation = null;
+        if(moving){
+        if(this.vx !== 0 && this.vy !== 0){ //condición de la diagonal
+            animation = this.vx > 0 ? `${this.characterName}_right_anim` : `${this.characterName}_left_anim`;
+        } else if(this.vx !== 0){ //mvto normal izq/dcha
+            animation = this.vx > 0 ? `${this.characterName}_right_anim` : `${this.characterName}_left_anim`;
+        } else if(this.vy !== 0){ //mvto normal arriba/abajo
+            animation = this.vy > 0 ? `${this.characterName}_front_anim` : `${this.characterName}_back_anim`;
+        }
+    }
+        if(animation) this.gameObject.anims.play(animation, true); //Se ejecuta la animación si el personaje se está moviendo
+        else this.gameObject.setTexture(`${this.characterName}_frontEst`); //si no, idle
 
         if(this.knockOutTimer > 0){
             this.knockOutTimer--

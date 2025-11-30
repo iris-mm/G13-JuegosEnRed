@@ -127,10 +127,6 @@ export class GameScene extends Phaser.Scene {
         const redBase = this.add.rectangle((1200 - base_SIZE / 2) - offset, 400, base_SIZE, base_SIZE, 0xA30000)
         .setAlpha(0.5);
 
-        // Añadir colider cuando player esté hecho y la función de añadir punto también!
-        // this.physics.add.overlap(this.player1, blueBase, addPoint);
-        // this.physics.add.overlap(this.player2, redBase, addPoint);
-    
         //Temporizador
         let timerText = this.add.text(600, 100, "45", {fontSize: "48px",color: "#ffffff"})
         .setOrigin(0.5, 0.5);
