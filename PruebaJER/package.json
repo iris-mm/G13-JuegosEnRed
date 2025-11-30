@@ -1,5 +1,5 @@
 {
-  "name": "practice",
+  "name": "crepusculones",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "keywords": [
     "game"
   ],
-  "author": "Claudia Morago Amigo",
+  "author": "Marta ye Miguel, Sara Mesa, Claudia Morago, Iris Muñoz y Ángel Younes",
   "license": "Apache-2.0",
   "description": "",
   "dependencies": {
