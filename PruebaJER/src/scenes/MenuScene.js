@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-//importar imagenes
+//importar imágenes
 // @ts-ignore
 import menuBackground from '../../assets/MainMenu2.jpg';
 // @ts-ignore
@@ -56,7 +56,7 @@ export class MenuScene extends Phaser.Scene {
             350,
             500,
             'buttonBackground',  
-            'Opciones',
+            'Ajustes',
             () => { 
                 this.scene.stop('PauseScene'); 
                 this.scene.start('ConfigScene',{ from: 'MenuScene' }); }
@@ -70,25 +70,5 @@ export class MenuScene extends Phaser.Scene {
             'Créditos',
             () => { this.scene.start('CreditsScene'); }
         );
-
-
-        /*// Botón Jugar
-        const localBtn = this.add.text(400, 320, 'Jugar', {
-            fontSize: '24px',
-            color: '#00ff00',
-        }).setOrigin(0.5)
-          .setInteractive({ useHandCursor: true })
-          .on('pointerover', () => localBtn.setStyle({ fill: '#7bffc1ff' }))
-          .on('pointerout', () => localBtn.setStyle({ fill: '#00ff00' }))
-          .on('pointerdown', () => this.scene.start('GameScene'));
-
-        // Botón Online (no disponible)
-        const onlineBtn = this.add.text(400, 390, 'Online Multiplayer (Not Available)', {
-            fontSize: '24px',
-            color: '#ad32ffff',
-        }).setOrigin(0.5)
-          .setInteractive({ useHandCursor: true })
-          .on('pointerover', () => onlineBtn.setStyle({ fill: '#ca9ee7ff' }))
-          .on('pointerout', () => onlineBtn.setStyle({ fill: '#ad32ffff' }));*/
     }
 }
