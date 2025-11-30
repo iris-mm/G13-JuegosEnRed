@@ -18,6 +18,7 @@ export class Player extends Entity {
         this.hasUpdatedItemInteraction = false;
         this.scene.input.keyboard.on(`keydown-${this.grabItemKey}`, () => this.grabItemInputOn = true );
         this.scene.input.keyboard.on(`keyup-${this.grabItemKey}`, () => this.grabItemInputOn = false );
+        this.itemInteractionCooldown = 0;
 
         this.facingX = 0;
         this.facingY = 0;
@@ -92,9 +93,13 @@ export class Player extends Entity {
             this.hasUpdatedItemInteraction = false;
             this.hasInteractedWithItems = false;
         }
+
+        if(this.itemInteractionCooldown > 0) this.itemInteractionCooldown--;
     }
 
     GrabItem(item){
+        if(this.itemInteractionCooldown > 0) return;
+
         if(!this.hasInteractedWithItems) return;
 
         if(this.currentItemGrabbing != null){
@@ -109,6 +114,7 @@ export class Player extends Entity {
         this.currentItemGrabbing = item;
         item.GrabItem(this);
 
+        this.itemInteractionCooldown = 3;
         this.hasCandy = this.currentItemGrabbing instanceof Candy;
     }
 

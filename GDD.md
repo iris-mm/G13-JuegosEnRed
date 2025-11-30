@@ -17,6 +17,7 @@ Integrantes:
   * [Comunicación](#comunicaci-n)
   * [Diagramas de flujo](#diagramas-de-flujo)
   * [Referencias](#referencias)
+  * [Assets](#assets)
 
 ## Aspectos generales
 Ambientado en Halloween, _Crepusculones_ es un juego de fiesta, acción y estrategia con  multijugador local y en línea 1 vs 1 con vista cenital. Dirigido a un público de entre 13 y 24 años. El juego busca ser un pasatiempo divertido para los jugadores que busquen adrenalina y diversión con un amigo.
@@ -77,6 +78,10 @@ Se han planeado dos diagramas de flujo. Uno de ellos muestra cómo el jugador pu
 [Videojuego de laberintos Bomberman](https://es.wikipedia.org/wiki/Bomberman)   
 [Juego de Google Halloween 2022](https://doodles.google/doodle/halloween-2022/)          
 [Assets de Halloween](https://craftpix.net/freebies/free-halloween-decorations-characters-and-items-pixel-art/?srsltid=AfmBOorreBU5S1y4a6NEnGLx1VxytknQ80rhrRatrEtu-gE1UsJa5OCL)
+
+## Assets
+Pantallas de menú, pausa, ajustes y créditos han sido realizadas con assets gratuitos de Canva.
+Música del juego ha sido seleccionada de FreeSound.
 
 
 
