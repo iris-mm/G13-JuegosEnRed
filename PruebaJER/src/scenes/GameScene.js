@@ -27,7 +27,7 @@ import zombiLeft from '../../assets/sprites/zombi_left.png';
 import zombiRight from '../../assets/sprites/zombi_right.png';
 
 //importar clases
-import { TimerController } from '../timer/TimerController.js';
+import { TimerController } from '../game/controllers/TimerController.js';
 import { EntitiesController } from '../game/controllers/EntitiesController.js';
 import { Candy } from '../game/items/Candy.js';
 import { Player } from '../game/player/playerController.js';
