@@ -33,13 +33,18 @@ import pumpkin2 from '../../assets/sprites/obj calabaza 2.png';
 import pumpkin3 from '../../assets/sprites/obj calabaza 3.png';
 // @ts-ignore
 import rock from '../../assets/sprites/obj piedra.png';
+//Sonidos
+// @ts-ignore
+import gameMusic from '../../assets/music_sounds/game_music.mp3';
 
 //importar clases
 import { TimerController } from '../game/controllers/TimerController.js';
 import { EntitiesController } from '../game/controllers/EntitiesController.js';
 import { Candy } from '../game/items/Candy.js';
 import { Player } from '../game/player/playerController.js';
+import { AudioManager } from '../game/controllers/AudioManager';
 import { ThrowableItem } from '../game/items/ThrowableItem.js';
+
 
 export class GameScene extends Phaser.Scene {
     constructor() {
@@ -51,6 +56,7 @@ export class GameScene extends Phaser.Scene {
         this.load.image('floor', floor);
         this.load.image('game_boundary', game_boundary);
         this.load.image('leaves', leaves);
+        this.load.audio('game_music', gameMusic);
         //Items
         this.load.image('candy', candySprite);
         this.load.image('pumpkin1', pumpkin1);
@@ -83,6 +89,15 @@ export class GameScene extends Phaser.Scene {
         const leaves = this.add.image(600, 400, 'leaves')
         .setScale(3)
         .setAlpha(0.75);
+
+        //Volumen global
+                this.sound.volume = AudioManager.getVolume();
+                this.sound.stopAll(); //para que no se superpongan las canciones
+                this.music = this.sound.add('game_music', {
+                    volume: AudioManager.getVolume(),
+                    loop: true
+                });
+                this.music.play();
 
         //Bases de jugadores. Cuando se colisione con ellas + tengan caramelo, se hará callback!
             // Base azul izquierda - PLAYER 1

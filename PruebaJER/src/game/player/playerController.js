@@ -49,6 +49,14 @@ export class Player extends Entity {
             this.vx * this.scene.game.loop.delta / 1000,
             this.vy * this.scene.game.loop.delta / 1000
         );
+
+        const halfWidth = this.gameObject.displayWidth / 2;
+        const halfHeight = this.gameObject.displayHeight / 2;
+
+        if(this.x < halfWidth) this.MoveTo(halfWidth, this.y);
+        if(this.x > this.scene.sys.game.config.width - halfWidth) this.MoveTo(this.scene.sys.game.config.width - halfWidth, this.y);
+        if(this.y < halfHeight) this.MoveTo(this.x, halfHeight);
+        if(this.y > this.scene.sys.game.config.height - halfHeight) this.MoveTo(this.x, this.scene.sys.game.config.height - halfHeight);
     }
 
     ItemInputs(){
