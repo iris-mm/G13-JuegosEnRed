@@ -2,11 +2,11 @@
 ## Descripción de la temática del juego
 Juego multijugador 1 vs 1 con temática de Halloween. Ambos jugadores se enfrentan para ver quién consigue la mayor cantidad de caramelos en cada ronda. Deben recoger los caramelos del suelo y llevarlos a su base. Se pueden tirar objetos del mapa y robarse entre ellos. 
 
-## AVISO!
-Si el juego el error "Can't resolve 'file-loader'", ejecutar npm install. 
-
 ## Novedades
 Juego implementado en modo local.
+
+## Instalación
+Instalar dependencias ejecutando npm install en la terminal
 
 ## Controles
 El juego está diseñado para que puedan jugar 2 jugadores en local, con el mismo teclado
