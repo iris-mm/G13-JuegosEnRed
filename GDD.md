@@ -24,35 +24,43 @@ Ambientado en Halloween, _Crepusculones_ es un juego de fiesta, acción y estrat
 
 ## Imagen y diseño visual
 El estilo del juego es Pixel Art 2D. Se busca una estética pequeña pero detallada, con sprites simples y reconocibles.
-Se usará una paleta de colores fríos y oscuros para dar la estética de misterio, a excepción de algunos elementos,  como los caramelos,  que tendrán colores más vivos, con la finalidad de que destaquen sobre el fondo. 
-A continuación se presentan los dos personajes diseñados:
-![Personaje 1](/imagenes/vampiresa front.png)
-![Personaje 2](/imagenes/zombi front.png)
+Se usará una paleta de colores fríos y oscuros para dar la estética de misterio, a excepción de algunos elementos,  como los caramelos o los personajes,  que tendrán colores más vivos, con la finalidad de que destaquen sobre el fondo. 
+A continuación, se presentan los dos personajes diseñados y los objetos implementados en el juego:
+![Personaje 1](/imagenes/vampiresa_front.png)
+![Personaje 2](/imagenes/zombie_front.png)
+![Caramelo](/imagenes/caramelo.png)
+![Calabaza 1](/imagenes/obj_calabaza_1.png)
+![Calabaza 2](/imagenes/obj_calabaza_2.png)
+![Calabaza 3](/imagenes/obj_calabaza_3.png)
+![Piedra](/imagenes/obj_piedra.png)
+
 Además de los personajes, también se han diseñado las pantallas:
-![Pantalla de menú](/imagenes/pantalla_de_menu.jpeg)
-![Pantalla de juego](/imagenes/pantalla_de_juego.jpeg)
-![Pantalla de pausa](/imagenes/pantalla_de_pausa.jpeg)
-![Pantalla de ajustes](/imagenes/pantalla_de_ajustes.jpeg)
-![Pantalla de créditos](/imagenes/pantalla_de_creditos.jpeg)
+![Pantalla de inicio](/imagenes/pantalla_de_inicio_2.png)
+![Pantalla de juego](/imagenes/pantalla_de_juego.png)
+![Pantalla de pausa](/imagenes/pantalla_de_pausa.png)
+![Pantalla de ajustes](/imagenes/pantalla_de_ajustes.png)
+![Pantalla de créditos](/imagenes/pantalla_de_creditos.png)
+
 También se ha creado un logo para la empresa ficticia de la que se forma parte:
 ![Logo empresa](/imagenes/logo_empresa.png)
 El estilo artístico está inspirado en los juegos clásicos  de 8 bits. Culturalmente se basa en la temática de Halloween, y hace un guiño a algunas obras de la cultura pop como la película _Crepúsculo_ o el videojuego _Minecraft_.
 
 ## Sonido
-Los sonidos y la música son estilo 8 bits. Busca fomentar partidas entretenidas y acciones impulsivas con música frenética y sonidos satisfactorios.
+Los sonidos y la música es estilo Halloween. Busca ser divertida y acorde con la temática del juego. Todas las músicas son coherentes entre ellas para no generar disonancia. 
 
 ## Jugabilidad
 Una partida se compone de 3 rondas. En cada ronda, el tiempo de aparición de los objetos se reduce para que la duración sea menor. La primera ronda dura 45 segundos, y en cada una de las siguientes se disminuyen 10 segundos respecto a la duración anterior. 
-Las mecánicas son similares a Captura la bandera. Varios objetos aparecerán en el mapa que los jugadores pueden coger y lanzar según su naturaleza. Existen 2 tipos de objetos:
+Varios objetos aparecerán en el mapa que los jugadores pueden coger y lanzar según su naturaleza. Existen 2 tipos de objetos:
 1. Caramelos: aparecen una vez por ronda. Los jugadores compiten por llevarlo a su cesta lo antes posible.
 2. Objetos del mapa: estos podrán ser recogidos por los jugadores y lanzados para aturdir a su enemigo por unos segundos, ya sea para generar una estrategia o para hacer que el enemigo suelte el ítem o caramelo que está sosteniendo.
 
-El jugador ganador será el que consiga el mayor número de caramelos al final de la partida.
+El objetivo es recolectar la mayor cantidad de caramelos por ronda. El jugador ganador será el que consiga el mayor número de rondas ganadas.
 
 ## Controles
 El juego está diseñado para que puedan jugar 2 jugadores en local, con el mismo teclado
-* Jugador izquierda: usará W A S D para moverse y E para recoger los caramelos
-* Jugador derecha: usará las flechas del teclado y O para recoger los caramelos
+* Jugador izquierda: usará W A S D para moverse y E para recoger los caramelos.
+* Jugador derecha: usará las flechas del teclado y O para recoger los caramelos.
+Para lanzar los objetos, se debe presionar la tecla para recoger y estar andando hacia la dirección donde se quiera tirar el objeto.
 
 ## Narrativa
 Un año más llega la noche de Halloween al pequeño pueblo de Nocturnia. Como cada año, los muertos salen de sus tumbas, los monstruos abandonan sus escondites y los niños salen en la búsqueda de caramelos. 
@@ -80,12 +88,7 @@ Se han planeado dos diagramas de flujo. Uno de ellos muestra cómo el jugador pu
 [Assets de Halloween](https://craftpix.net/freebies/free-halloween-decorations-characters-and-items-pixel-art/?srsltid=AfmBOorreBU5S1y4a6NEnGLx1VxytknQ80rhrRatrEtu-gE1UsJa5OCL)
 
 ## Assets
+Personajes, escenario y objetos realizados por el equipo.
 Pantallas de menú, pausa, ajustes y créditos han sido realizadas con assets gratuitos de Canva.
 Música del juego ha sido seleccionada de FreeSound.
-
-
-
-
-
-
 

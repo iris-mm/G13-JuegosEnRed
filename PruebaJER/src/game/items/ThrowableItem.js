@@ -17,8 +17,6 @@ export class ThrowableItem extends Item{
     }
 
     Throw(xDir, yDir){
-        console.log("thrown")
-
         const throwForce = 30;
         this.throwSpeedX = throwForce * (xDir > 0 ? 1 : xDir == 0 ? 0 : -1);
         this.throwSpeedY = throwForce * (yDir > 0 ? 1 : yDir == 0 ? 0 : -1);
@@ -48,5 +46,14 @@ export class ThrowableItem extends Item{
 
         const resistance = 0.9;
         this.Move(this.throwSpeedX *= resistance, this.throwSpeedY *= resistance);
+
+        if(this.x < 50 || this.x > 1200 - 50) {
+            this.throwSpeedX *= -1;
+            this.Move(5 * Math.sign(this.throwSpeedX), 0)
+        }
+        if(this.y < 50 || this.y > 800 - 50) {
+            this.throwSpeedY *= -1;
+            this.Move(0, 5 * Math.sign(this.throwSpeedY))
+        }
     }
 }
