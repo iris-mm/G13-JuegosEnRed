@@ -65,9 +65,9 @@ El objetivo es recolectar la mayor cantidad de caramelos por ronda. El jugador g
 
 ## Controles
 El juego está diseñado para que puedan jugar 2 jugadores en local, con el mismo teclado
-* Jugador izquierda: usará W A S D para moverse y E para recoger los caramelos.
-* Jugador derecha: usará las flechas del teclado y O para recoger los caramelos.
-Para lanzar los objetos, se debe presionar la tecla para recoger y estar andando hacia la dirección donde se quiera tirar el objeto.
+* Jugador izquierda: usará W A S D para moverse y E para recoger los caramelos y los objetos.
+* Jugador derecha: usará I J K L para moverse y O para recoger los caramelos y los objetos.
+Para lanzar los objetos se debe presionar la tecla para recoger y estar andando hacia la dirección donde se quiera tirar el objeto, si no, sólo sotará dicho objeto.
 
 ## Narrativa
 Un año más llega la noche de Halloween al pequeño pueblo de Nocturnia. Como cada año, los muertos salen de sus tumbas, los monstruos abandonan sus escondites y los niños salen en la búsqueda de caramelos. 
@@ -107,6 +107,7 @@ Pantallas de menú, pausa, ajustes y créditos han sido realizadas con assets gr
 <br>
 Música del juego ha sido seleccionada de FreeSound.
 <br>
+
 
 
 
