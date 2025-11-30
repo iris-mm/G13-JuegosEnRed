@@ -44,6 +44,7 @@ import { Candy } from '../game/items/Candy.js';
 import { Player } from '../game/player/playerController.js';
 import { AudioManager } from '../game/controllers/AudioManager';
 import { ThrowableItem } from '../game/items/ThrowableItem.js';
+import { CandyBasket } from '../game/controllers/CandyBasket.js';
 
 
 export class GameScene extends Phaser.Scene {
@@ -74,7 +75,7 @@ export class GameScene extends Phaser.Scene {
         this.load.image('zombi right', zombiRight);
     }
 
-    create(){
+        create(){
         //Escenario
         const floor = this.add.tileSprite(0, 0, 1200, 800, 'floor') 
         .setOrigin(0,0) 
@@ -170,6 +171,10 @@ export class GameScene extends Phaser.Scene {
         this.entitiesController.AddEntity(this.item4);
         this.item5 = new ThrowableItem(0.3, 'rock', this)
         this.entitiesController.AddEntity(this.item5);
+
+        //  Baskets
+        this.basket1 = new CandyBasket(60, 400, 70, 310, this.player1, this);
+        this.basket2 = new CandyBasket(1200 - 60, 400, 1200 - 90, 310, this.player2, this);
     }
 
     update(){
@@ -194,34 +199,5 @@ export class GameScene extends Phaser.Scene {
         const newDuration = Math.max(0, 45000 - (15000 * (this.round-1)));
 
         this.startRound(newDuration);
-    }
-
-    addPoint(ID_player){
-        
-        /*switch (ID_player) {
-        case 1:
-            if(player1 tiene caramelo){
-                this.player1_score++;
-                // Detiene cuenta actual
-                this.countdown.stop();
-
-                // Pasar al siguiente ciclo
-                this.endRound();
-            }
-            
-            break;
-
-        case 2:
-            if(player2 tiene caramelo){
-                this.player2_score++;
-                // Detiene cuenta actual
-                this.countdown.stop();
-
-                // Pasar al siguiente ciclo
-                this.endRound();
-            }
-            break;
-        } Ejemplo de cómo funcionaría lo de añadir puntos*/
-
     }
 }
