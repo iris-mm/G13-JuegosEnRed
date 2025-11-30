@@ -74,6 +74,7 @@ export class CreditsScene extends Phaser.Scene {
         const creditsOthers=[
             'Assets de sprites GameScene: 13th CandyWeb',
             'Assets pantallas: Canva',
+            'Música y efectos de sonido: FreeSound',
         ];
 
         // Altura inicial para el primer nombre 
@@ -89,7 +90,7 @@ export class CreditsScene extends Phaser.Scene {
             }).setOrigin(0.5);
         });
         creditsOthers.forEach((name, index) => {
-            this.add.text(600, startY + (creditsGrupo.length + index) * spacing +90, name, {
+            this.add.text(600, startY + (creditsGrupo.length + index) * spacing +85, name, {
                 fontSize: '24px',
                 color: '#ffffff',
                 align: 'center'
