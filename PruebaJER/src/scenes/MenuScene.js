@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 
 //importar imagenes
 // @ts-ignore
-import menuBackground from '../../assets/fondo menus.png';
+import menuBackground from '../../assets/MainMenu2.jpg';
 // @ts-ignore
 import buttonBackground from '../../assets/boton piedra.png';
 
@@ -20,20 +20,17 @@ export class MenuScene extends Phaser.Scene {
     }
 
     create() {
-        // Fondo centrado
-        this.add.image(400, 300, 'menuBackground');
-
-        // Título
-        this.add.text(400, 100, 'CREPUSCULONES', {
-            fontSize: '64px',
-            color: '#ffffff'
-        }).setOrigin(0.5);
+        // Fondo centrado y ajustado a 1200x800
+        const bg = this.add.image(600, 400, 'menuBackground')
+        .setOrigin(0.5);
+        bg.displayWidth = 1200;
+        bg.displayHeight = 800;
 
         // botones usando la clase Button
         const playButton = new Button(
             this,
-            250,
-            300,
+            350,
+            350,
             'buttonBackground',  
             'Jugar',
             () => { this.scene.start('GameScene'); }
@@ -41,8 +38,8 @@ export class MenuScene extends Phaser.Scene {
 
         const settingsButton = new Button(
             this,
-            250,
-            425,
+            350,
+            500,
             'buttonBackground',  
             'Opciones',
             () => { 
@@ -52,8 +49,8 @@ export class MenuScene extends Phaser.Scene {
         
         const creditsButton = new Button(
             this,
-            250,
-            550,
+            350,
+            650,
             'buttonBackground',  
             'Créditos',
             () => { this.scene.start('CreditsScene'); }
