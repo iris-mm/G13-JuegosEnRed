@@ -14,17 +14,19 @@ export class Button {
 
         this.container = scene.add.container(x, y, [this.image, this.text]);
         this.container.setSize(this.image.width, this.image.height);
-        //this.container.setScale(1.5); // escalar fondo y texto
+        this.container.setScale(1.5); // escalar fondo y texto
 
 
         this.container.setInteractive({ useHandCursor: true })
             .on('pointerover', () => {
                 this.image.setTint(0xffff00); 
-                this.text.setColor('#ffff00'); 
+                this.text.setColor('#ffff00');
+                this.text.setScale(1.2);
             })
             .on('pointerout', () => {
                 this.image.clearTint(); 
-                this.text.setColor('#ffffffff'); 
+                this.text.setColor('#ffffffff');
+                this.text.setScale(1);
             })
             .on('pointerdown', callback);
     }
