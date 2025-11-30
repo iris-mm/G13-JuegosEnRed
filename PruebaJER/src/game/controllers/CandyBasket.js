@@ -22,4 +22,9 @@ export class CandyBasket extends Entity{
         this.owner.currentItemGrabbing.Reset();
         this.owner.currentItemGrabbing = null;
     }
+
+    Restart(){
+        this.candies = 0;
+        this.text.text = 0;
+    }
 }

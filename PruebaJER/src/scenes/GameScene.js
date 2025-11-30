@@ -244,6 +244,11 @@ export class GameScene extends Phaser.Scene {
         //  Baskets
         this.basket1 = new CandyBasket(60, 400, 70, 310, this.player1, this);
         this.basket2 = new CandyBasket(1200 - 60, 400, 1200 - 90, 310, this.player2, this);
+
+        this.player1Score = 0;
+        this.player1ScoreText = this.add.text(100, 100, "0", {fontSize: "48px",color: "#ffffff"});
+        this.player2Score = 0;
+        this.player2ScoreText = this.add.text(1200 - 100, 100, "0", {fontSize: "48px",color: "#ffffff"});
     }
 
     update(){
@@ -258,12 +263,22 @@ export class GameScene extends Phaser.Scene {
 
     endRound(){
         this.round++;
+        
+        if(this.basket1.candies > this.basket2.candies) {
+            this.player1ScoreText.text = ++this.player1Score;
+        }
+        else if(this.basket1.candies < this.basket2.candies) {
+            this.player2ScoreText.text = ++this.player2Score;
+        }
+
+        this.basket1.Restart();
+        this.basket2.Restart();
 
         if (this.round > 4) {
             this.scene.start("MenuScene");
             return;
         }
-
+        
         // Cada ciclo dura 15s menos
         const newDuration = Math.max(0, 45000 - (15000 * (this.round-1)));
 
