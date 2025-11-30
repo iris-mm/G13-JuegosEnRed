@@ -139,8 +139,8 @@ export class GameScene extends Phaser.Scene {
 
         this.keys2 = this.input.keyboard.createCursorKeys(); //P2
 
-        this.player1 = new Player(100, 100, 0.4, 'vampiresa', this, this.keys1);
-        this.player2 = new Player(200, 100, 0.4, 'zombi', this, this.keys2);
+        this.player1 = new Player(100, 400, 0.4, 'vampiresa', this, this.keys1);
+        this.player2 = new Player(1100, 400, 0.4, 'zombi', this, this.keys2);
 
         this.entitiesController.AddEntity(this.player1);
         this.entitiesController.AddEntity(this.player2);
