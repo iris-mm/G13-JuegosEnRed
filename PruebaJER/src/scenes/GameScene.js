@@ -56,6 +56,7 @@ import { Candy } from '../game/items/Candy.js';
 import { Player } from '../game/player/playerController.js';
 import { AudioManager } from '../game/controllers/AudioManager';
 import { ThrowableItem } from '../game/items/ThrowableItem.js';
+import { CandyBasket } from '../game/controllers/CandyBasket.js';
 
 
 export class GameScene extends Phaser.Scene {
@@ -90,7 +91,7 @@ export class GameScene extends Phaser.Scene {
         this.load.spritesheet('zombi_right', zombiRight, { frameWidth: 256, frameHeight: 256 });
     }
 
-    create(){
+        create(){
         //Escenario
         const floor = this.add.tileSprite(0, 0, 1200, 800, 'floor') 
         .setOrigin(0,0) 
@@ -136,7 +137,8 @@ export class GameScene extends Phaser.Scene {
         timerText.depth = 100;
 
         this.countdown = new TimerController(this, timerText);
-        this.countdown.start();
+        this.round = 1;
+        this.startRound(45000);
 
         //Acceder a escena de Pausa al pulsar ESC
         this.input.keyboard.on('keydown-ESC', () => {
@@ -236,10 +238,35 @@ export class GameScene extends Phaser.Scene {
         this.entitiesController.AddEntity(this.item3);
         this.item4 = new ThrowableItem(0.3, 'rock', this)
         this.entitiesController.AddEntity(this.item4);
+        this.item5 = new ThrowableItem(0.3, 'rock', this)
+        this.entitiesController.AddEntity(this.item5);
+
+        //  Baskets
+        this.basket1 = new CandyBasket(60, 400, 70, 310, this.player1, this);
+        this.basket2 = new CandyBasket(1200 - 60, 400, 1200 - 90, 310, this.player2, this);
     }
 
     update(){
         this.countdown.update();
         this.entitiesController.Update();
+    }
+
+    startRound(seconds) {
+
+        this.countdown.start(seconds, () => this.endRound());
+    }
+
+    endRound(){
+        this.round++;
+
+        if (this.round > 4) {
+            this.scene.start("MenuScene");
+            return;
+        }
+
+        // Cada ciclo dura 15s menos
+        const newDuration = Math.max(0, 45000 - (15000 * (this.round-1)));
+
+        this.startRound(newDuration);
     }
 }
