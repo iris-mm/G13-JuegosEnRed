@@ -34,7 +34,7 @@ export class PauseScene extends Phaser.Scene {
         const resumeButton = new Button(this, 600, 300, 'buttonBackground', 'Reanudar', () => {
             this.scene.stop(); // Detener la escena de pausa
             this.scene.resume('GameScene'); // Reanudar la escena del juego
-        });
+        }, { fontSize: '25px' });
          
 
         //Botón volver al menú principal

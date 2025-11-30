@@ -20,11 +20,13 @@ export class Button {
         this.container.setInteractive({ useHandCursor: true })
             .on('pointerover', () => {
                 this.image.setTint(0xffff00); 
-                this.text.setColor('#ffff00'); 
+                this.text.setColor('#ffff00');
+                this.text.setScale(1.2);
             })
             .on('pointerout', () => {
                 this.image.clearTint(); 
-                this.text.setColor('#ffffffff'); 
+                this.text.setColor('#ffffffff');
+                this.text.setScale(1);
             })
             .on('pointerdown', callback);
     }
