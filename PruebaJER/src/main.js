@@ -5,6 +5,7 @@ import { PauseScene } from './scenes/PauseScene.js';
 import { CreditsScene } from './scenes/CreditsScene.js';
 import { ConfigScene } from './scenes/ConfigScene.js';
 
+
 const config = {
     type: Phaser.AUTO,
     width: 1200,
