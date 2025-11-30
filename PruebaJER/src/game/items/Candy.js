@@ -4,8 +4,7 @@ export class Candy extends Item{
     constructor(scale, sprite, scene){
         super(-64, -64, scale, sprite, scene);
 
-        this.spawnTime = Phaser.Math.Between(60, 240);
-        this.hasSpawned = false;
+        this.Reset();
     }
 
 
@@ -19,5 +18,14 @@ export class Candy extends Item{
                 this.hasSpawned = true;
             }
         }
+    }
+
+    Reset(){
+        this.MoveTo(-64, -64);
+        
+        this.spawnTime = Phaser.Math.Between(60, 240);
+        this.hasSpawned = false;
+        
+        this.ClearPlayer();
     }
 }

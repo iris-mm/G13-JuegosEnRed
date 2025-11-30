@@ -4,7 +4,7 @@ import { Candy } from "../items/Candy.js";
 
 export class Player extends Entity {
     constructor(x, y, scale, characterName, scene, cursors, grabItemKey) {
-        super(x, y, scale, `${characterName} front`, scene); //Default sprite
+        super(x, y, scale, `${characterName}_frontEst`, scene, true); //Default player al iniciar
 
         this.scene = scene;
         this.speed = 200;      
@@ -34,30 +34,37 @@ export class Player extends Entity {
     Movement(){
         this.vx = 0;
         this.vy = 0;
+        let moving = false;
 
         this.facingX = 0;
         this.facingY = 0;
 
         if (this.cursors.left.isDown){
             this.vx = -this.speed;
-            this.gameObject.setTexture(`${this.characterName} left`);
+            this.gameObject.anims.play(`${this.characterName}_left_anim`, true);
+            moving = true;
             this.facingX = -1;
         } 
         if (this.cursors.right.isDown){
             this.vx = this.speed;
-            this.gameObject.setTexture(`${this.characterName} right`);
+            this.gameObject.anims.play(`${this.characterName}_right_anim`, true);
+            moving = true;
             this.facingX = 1;
         } 
         if (this.cursors.up.isDown){
             this.vy = -this.speed;
-            this.gameObject.setTexture(`${this.characterName} back`);
+            this.gameObject.anims.play(`${this.characterName}_back_anim`, true);
+            moving = true;
             this.facingY = -1;
         } 
         if (this.cursors.down.isDown){
             this.vy = this.speed;
-            this.gameObject.setTexture(`${this.characterName} front`);
+            this.gameObject.anims.play(`${this.characterName}_front_anim`, true);
+            moving = true;
             this.facingY = 1;
+
         } 
+        if(!moving){this.gameObject.setTexture(`${this.characterName}_frontEst`)}
 
         if(this.knockOutTimer > 0){
             this.knockOutTimer--
@@ -72,6 +79,7 @@ export class Player extends Entity {
             this.vy * this.scene.game.loop.delta / 1000
         );
 
+        //Para que no se salga del mapa
         const halfWidth = this.gameObject.displayWidth / 2;
         const halfHeight = this.gameObject.displayHeight / 2;
 
