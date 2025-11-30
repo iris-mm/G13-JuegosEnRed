@@ -145,6 +145,8 @@ export class GameScene extends Phaser.Scene {
         this.entitiesController.AddEntity(this.item3);
         this.item4 = new ThrowableItem(0.3, 'rock', this)
         this.entitiesController.AddEntity(this.item4);
+        this.item5 = new ThrowableItem(0.3, 'rock', this)
+        this.entitiesController.AddEntity(this.item5);
     }
 
     update(){
