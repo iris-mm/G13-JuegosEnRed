@@ -1,12 +1,18 @@
 export class Entity{
-    constructor(x, y, scale, sprite, scene){
+    constructor(x, y, scale, sprite, scene, useSprite = false){
         this.x = x;
         this.y = y;
         this.sprite = sprite;
 
         this.scene = scene;
 
-        this.gameObject = scene.physics.add.image(x, y, sprite)
+        if(useSprite){
+            this.gameObject = scene.physics.add.sprite(x, y, sprite)
+    
+        }else{
+            this.gameObject = scene.physics.add.image(x, y, sprite)
+        }
+        
         this.gameObject.setScale(scale);
     }
 

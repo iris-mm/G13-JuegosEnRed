@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 //importar imagenes
+//JUEGO
 // @ts-ignore
 import floor from '../../assets/stone_tile.png';
 // @ts-ignore
@@ -8,23 +9,9 @@ import game_boundary from '../../assets/game_boundary.png';
 // @ts-ignore
 import leaves from '../../assets/leaves_overlay.png';
 // @ts-ignore
+
+//ITEMS
 import candySprite from '../../assets/sprites/caramelo.png';
-// @ts-ignore
-import vampiresaFront from '../../assets/sprites/vampiresa_front.png';
-// @ts-ignore
-import vampiresaback from '../../assets/sprites/vampiresa_back.png';
-// @ts-ignore
-import vampiresaLeft from '../../assets/sprites/vampiresa_left.png';
-// @ts-ignore
-import vampiresaRight from '../../assets/sprites/vampiresa_right.png';
-// @ts-ignore
-import zombiFront from '../../assets/sprites/zombi_front.png';
-// @ts-ignore
-import zombiBack from '../../assets/sprites/zombi_back.png';
-// @ts-ignore
-import zombiLeft from '../../assets/sprites/zombi_left.png';
-// @ts-ignore
-import zombiRight from '../../assets/sprites/zombi_right.png';
 // @ts-ignore
 import pumpkin1 from '../../assets/sprites/obj calabaza.png';
 // @ts-ignore
@@ -33,11 +20,36 @@ import pumpkin2 from '../../assets/sprites/obj calabaza 2.png';
 import pumpkin3 from '../../assets/sprites/obj calabaza 3.png';
 // @ts-ignore
 import rock from '../../assets/sprites/obj piedra.png';
-//Sonidos
+
+//PERSONAJES
+//Para el idle (temporal)
+// @ts-ignore
+import vampiresaFrontEst from '../../assets/sprites/vampiresa_front.png';
+// @ts-ignore
+import zombiFrontEst from '../../assets/sprites/zombi_front.png';
+//Animaciones
+// @ts-ignore
+import vampiresaFront from '../../assets/sprites/Spritesheets/SS_vampiresa_front.png';
+// @ts-ignore
+import vampiresaback from '../../assets/sprites/Spritesheets/SS_vampiresa_back.png';
+// @ts-ignore
+import vampiresaLeft from '../../assets/sprites/Spritesheets/SS_vampiresa_left.png';
+// @ts-ignore
+import vampiresaRight from '../../assets/sprites/Spritesheets/SS_vampiresa_right.png';
+// @ts-ignore
+import zombiFront from '../../assets/sprites/Spritesheets/SS_zombie_front.png';
+// @ts-ignore
+import zombiBack from '../../assets/sprites/Spritesheets/SS_zombie_back.png';
+// @ts-ignore
+import zombiLeft from '../../assets/sprites/Spritesheets/SS_zombie_left.png';
+// @ts-ignore
+import zombiRight from '../../assets/sprites/Spritesheets/SS_zombie_right.png';
+
+//SONIDOS
 // @ts-ignore
 import gameMusic from '../../assets/music_sounds/game_music.mp3';
 
-//importar clases
+//CLASES
 import { TimerController } from '../game/controllers/TimerController.js';
 import { EntitiesController } from '../game/controllers/EntitiesController.js';
 import { Candy } from '../game/items/Candy.js';
@@ -64,14 +76,18 @@ export class GameScene extends Phaser.Scene {
         this.load.image('pumpkin3', pumpkin3);
         this.load.image('rock', rock);
         //Players
-        this.load.image('vampiresa front', vampiresaFront);
-        this.load.image('vampiresa back', vampiresaback);
-        this.load.image('vampiresa left',  vampiresaLeft);
-        this.load.image('vampiresa right', vampiresaRight);
-        this.load.image('zombi front',  zombiFront);
-        this.load.image('zombi back', zombiBack);
-        this.load.image('zombi left',  zombiLeft);
-        this.load.image('zombi right', zombiRight);
+        //para el idle (temporal)
+        this.load.image('vampiresa_frontEst', vampiresaFrontEst);
+        this.load.image('zombi_frontEst', zombiFrontEst);
+        //
+        this.load.spritesheet('vampiresa_front', vampiresaFront, { frameWidth: 256, frameHeight: 256 });
+        this.load.spritesheet('vampiresa_back', vampiresaback, { frameWidth: 256, frameHeight: 256 });
+        this.load.spritesheet('vampiresa_left',  vampiresaLeft, { frameWidth: 256, frameHeight: 256 });
+        this.load.spritesheet('vampiresa_right', vampiresaRight, { frameWidth: 256, frameHeight: 256 });
+        this.load.spritesheet('zombi_front',  zombiFront, { frameWidth: 256, frameHeight: 256 });
+        this.load.spritesheet('zombi_back', zombiBack, { frameWidth: 256, frameHeight: 256 });
+        this.load.spritesheet('zombi_left',  zombiLeft, { frameWidth: 256, frameHeight: 256 });
+        this.load.spritesheet('zombi_right', zombiRight, { frameWidth: 256, frameHeight: 256 });
     }
 
     create(){
@@ -132,6 +148,60 @@ export class GameScene extends Phaser.Scene {
         this.entitiesController = new EntitiesController();
 
         //Players
+        //Animaciones
+        //Vampiresa
+        this.anims.create({
+            key: 'vampiresa_front_anim',
+            frames: this.anims.generateFrameNumbers('vampiresa_front', { start: 0, end: 3 }),
+            frameRate: 6, //Velocidad animación
+            repeat: -1 //Se repite en bucle
+        });
+        this.anims.create({
+            key: 'vampiresa_back_anim',
+            frames: this.anims.generateFrameNumbers('vampiresa_back', { start: 0, end: 3 }),
+            frameRate: 6,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'vampiresa_left_anim',
+            frames: this.anims.generateFrameNumbers('vampiresa_left', { start: 0, end: 3 }),
+            frameRate: 6,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'vampiresa_right_anim',
+            frames: this.anims.generateFrameNumbers('vampiresa_right', { start: 0, end: 3 }),
+            frameRate: 6,
+            repeat: -1
+        });
+
+        //Zombie
+        this.anims.create({
+            key: 'zombi_front_anim',
+            frames: this.anims.generateFrameNumbers('zombi_front', { start: 0, end: 3 }),
+            frameRate: 6,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'zombi_back_anim',
+            frames: this.anims.generateFrameNumbers('zombi_back', { start: 0, end: 3 }),
+            frameRate: 6,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'zombi_left_anim',
+            frames: this.anims.generateFrameNumbers('zombi_left', { start: 0, end: 3 }),
+            frameRate: 6,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'zombi_right_anim',
+            frames: this.anims.generateFrameNumbers('zombi_right', { start: 0, end: 3 }),
+            frameRate: 6,
+            repeat: -1
+        });
+
+        //Controles
         this.keys1 = this.input.keyboard.addKeys({ //P1
             up: 'W',
             down: 'S',
@@ -146,10 +216,9 @@ export class GameScene extends Phaser.Scene {
             right: 'L'
         });
 
-
+        //Instanciar jugadores
         this.player1 = new Player(100, 400, 0.4, 'zombi', this, this.keys1, 'E');
         this.player2 = new Player(1100, 400, 0.4, 'vampiresa', this, this.keys2, 'O');
-
 
         this.entitiesController.AddEntity(this.player1);
         this.entitiesController.AddEntity(this.player2);
