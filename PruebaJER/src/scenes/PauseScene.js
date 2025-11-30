@@ -43,5 +43,10 @@ export class PauseScene extends Phaser.Scene {
             this.scene.start('MenuScene'); // Ir al menú principal
         });
         
+         //Botón de "Ajustes"
+        const configButton = new Button(this, 600, 500, 'buttonBackground', 'Ajustes', () => {
+            this.scene.launch('ConfigScene', { from: 'PauseScene' }); // Abrir la escena de configuración
+            this.scene.pause(); // Pausar la escena de pausa
+        });
     }
 }
