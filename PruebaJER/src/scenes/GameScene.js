@@ -263,7 +263,7 @@ export class GameScene extends Phaser.Scene {
 
     endRound(){
         this.round++;
-        
+
         if(this.basket1.candies > this.basket2.candies) {
             this.player1ScoreText.text = ++this.player1Score;
         }
@@ -274,14 +274,53 @@ export class GameScene extends Phaser.Scene {
         this.basket1.Restart();
         this.basket2.Restart();
 
+        // Si es la última ronda, mostrar GameOver
         if (this.round > 4) {
-            this.scene.start("MenuScene");
+            const msgGameOver = this.add.text(600, 350, `FIN DE LA PARTIDA`, {
+                fontSize: "48px",
+                fontStyle: "bold",
+                color: "#ff0000ff",
+                backgroundColor: "#000000a7",
+            }).setOrigin(0.5);
+
+            let winnerText = "";
+            if (this.player1Score > this.player2Score) {
+                winnerText = "¡Gana Jugador 1!";
+            } else if (this.player2Score > this.player1Score) {
+                winnerText = "¡Gana Jugador 2!";
+            } else {
+                winnerText = "¡Empate!";
+            }
+
+            const msgWinner = this.add.text(600, 450, winnerText, {
+                fontSize: "36px",
+                fontStyle: "bold",
+                color: "#ffffff",
+                backgroundColor: "#000000a7",
+            }).setOrigin(0.5);
+
+            this.time.delayedCall(3000, () => {
+                msgGameOver.destroy();
+                msgWinner.destroy();
+                this.scene.start("MenuScene");
+            });
+
             return;
         }
-        
-        // Cada ciclo dura 15s menos
-        const newDuration = Math.max(0, 45000 - (15000 * (this.round-1)));
 
-        this.startRound(newDuration);
+        const msgRound = this.add.text(600, 400, `Ronda ${this.round - 1} terminada`, {
+            fontSize: "48px",
+            fontStyle: "bold",
+            color: "#ffffff",
+            backgroundColor: "#000000a7",
+        }).setOrigin(0.5);
+
+        this.time.delayedCall(2000, () => {
+            msgRound.destroy();
+            const newDuration = Math.max(0, 45000 - (15000 * (this.round - 1)));
+            this.startRound(newDuration);
+        });
     }
+
+
 }
