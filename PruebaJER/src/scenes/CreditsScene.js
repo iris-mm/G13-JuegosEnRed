@@ -8,7 +8,10 @@ import logoImg from '../../assets/logo.png';
 import buttonBackground from '../../assets/boton piedra.png';
 //importar clases Button
 import { Button } from '../entities/Button.js';
-
+//importar para los sonidos
+import { AudioManager } from '../game/controllers/AudioManager.js';
+// @ts-ignore
+import creditsMusic from '../../assets/music_sounds/credits_music.mp3';
 
 export class CreditsScene extends Phaser.Scene {
     constructor() {
@@ -19,9 +22,19 @@ export class CreditsScene extends Phaser.Scene {
         this.load.image('logoImg', logoImg);
         this.load.image('menuCred', menuCred);
         this.load.image('buttonBackground', buttonBackground);
+        this.load.audio('credits_music', creditsMusic);
     }
 
     create(){
+        //Volumen global
+        this.sound.volume = AudioManager.getVolume();
+        this.sound.stopAll(); //para que no se superpongan las canciones
+        this.music = this.sound.add('credits_music', {
+            volume: AudioManager.getVolume(),
+            loop: true
+        });
+        this.music.play();
+
         this.cameras.main.setBackgroundColor('#000000');
         //Logo inicial
         const logoImg=this.add.image( this.cameras.main.width / 2,

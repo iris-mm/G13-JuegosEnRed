@@ -2,13 +2,18 @@ import Phaser from 'phaser';
 
 //importar imagenes
 // @ts-ignore
+//SCENE
 import floor from '../../assets/stone_tile.png';
 // @ts-ignore
 import game_boundary from '../../assets/game_boundary.png';
 // @ts-ignore
 import leaves from '../../assets/leaves_overlay.png';
+
+//ITEMS
 // @ts-ignore
 import candySprite from '../../assets/sprites/caramelo.png';
+
+//CHARACTERS
 // @ts-ignore
 import vampiresaFront from '../../assets/sprites/vampiresa_front.png';
 // @ts-ignore
@@ -26,11 +31,18 @@ import zombiLeft from '../../assets/sprites/zombi_left.png';
 // @ts-ignore
 import zombiRight from '../../assets/sprites/zombi_right.png';
 
+//SOUNDS
+// @ts-ignore
+import gameMusic from '../../assets/music_sounds/game_music.mp3';
+// @ts-ignore
+import timerAlert from '../../assets/music_sounds/timer_alert.mp3';
+
 //importar clases
 import { TimerController } from '../game/controllers/TimerController.js';
 import { EntitiesController } from '../game/controllers/EntitiesController.js';
 import { Candy } from '../game/items/Candy.js';
 import { Player } from '../game/player/playerController.js';
+import { AudioManager } from '../game/controllers/AudioManager.js';
 
 export class GameScene extends Phaser.Scene {
     constructor() {
@@ -42,6 +54,9 @@ export class GameScene extends Phaser.Scene {
         this.load.image('floor', floor);
         this.load.image('game_boundary', game_boundary);
         this.load.image('leaves', leaves);
+        //sounds
+        this.load.audio('game_music', gameMusic);
+        this.load.audio('timer_alert', timerAlert);
         //Items
         this.load.image('candy', candySprite);
         //Players
@@ -70,6 +85,15 @@ export class GameScene extends Phaser.Scene {
         const leaves = this.add.image(600, 400, 'leaves')
         .setScale(3)
         .setAlpha(0.75);
+
+        //Volumen global
+        this.sound.volume = AudioManager.getVolume();
+        this.sound.stopAll(); //para que no se superpongan las canciones
+        this.music = this.sound.add('game_music', {
+            volume: AudioManager.getVolume(),
+            loop: true
+        });
+        this.music.play();
 
         //Bases de jugadores. Cuando se colisione con ellas + tengan caramelo, se hará callback!
             // Base azul izquierda - PLAYER 1

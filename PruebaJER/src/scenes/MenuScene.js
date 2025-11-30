@@ -8,6 +8,11 @@ import buttonBackground from '../../assets/boton piedra.png';
 
 //importar clases
 import { Button } from '../entities/Button.js';
+import { AudioManager } from '../game/controllers/AudioManager';
+
+//importar sonidos
+// @ts-ignore
+import mainMusic from '../../assets/music_sounds/main_music.mp3';
 
 export class MenuScene extends Phaser.Scene {
     constructor() {
@@ -17,6 +22,7 @@ export class MenuScene extends Phaser.Scene {
     preload() {
         this.load.image('menuBackground', menuBackground); 
         this.load.image('buttonBackground', buttonBackground);
+        this.load.audio('main_music', mainMusic);
     }
 
     create() {
@@ -25,6 +31,15 @@ export class MenuScene extends Phaser.Scene {
         .setOrigin(0.5);
         bg.displayWidth = 1200;
         bg.displayHeight = 800;
+
+        //Volumen global
+        this.sound.volume = AudioManager.getVolume();
+        this.sound.stopAll(); //para que no se superpongan las canciones
+        this.music = this.sound.add('main_music', {
+            volume: AudioManager.getVolume(),
+            loop: true
+        });
+        this.music.play();
 
         // botones usando la clase Button
         const playButton = new Button(

@@ -24,8 +24,21 @@ module.exports = {
       //manejar imágenes
       { test: /\.(png|jpe?g|gif|svg)$/i, type: 'asset/resource' },
       //manejar fuentes
-      { test: /\.(woff2?|ttf|otf|eot)$/i, type: 'asset/resource' }
-    ]
+      { test: /\.(woff2?|ttf|otf|eot)$/i, type: 'asset/resource' },
+      //manejar audio
+      { test: /\.(mp3|wav|ogg)$/i,
+        use: [
+          {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: 'assets/music_sounds/',
+            publicPath: 'assets/music_sounds/'
+            } 
+          }
+        ]
+      }
+    ],
   },
 
   plugins: [

@@ -6,7 +6,9 @@ import menuConfig from '../../assets/menuAjustes.jpg';
 import buttonBackground from '../../assets/boton piedra.png';
 //importar clases Button
 import { Button } from '../entities/Button.js';
-
+import { AudioManager } from '../game/controllers/AudioManager';
+// @ts-ignore
+import configMusic from '../../assets/music_sounds/config_music.mp3';
 
 export class ConfigScene extends Phaser.Scene {
     constructor() {
@@ -16,6 +18,7 @@ export class ConfigScene extends Phaser.Scene {
     preload(){
         this.load.image('menuConfig', menuConfig);
         this.load.image('buttonBackground', buttonBackground);
+        this.load.audio('config_music', configMusic);
     }
 
     init(data){
@@ -28,6 +31,15 @@ export class ConfigScene extends Phaser.Scene {
         .setOrigin(0.5);
         bg.displayWidth = 1200;
         bg.displayHeight = 800;
+
+        //Volumen global
+        this.sound.volume = AudioManager.getVolume();
+        this.sound.stopAll(); //para que no se superpongan las canciones
+        this.music = this.sound.add('config_music', {
+            volume: AudioManager.getVolume(),
+            loop: true
+        });
+        this.music.play();
 
         //Botón de "Volver" según desde dónde se abrió la escena
         if(this.openedFrom === 'MenuScene'){
@@ -60,7 +72,8 @@ export class ConfigScene extends Phaser.Scene {
         //Barra base
         const volumeBar = this.add.rectangle(barX, barY, barWidth, barHeight, 0x888888);
         //Volumen inicial
-        let currentVolume = this.sound.volume;
+        let currentVolume = AudioManager.getVolume();
+        this.sound.volume = currentVolume;
         //Barra de relleno
         const volumeIndicator = this.add.rectangle(barX - barWidth / 2 + (currentVolume * barWidth) / 2, barY, currentVolume * barWidth, barHeight,0x222222);
         //Hacer barra interactiva
@@ -80,6 +93,7 @@ export class ConfigScene extends Phaser.Scene {
             handle.x = dragX;
             //Actualizar volumen basado en la posición del handle
             currentVolume = (handle.x - minX) / barWidth;
+            AudioManager.setVolume(currentVolume);
             this.sound.setVolume(currentVolume);
             //Actualizar la barra de volumen
             volumeIndicator.width = currentVolume * barWidth;
@@ -91,6 +105,7 @@ export class ConfigScene extends Phaser.Scene {
             const localX = pointer.x - (barX - barWidth / 2);
             //Actualizar volumen basado en la posición del click
             currentVolume = Phaser.Math.Clamp(localX / barWidth, 0, 1);
+            AudioManager.setVolume(currentVolume);
             this.sound.setVolume(currentVolume);
             //Actualizar la posición del handle y la barra de volumen
             handle.x = barX - barWidth / 2 + currentVolume * barWidth;
