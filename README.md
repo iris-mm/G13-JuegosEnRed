@@ -5,8 +5,8 @@ Juego multijugador 1 vs 1 con temática de Halloween. Ambos jugadores se enfrent
 ## Controles
 El juego está diseñado para que puedan jugar 2 jugadores en local, con el mismo teclado
 * Jugador izquierda: usará W A S D para moverse y E para recoger los caramelos y los objetos.
-* Jugador derecha: usará I J K L para moverse y O para recoger los caramelos y los objetos.
-Para lanzar los objetos se debe presionar la tecla para recoger y estar andando hacia la dirección donde se quiera tirar el objeto, si no, sólo sotará dicho objeto.
+* Jugador derecha: usará I J K L para moverse y O para recoger los caramelos y los objetos.       
+Para lanzar los objetos se debe presionar la tecla para recoger y estar andando hacia la dirección donde se quiera tirar el objeto, si no, sólo soltará dicho objeto.
 
 ## Integrantes del equipo de desarrollo  
 - Marta de Miguel Tapia:
