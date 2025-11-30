@@ -2,6 +2,9 @@
 ## Descripción de la temática del juego
 Juego multijugador 1 vs 1 con temática de Halloween. Ambos jugadores se enfrentan para ver quién consigue la mayor cantidad de caramelos en cada ronda. Deben recoger los caramelos del suelo y llevarlos a su base. Se pueden tirar objetos del mapa y robarse entre ellos. 
 
+## Novedades
+Juego implementado en modo local.      
+
 ## Controles
 El juego está diseñado para que puedan jugar 2 jugadores en local, con el mismo teclado
 * Jugador izquierda: usará W A S D para moverse y E para recoger los caramelos y los objetos.
