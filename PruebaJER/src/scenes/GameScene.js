@@ -177,7 +177,7 @@ export class GameScene extends Phaser.Scene {
         this.entitiesController.Update();
     }
 
-        startRound(seconds) {
+    startRound(seconds) {
 
         this.countdown.start(seconds, () => this.endRound());
     }
