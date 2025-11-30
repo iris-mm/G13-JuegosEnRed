@@ -24,4 +24,9 @@ Para lanzar los objetos se debe presionar la tecla para recoger y estar andando 
 - Iris Muñoz Montero:
   i.munoz.2023@alumnos.urjc.es
   iris-mm
+  
+## Licencia
+Este proyecto es una práctica académica y está distribuido para fines educativos. 
+No se permite su uso comercial.
+
 
