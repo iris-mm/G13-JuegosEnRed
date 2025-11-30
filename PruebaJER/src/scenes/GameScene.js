@@ -139,11 +139,16 @@ export class GameScene extends Phaser.Scene {
             right: 'D'
         });
 
-        this.keys2 = this.input.keyboard.createCursorKeys(); //P2
+        this.keys2 = this.input.keyboard.addKeys({ //P2
+            up: 'I',
+            down: 'K',
+            left: 'J',
+            right: 'L'
+        });
 
 
-        this.player1 = new Player(100, 400, 0.4, 'vampiresa', this, this.keys1, 'E');
-        this.player2 = new Player(1100, 400, 0.4, 'zombi', this, this.keys2, 'ENTER');
+        this.player1 = new Player(100, 400, 0.4, 'zombi', this, this.keys1, 'E');
+        this.player2 = new Player(1100, 400, 0.4, 'vampiresa', this, this.keys2, 'O');
 
 
         this.entitiesController.AddEntity(this.player1);
