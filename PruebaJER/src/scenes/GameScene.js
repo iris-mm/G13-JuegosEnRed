@@ -120,7 +120,8 @@ export class GameScene extends Phaser.Scene {
         timerText.depth = 100;
 
         this.countdown = new TimerController(this, timerText);
-        this.countdown.start();
+        this.round = 1;
+        this.startRound(45000);
 
         //Acceder a escena de Pausa al pulsar ESC
         this.input.keyboard.on('keydown-ESC', () => {
@@ -174,5 +175,53 @@ export class GameScene extends Phaser.Scene {
     update(){
         this.countdown.update();
         this.entitiesController.Update();
+    }
+
+        startRound(seconds) {
+
+        this.countdown.start(seconds, () => this.endRound());
+    }
+
+    endRound(){
+        this.round++;
+
+        if (this.round > 4) {
+            this.scene.start("MenuScene");
+            return;
+        }
+
+        // Cada ciclo dura 15s menos
+        const newDuration = Math.max(0, 45000 - (15000 * (this.round-1)));
+
+        this.startRound(newDuration);
+    }
+
+    addPoint(ID_player){
+        
+        /*switch (ID_player) {
+        case 1:
+            if(player1 tiene caramelo){
+                this.player1_score++;
+                // Detiene cuenta actual
+                this.countdown.stop();
+
+                // Pasar al siguiente ciclo
+                this.endRound();
+            }
+            
+            break;
+
+        case 2:
+            if(player2 tiene caramelo){
+                this.player2_score++;
+                // Detiene cuenta actual
+                this.countdown.stop();
+
+                // Pasar al siguiente ciclo
+                this.endRound();
+            }
+            break;
+        } Ejemplo de cómo funcionaría lo de añadir puntos*/
+
     }
 }

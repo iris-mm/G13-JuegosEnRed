@@ -8,7 +8,7 @@ export class TimerController{
         this.maxCycles = 3;     // máximo de repeticiones
     }
 
-    start(duration = 45000){
+    start(duration, callback){
         //Si ya existe, destruir el actual
         this.stop();
 
@@ -18,11 +18,7 @@ export class TimerController{
         {delay:duration, 
         loop: false,
         callback: () => {
-            this.cycles++;
-            if (this.cycles >= this.maxCycles){return;}
-            // Timer terminado: reiniciar con 10 segundos menos
-            const nextDuration = Math.max(0, this.duration - 10000);
-            this.start(nextDuration);
+            callback;
         }});
     }
 
