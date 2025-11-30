@@ -11,7 +11,7 @@ import leaves from '../../assets/leaves_overlay.png';
 import candySprite from '../../assets/sprites/caramelo.png';
 
 //importar clases
-import { TimerController } from '../timer/TimerController.js';
+import { TimerController } from '../game/controllers/TimerController.js';
 import { EntitiesController } from '../game/controllers/EntitiesController.js';
 import { Candy } from '../game/items/Candy.js';
 

@@ -19,6 +19,9 @@ export class PauseScene extends Phaser.Scene {
     }
 
     create(){
+        // Fondo gris
+        const overlay = this.add.rectangle(600, 400, 1200, 800, 0x000000, 0.5);
+
         // Fondo centrado
         const bg = this.add.image(600, 400, 'menuPause')
         .setOrigin(0.5);
