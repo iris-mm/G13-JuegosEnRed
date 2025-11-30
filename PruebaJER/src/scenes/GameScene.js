@@ -2,18 +2,13 @@ import Phaser from 'phaser';
 
 //importar imagenes
 // @ts-ignore
-//SCENE
 import floor from '../../assets/stone_tile.png';
 // @ts-ignore
 import game_boundary from '../../assets/game_boundary.png';
 // @ts-ignore
 import leaves from '../../assets/leaves_overlay.png';
-
-//ITEMS
 // @ts-ignore
 import candySprite from '../../assets/sprites/caramelo.png';
-
-//CHARACTERS
 // @ts-ignore
 import vampiresaFront from '../../assets/sprites/vampiresa_front.png';
 // @ts-ignore
@@ -30,19 +25,21 @@ import zombiBack from '../../assets/sprites/zombi_back.png';
 import zombiLeft from '../../assets/sprites/zombi_left.png';
 // @ts-ignore
 import zombiRight from '../../assets/sprites/zombi_right.png';
-
-//SOUNDS
 // @ts-ignore
-import gameMusic from '../../assets/music_sounds/game_music.mp3';
+import pumpkin1 from '../../assets/sprites/obj calabaza.png';
 // @ts-ignore
-import timerAlert from '../../assets/music_sounds/timer_alert.mp3';
+import pumpkin2 from '../../assets/sprites/obj calabaza 2.png';
+// @ts-ignore
+import pumpkin3 from '../../assets/sprites/obj calabaza 3.png';
+// @ts-ignore
+import rock from '../../assets/sprites/obj piedra.png';
 
 //importar clases
 import { TimerController } from '../game/controllers/TimerController.js';
 import { EntitiesController } from '../game/controllers/EntitiesController.js';
 import { Candy } from '../game/items/Candy.js';
 import { Player } from '../game/player/playerController.js';
-import { AudioManager } from '../game/controllers/AudioManager.js';
+import { ThrowableItem } from '../game/items/ThrowableItem.js';
 
 export class GameScene extends Phaser.Scene {
     constructor() {
@@ -54,11 +51,12 @@ export class GameScene extends Phaser.Scene {
         this.load.image('floor', floor);
         this.load.image('game_boundary', game_boundary);
         this.load.image('leaves', leaves);
-        //sounds
-        this.load.audio('game_music', gameMusic);
-        this.load.audio('timer_alert', timerAlert);
         //Items
         this.load.image('candy', candySprite);
+        this.load.image('pumpkin1', pumpkin1);
+        this.load.image('pumpkin2', pumpkin2);
+        this.load.image('pumpkin3', pumpkin3);
+        this.load.image('rock', rock);
         //Players
         this.load.image('vampiresa front', vampiresaFront);
         this.load.image('vampiresa back', vampiresaback);
@@ -86,15 +84,6 @@ export class GameScene extends Phaser.Scene {
         .setScale(3)
         .setAlpha(0.75);
 
-        //Volumen global
-        this.sound.volume = AudioManager.getVolume();
-        this.sound.stopAll(); //para que no se superpongan las canciones
-        this.music = this.sound.add('game_music', {
-            volume: AudioManager.getVolume(),
-            loop: true
-        });
-        this.music.play();
-
         //Bases de jugadores. Cuando se colisione con ellas + tengan caramelo, se hará callback!
             // Base azul izquierda - PLAYER 1
             // Base roja derecha - PLAYER 2
@@ -111,8 +100,10 @@ export class GameScene extends Phaser.Scene {
         // this.physics.add.overlap(this.player2, redBase, addPoint);
     
         //Temporizador
-        const timerText = this.add.text(600, 100, "45", {fontSize: "48px",color: "#ffffff"})
+        let timerText = this.add.text(600, 100, "45", {fontSize: "48px",color: "#ffffff"})
         .setOrigin(0.5, 0.5);
+        timerText.depth = 100;
+
         this.countdown = new TimerController(this, timerText);
         this.countdown.start();
 
@@ -125,10 +116,6 @@ export class GameScene extends Phaser.Scene {
         //  Controlador de entidades, lista de entidades que actualiza en 'update'
         this.entitiesController = new EntitiesController();
 
-        //  Candy
-        this.candy = new Candy(0.2, 'candy', this);
-        this.entitiesController.AddEntity(this.candy);
-
         //Players
         this.keys1 = this.input.keyboard.addKeys({ //P1
             up: 'W',
@@ -139,12 +126,25 @@ export class GameScene extends Phaser.Scene {
 
         this.keys2 = this.input.keyboard.createCursorKeys(); //P2
 
-        this.player1 = new Player(100, 100, 0.4, 'vampiresa', this, this.keys1);
-        this.player2 = new Player(200, 100, 0.4, 'zombi', this, this.keys2);
+        this.player1 = new Player(200, 400, 0.4, 'vampiresa', this, this.keys1, 'E');
+        this.player2 = new Player(1000, 400, 0.4, 'zombi', this, this.keys2, 'ENTER');
 
         this.entitiesController.AddEntity(this.player1);
         this.entitiesController.AddEntity(this.player2);
+        
+        //  Candy
+        this.candy = new Candy(0.2, 'candy', this);
+        this.entitiesController.AddEntity(this.candy);
 
+        //  Throwable Items
+        this.item1 = new ThrowableItem(0.3, 'pumpkin1', this)
+        this.entitiesController.AddEntity(this.item1);
+        this.item2 = new ThrowableItem(0.3, 'pumpkin2', this)
+        this.entitiesController.AddEntity(this.item2);
+        this.item3 = new ThrowableItem(0.3, 'pumpkin3', this)
+        this.entitiesController.AddEntity(this.item3);
+        this.item4 = new ThrowableItem(0.3, 'rock', this)
+        this.entitiesController.AddEntity(this.item4);
     }
 
     update(){
