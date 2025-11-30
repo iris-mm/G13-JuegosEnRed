@@ -5,7 +5,7 @@ export class Button {
         this.style = {
             fontFamily: 'ButtonsFont', 
             fontSize: '29px',            
-            color: '#ffffffff',
+            color: '#ffffff',
             ...style
         };
 
