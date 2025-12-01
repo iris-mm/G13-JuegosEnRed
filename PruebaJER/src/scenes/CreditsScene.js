@@ -12,6 +12,8 @@ import { Button } from '../entities/Button.js';
 import { AudioManager } from '../game/controllers/AudioManager.js';
 // @ts-ignore
 import creditsMusic from '../../assets/music_sounds/credits_music.mp3';
+// @ts-ignore
+import buttonSound from '../../assets/music_sounds/button_sound.mp3';
 
 export class CreditsScene extends Phaser.Scene {
     constructor() {
@@ -23,6 +25,7 @@ export class CreditsScene extends Phaser.Scene {
         this.load.image('menuCred', menuCred);
         this.load.image('buttonBackground', buttonBackground);
         this.load.audio('credits_music', creditsMusic);
+        this.load.audio('button_sound', buttonSound);
     }
 
     create(){
@@ -70,6 +73,7 @@ export class CreditsScene extends Phaser.Scene {
         bg.displayHeight = 800;
         //Botón volver al menú principal
         const menuButton = new Button(this, 600, 600, 'buttonBackground', 'Menú', () => {
+            AudioManager.playButtonSound(this);
             this.scene.start('MenuScene'); // Ir al menú principal
         });
 

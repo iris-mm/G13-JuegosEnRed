@@ -11,6 +11,8 @@ import { AudioManager } from '../game/controllers/AudioManager';
 import configMusic from '../../assets/music_sounds/config_music.mp3';
 // @ts-ignore
 import gameMusic from '../../assets/music_sounds/game_music.mp3';
+// @ts-ignore
+import buttonSound from '../../assets/music_sounds/button_sound.mp3';
 
 export class ConfigScene extends Phaser.Scene {
     constructor() {
@@ -22,6 +24,7 @@ export class ConfigScene extends Phaser.Scene {
         this.load.image('buttonBackground', buttonBackground);
         this.load.audio('config_music', configMusic);
         this.load.audio('game_music', gameMusic);
+        this.load.audio('button_sound', buttonSound);
     }
 
     init(data){
@@ -48,6 +51,7 @@ export class ConfigScene extends Phaser.Scene {
         if(this.openedFrom === 'MenuScene'){
             //Botón volver al menú principal
             const menuButton = new Button(this, 600, 500, 'buttonBackground', 'Menú', () => {
+                AudioManager.playButtonSound(this);
                 this.scene.stop(); // Detener la escena de configuración
                 this.scene.stop('PauseScene'); // Asegurarse de detener la escena de pausa si estaba abierta
                 this.scene.start('MenuScene'); // Ir al menú principal
@@ -55,6 +59,7 @@ export class ConfigScene extends Phaser.Scene {
         }else if(this.openedFrom === 'PauseScene'){
             //Botón volver al menú de pausa
             const pauseButton = new Button(this, 600, 500, 'buttonBackground', 'Volver', () => {
+                AudioManager.playButtonSound(this);
                 this.scene.stop(); // Detener la escena de configuración
                 this.sound.stopAll();
                 this.scene.resume('PauseScene'); // Volver a la escena de pausa

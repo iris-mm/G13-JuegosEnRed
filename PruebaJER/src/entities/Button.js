@@ -1,3 +1,5 @@
+import { AudioManager } from "../game/controllers/AudioManager";
+
 export class Button {
     constructor(scene, x, y, texture, text, callback, style = {}) {
         this.scene = scene;
@@ -28,7 +30,10 @@ export class Button {
                 this.text.setColor('#ffffffff');
                 this.text.setScale(1);
             })
-            .on('pointerdown', callback);
+            .on('pointerdown', () => {
+            AudioManager.playButtonSound(this.scene);
+            callback();
+            });
     }
 
     setText(newText) {

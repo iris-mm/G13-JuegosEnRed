@@ -5,6 +5,9 @@ export const AudioManager = {
     },
     getVolume() {
         return this.volume;
+    },
+    playButtonSound(scene) {
+        scene.sound.play("button_sound", { volume: this.volume });
     }
 };
 
