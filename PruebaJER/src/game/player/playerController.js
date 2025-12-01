@@ -93,6 +93,7 @@ export class Player extends Entity {
         if(this.knockOutTimer > 0){
             this.hasUpdatedItemInteraction = false
             this.hasInteractedWithItems = false
+            return;
         }
 
         if(!this.hasUpdatedItemInteraction){
@@ -119,7 +120,6 @@ export class Player extends Entity {
             if(this.currentItemGrabbing instanceof ThrowableItem){
                 this.currentItemGrabbing.Throw(this.facingX, this.facingY);
                 this.currentItemGrabbing = null;
-                this.hasCandy = false;
             }
             return;
         }
