@@ -17,6 +17,8 @@ export class ThrowableItem extends Item{
     }
 
     Throw(xDir, yDir){
+        if(this.playerGrabbing == null) return;
+
         const throwForce = 30;
         this.throwSpeedX = throwForce * (xDir > 0 ? 1 : xDir == 0 ? 0 : -1);
         this.throwSpeedY = throwForce * (yDir > 0 ? 1 : yDir == 0 ? 0 : -1);

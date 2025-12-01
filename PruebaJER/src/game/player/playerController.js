@@ -90,10 +90,15 @@ export class Player extends Entity {
     }
 
     ItemInputs(){
+        if(this.knockOutTimer > 0){
+            this.hasUpdatedItemInteraction = false
+            this.hasInteractedWithItems = false
+        }
+
         if(!this.hasUpdatedItemInteraction){
             if(this.grabItemInputOn){
-                this.hasInteractedWithItems=true;
-                this.hasUpdatedItemInteraction=true;
+                this.hasInteractedWithItems = true;
+                this.hasUpdatedItemInteraction = true;
             }
         }else this.hasInteractedWithItems = false;
 
@@ -119,8 +124,8 @@ export class Player extends Entity {
             return;
         }
 
-        this.currentItemGrabbing = item;
         item.GrabItem(this);
+        this.currentItemGrabbing = item;
 
         this.itemInteractionCooldown = 3;
         this.hasCandy = this.currentItemGrabbing instanceof Candy;
@@ -129,7 +134,7 @@ export class Player extends Entity {
     KnockOut(){
         if(this.knockOutTimer > 0) return;
 
-        this.knockOutTimer = 30;
+        this.knockOutTimer = 100;
 
         if(this.currentItemGrabbing != null){
             this.currentItemGrabbing.MoveTo(this.x, this.y)
