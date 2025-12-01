@@ -17,7 +17,7 @@ export class TimerController{
         this.duration = duration;
         this.alertPlayed = false;
         this.timerEvent = this.scene.time.addEvent(
-        {delay:duration, 
+        {delay:duration,
         loop: false,
         callback: () => {
             callback();
@@ -34,7 +34,7 @@ export class TimerController{
     update(){
         //Si no existe, volver
         if (!this.timerEvent || this.duration <= 0){
-            return
+            return;
         }
 
         const elapsed = this.timerEvent.getElapsed();

@@ -243,6 +243,11 @@ export class GameScene extends Phaser.Scene {
         //  Baskets
         this.basket1 = new CandyBasket(60, 400, 70, 310, this.player1, this);
         this.basket2 = new CandyBasket(1200 - 60, 400, 1200 - 90, 310, this.player2, this);
+
+        this.player1Score = 0;
+        this.player1ScoreText = this.add.text(100, 100, "0", {fontSize: "48px",color: "#ffffff"});
+        this.player2Score = 0;
+        this.player2ScoreText = this.add.text(1200 - 100, 100, "0", {fontSize: "48px",color: "#ffffff"});
     }
 
     update(){
@@ -258,14 +263,63 @@ export class GameScene extends Phaser.Scene {
     endRound(){
         this.round++;
 
+        if(this.basket1.candies > this.basket2.candies) {
+            this.player1ScoreText.text = ++this.player1Score;
+        }
+        else if(this.basket1.candies < this.basket2.candies) {
+            this.player2ScoreText.text = ++this.player2Score;
+        }
+
+        this.basket1.Restart();
+        this.basket2.Restart();
+
+        // Si es la última ronda, mostrar GameOver
         if (this.round > 4) {
-            this.scene.start("MenuScene");
+            const msgGameOver = this.add.text(600, 350, `FIN DE LA PARTIDA`, {
+                fontSize: "48px",
+                fontStyle: "bold",
+                color: "#ff0000ff",
+                backgroundColor: "#000000a7",
+            }).setOrigin(0.5);
+
+            let winnerText = "";
+            if (this.player1Score > this.player2Score) {
+                winnerText = "¡Gana Jugador 1!";
+            } else if (this.player2Score > this.player1Score) {
+                winnerText = "¡Gana Jugador 2!";
+            } else {
+                winnerText = "¡Empate!";
+            }
+
+            const msgWinner = this.add.text(600, 450, winnerText, {
+                fontSize: "36px",
+                fontStyle: "bold",
+                color: "#ffffff",
+                backgroundColor: "#000000a7",
+            }).setOrigin(0.5);
+
+            this.time.delayedCall(3000, () => {
+                msgGameOver.destroy();
+                msgWinner.destroy();
+                this.scene.start("MenuScene");
+            });
+
             return;
         }
 
-        // Cada ciclo dura 15s menos
-        const newDuration = Math.max(0, 45000 - (15000 * (this.round-1)));
+        const msgRound = this.add.text(600, 400, `Ronda ${this.round - 1} terminada`, {
+            fontSize: "48px",
+            fontStyle: "bold",
+            color: "#ffffff",
+            backgroundColor: "#000000a7",
+        }).setOrigin(0.5);
 
-        this.startRound(newDuration);
+        this.time.delayedCall(2000, () => {
+            msgRound.destroy();
+            const newDuration = Math.max(0, 45000 - (15000 * (this.round - 1)));
+            this.startRound(newDuration);
+        });
     }
+
+
 }

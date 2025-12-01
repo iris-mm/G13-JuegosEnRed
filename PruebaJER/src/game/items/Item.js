@@ -12,7 +12,9 @@ export class Item extends Entity{
 
     GrabItem(player){
         if(player == null) return;
+
         if(this.playerGrabbing != null) return;
+        if(player.currentItemGrabbing != null) return;
 
         this.playerGrabbing = player;
     }
@@ -22,7 +24,7 @@ export class Item extends Entity{
     }
 
     Update(){
-        if(this.playerGrabbing){
+        if(this.playerGrabbing != null){
             this.MoveTo(this.playerGrabbing.x, this.playerGrabbing.y - 60)
         }
     }

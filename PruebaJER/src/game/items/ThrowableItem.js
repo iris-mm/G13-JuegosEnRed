@@ -4,8 +4,8 @@ export class ThrowableItem extends Item{
     constructor(scale, sprite, scene){
         super(-128, -128, scale, sprite, scene);
 
-        scene.physics.add.overlap(scene.player1.gameObject, this.gameObject, (player) => { if(this.throwOwner != null && this.throwOwner != scene.player1) scene.player1.KnockOut(); } );
-        scene.physics.add.overlap(scene.player2.gameObject, this.gameObject, (player) => { if(this.throwOwner != null && this.throwOwner != scene.player2) scene.player2.KnockOut(); } );
+        scene.physics.add.overlap(scene.player1.gameObject, this.gameObject, () => { if(this.throwOwner != null && this.throwOwner != scene.player1) scene.player1.KnockOut(); } );
+        scene.physics.add.overlap(scene.player2.gameObject, this.gameObject, () => { if(this.throwOwner != null && this.throwOwner != scene.player2) scene.player2.KnockOut(); } );
 
         this.MoveTo(Phaser.Math.Between(256, 1200 - 256), Phaser.Math.Between(128, 800 - 128));
 
@@ -17,7 +17,7 @@ export class ThrowableItem extends Item{
     }
 
     Throw(xDir, yDir){
-        console.log("thrown")
+        if(this.playerGrabbing == null) return;
 
         const throwForce = 30;
         this.throwSpeedX = throwForce * (xDir > 0 ? 1 : xDir == 0 ? 0 : -1);
@@ -32,7 +32,6 @@ export class ThrowableItem extends Item{
 
     Update(){
         super.Update();
-
         this.ThrowMovement();
     }
 
@@ -48,5 +47,14 @@ export class ThrowableItem extends Item{
 
         const resistance = 0.9;
         this.Move(this.throwSpeedX *= resistance, this.throwSpeedY *= resistance);
+
+        if(this.x < 50 || this.x > 1200 - 50) {
+            this.throwSpeedX *= -1;
+            this.Move(5 * Math.sign(this.throwSpeedX), 0)
+        }
+        if(this.y < 50 || this.y > 800 - 50) {
+            this.throwSpeedY *= -1;
+            this.Move(0, 5 * Math.sign(this.throwSpeedY))
+        }
     }
 }
