@@ -15,7 +15,7 @@ export class Item extends Entity{
 
         if(this.playerGrabbing != null) return;
         if(player.currentItemGrabbing != null) return;
-
+        
         this.playerGrabbing = player;
     }
 

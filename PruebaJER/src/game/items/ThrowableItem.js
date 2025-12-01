@@ -36,10 +36,7 @@ export class ThrowableItem extends Item{
     }
 
     ThrowMovement(){
-        let speedX = this.throwSpeedX > 0 ? this.throwSpeedX : -this.throwSpeedX;
-        let speedY = this.throwSpeedY > 0 ? this.throwSpeedY : -this.throwSpeedY;
-
-        if(speedX < 1 && speedY < 1){
+        if(Math.abs(this.throwSpeedX) < 1 && Math.abs(this.throwSpeedY) < 1){
             this.throwOwner = null;
             this.isThrown = false;
             return;

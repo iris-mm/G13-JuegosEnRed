@@ -29,6 +29,7 @@ export class Player extends Entity {
     Update() {
         this.Movement();
         this.ItemInputs();
+        if(this.currentItemGrabbing) this.GrabItem(this.currentItemGrabbing)
     }
 
     Movement(){
@@ -120,9 +121,12 @@ export class Player extends Entity {
             if(this.currentItemGrabbing instanceof ThrowableItem){
                 this.currentItemGrabbing.Throw(this.facingX, this.facingY);
                 this.currentItemGrabbing = null;
+                this.itemInteractionCooldown = 3;
             }
             return;
         }
+        
+        if(item.playerGrabbing != null) return;
 
         item.GrabItem(this);
         this.currentItemGrabbing = item;
