@@ -7,6 +7,8 @@ import buttonBackground from '../../assets/boton piedra.png';
 //importar clases Button
 import { Button } from '../entities/Button.js';
 import { AudioManager } from '../game/controllers/AudioManager';
+// @ts-ignore
+import buttonSound from '../../assets/music_sounds/button_sound.mp3';
 
 export class PauseScene extends Phaser.Scene {
     constructor() {
@@ -16,6 +18,7 @@ export class PauseScene extends Phaser.Scene {
     preload(){
         this.load.image('menuPause', menuPause); 
         this.load.image('buttonBackground', buttonBackground);
+        this.load.audio('button_sound', buttonSound);
     }
 
     create(){
@@ -41,12 +44,14 @@ export class PauseScene extends Phaser.Scene {
 
         //Botón volver al menú principal
         const menuButton = new Button(this, 600, 400, 'buttonBackground', 'Menú', () => {
+            AudioManager.playButtonSound(this);
             this.scene.stop('GameScene'); // Detener la escena del juego
             this.scene.start('MenuScene'); // Ir al menú principal
         });
         
          //Botón de "Ajustes"
         const configButton = new Button(this, 600, 500, 'buttonBackground', 'Ajustes', () => {
+            AudioManager.playButtonSound(this);
             this.scene.launch('ConfigScene', { from: 'PauseScene' }); // Abrir la escena de configuración
             this.scene.pause(); // Pausar la escena de pausa
         });

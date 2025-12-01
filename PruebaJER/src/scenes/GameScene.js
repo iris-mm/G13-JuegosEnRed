@@ -48,6 +48,8 @@ import zombiRight from '../../assets/sprites/Spritesheets/SS_zombie_right.png';
 //SONIDOS
 // @ts-ignore
 import gameMusic from '../../assets/music_sounds/game_music.mp3';
+// @ts-ignore
+import timerAlert from '../../assets/music_sounds/timer_alert.mp3';
 
 //CLASES
 import { TimerController } from '../game/controllers/TimerController.js';
@@ -70,6 +72,7 @@ export class GameScene extends Phaser.Scene {
         this.load.image('game_boundary', game_boundary);
         this.load.image('leaves', leaves);
         this.load.audio('game_music', gameMusic);
+        this.load.audio('timer_alert', timerAlert);
         //Items
         this.load.image('candy', candySprite);
         this.load.image('pumpkin1', pumpkin1);
@@ -127,10 +130,6 @@ export class GameScene extends Phaser.Scene {
         const redBase = this.add.rectangle((1200 - base_SIZE / 2) - offset, 400, base_SIZE, base_SIZE, 0xA30000)
         .setAlpha(0.5);
 
-        // Añadir colider cuando player esté hecho y la función de añadir punto también!
-        // this.physics.add.overlap(this.player1, blueBase, addPoint);
-        // this.physics.add.overlap(this.player2, redBase, addPoint);
-    
         //Temporizador
         let timerText = this.add.text(600, 100, "45", {fontSize: "48px",color: "#ffffff"})
         .setOrigin(0.5, 0.5);

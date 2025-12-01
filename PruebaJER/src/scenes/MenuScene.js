@@ -13,6 +13,8 @@ import { AudioManager } from '../game/controllers/AudioManager';
 //importar sonidos
 // @ts-ignore
 import mainMusic from '../../assets/music_sounds/main_music.mp3';
+// @ts-ignore
+import buttonSound from '../../assets/music_sounds/button_sound.mp3';
 
 export class MenuScene extends Phaser.Scene {
     constructor() {
@@ -23,6 +25,7 @@ export class MenuScene extends Phaser.Scene {
         this.load.image('menuBackground', menuBackground); 
         this.load.image('buttonBackground', buttonBackground);
         this.load.audio('main_music', mainMusic);
+        this.load.audio('button_sound', buttonSound);
     }
 
     create() {
@@ -48,7 +51,7 @@ export class MenuScene extends Phaser.Scene {
             350,
             'buttonBackground',  
             'Jugar',
-            () => { this.scene.start('GameScene'); }
+            () => {AudioManager.playButtonSound(this); this.scene.start('GameScene'); }
         );
 
         const settingsButton = new Button(
@@ -57,7 +60,8 @@ export class MenuScene extends Phaser.Scene {
             500,
             'buttonBackground',  
             'Ajustes',
-            () => { 
+            () => {
+                AudioManager.playButtonSound(this); 
                 this.scene.stop('PauseScene'); 
                 this.scene.start('ConfigScene',{ from: 'MenuScene' }); }
         );
@@ -68,7 +72,7 @@ export class MenuScene extends Phaser.Scene {
             650,
             'buttonBackground',  
             'Créditos',
-            () => { this.scene.start('CreditsScene'); }
+            () => {AudioManager.playButtonSound(this); this.scene.start('CreditsScene'); }
         );
     }
 }
