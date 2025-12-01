@@ -1,3 +1,5 @@
+import { AudioManager } from "./AudioManager";
+
 export class TimerController{
     constructor (scene, text){
         this.scene = scene;
@@ -13,12 +15,12 @@ export class TimerController{
         this.stop();
 
         this.duration = duration;
-
+        this.alertPlayed = false;
         this.timerEvent = this.scene.time.addEvent(
         {delay:duration, 
         loop: false,
         callback: () => {
-            callback;
+            callback();
         }});
     }
 
@@ -42,5 +44,12 @@ export class TimerController{
         const seconds = Math.max(0, remaining / 1000);
 
         this.text.text = `${seconds.toFixed(2)}`;
+
+        //Sonido de alerta cuando quedan 10 segundos o menos
+          if (seconds <= 5 && !this.alertPlayed) {
+            const timerAlert = this.scene.sound.add('timer_alert');
+            timerAlert.play({ volume: AudioManager.getVolume() * 4 });
+            this.alertPlayed = true;
+        }
     }
 }

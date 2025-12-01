@@ -48,6 +48,8 @@ import zombiRight from '../../assets/sprites/Spritesheets/SS_zombie_right.png';
 //SONIDOS
 // @ts-ignore
 import gameMusic from '../../assets/music_sounds/game_music.mp3';
+// @ts-ignore
+import timerAlert from '../../assets/music_sounds/timer_alert.mp3';
 
 //CLASES
 import { TimerController } from '../game/controllers/TimerController.js';
@@ -70,6 +72,7 @@ export class GameScene extends Phaser.Scene {
         this.load.image('game_boundary', game_boundary);
         this.load.image('leaves', leaves);
         this.load.audio('game_music', gameMusic);
+        this.load.audio('timer_alert', timerAlert);
         //Items
         this.load.image('candy', candySprite);
         this.load.image('pumpkin1', pumpkin1);
