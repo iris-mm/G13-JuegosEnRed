@@ -43,8 +43,8 @@ module.exports = {
 
   plugins: [
     new HtmlWebpackPlugin({
-      template: './game/index.html',
-      inject: false
+      template: './public/index.html',
+      inject: false,
     })
   ],
   resolve: {
