@@ -53,7 +53,11 @@ También se ha creado un logo para la empresa ficticia de la que se forma parte:
 El estilo artístico está inspirado en los juegos clásicos  de 8 bits. Culturalmente se basa en la temática de Halloween, y hace un guiño a algunas obras de la cultura pop como la película _Crepúsculo_ o el videojuego _Minecraft_.
 
 ## Sonido
-Los sonidos y la música es estilo Halloween. Busca ser divertida y acorde con la temática del juego. Todas las músicas son coherentes entre ellas para no generar disonancia. 
+Los sonidos y la música es de temática Halloween. Busca ser divertida y acorde con la temática del juego. Todas las músicas son coherentes entre ellas para no generar disonancia.
+Se han introducido 4 canciones en total: una para el menú de inicio, de carácter divertido y misterioso que representa la temática global del juego; una para la escena de juego, más energética y que inspira la urgencia de una partida contrarreloj; una para el menú de ajustes, que sirve de sonido de ambiente más que de música, pues es una pantalla en la que el jugador suele quedarse pensando más que viviendo una emoción; y finalmente una para los créditos, que tiene un tono calmado y de clausura dentro de lo que es la temática, ya que suele ser la que los jugadores visitan en última estancia.
+Adicionalmente se añadieron 2 efectos de sonido dentro del juego: el sonido de pulsar los botones de la interfaz, que es de estilo 8 bits al igual que los propios botones y un sonido de aviso de cuando se está acabando el tiempo en las rondas, pues es un recurso ampliamente usado en juegos de este estilo para provocar tensión en las partidas que tienen un tiempo limitado.
+Se planean añadir en las próximas fases sonidos para los distintos objetos y para otros aspectos de la interfaz entre otras cosas.
+Los sonidos pertenecen a la página de sonidos de libre uso Freesound, como se indica en los créditos. 
 
 ## Jugabilidad
 Una partida se compone de 3 rondas. En cada ronda, el tiempo de aparición de los objetos se reduce para que la duración sea menor. La primera ronda dura 45 segundos, y en cada una de las siguientes se disminuyen 10 segundos respecto a la duración anterior. 
