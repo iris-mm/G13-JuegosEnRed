@@ -23,7 +23,7 @@ export class Button {
         this.container.setInteractive({ useHandCursor: true })
             .on('pointerover', () => {
                 this.image.setTint(0xffff00); 
-                this.text.setColor('#ffff00');
+                this.text.setColor('#ffffdd');
                 this.text.setScale(1.2);
             })
             .on('pointerout', () => {

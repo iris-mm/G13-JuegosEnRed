@@ -23,10 +23,13 @@ export class TutorialMenu extends Phaser.Scene {
         bg.displayHeight = 800;
 
         new Button(100, 750, this, 'SPR_Button', "Volver", () => this.GoBack());
+
+        this.cameras.main.fadeIn(100, 0, 0, 0)
     }
 
 
     GoBack(){
-        this.scene.start('MainMenu');
+        this.cameras.main.fadeOut(100, 0, 0, 0);
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('MainMenu'))
     }
 }

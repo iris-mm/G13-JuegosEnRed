@@ -26,9 +26,12 @@ export class PlayModeMenu extends Phaser.Scene {
         new Button(600 + 180, 400, this, 'SPR_Button', "Unirse a Partida", null);
         new Button(600, 550, this, 'SPR_Button', "Local", null);
         new Button(100, 750, this, 'SPR_Button', "Volver", () => this.GoBack());
+        
+        this.cameras.main.fadeIn(100, 0, 0, 0)
     }
 
     GoBack(){
-        this.scene.start('MainMenu');
+        this.cameras.main.fadeOut(100, 0, 0, 0);
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('MainMenu'))
     }
 }

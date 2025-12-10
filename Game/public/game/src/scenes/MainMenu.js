@@ -29,22 +29,28 @@ export class MainMenu extends Phaser.Scene {
         new Button(600 - 300, 700, this, 'SPR_Button', "Tutorial", () => this.StartTutorial());
         new Button(600, 700, this, 'SPR_Button', "Ajustes", () => this.StartSettings());
         new Button(600 + 300, 700, this, 'SPR_Button', "Créditos", () => this.StartCredits());
+
+        this.cameras.main.fadeIn(100, 0, 0, 0)
     }
 
 
     StartPlay(){
-        this.scene.start('PlayModeMenu');
+        this.cameras.main.fadeOut(100, 0, 0, 0);
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('PlayModeMenu'))
     }
     
     StartTutorial(){
-        this.scene.start('TutorialMenu');
+        this.cameras.main.fadeOut(100, 0, 0, 0);
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('TutorialMenu'))
     }
     
     StartSettings(){
-        this.scene.start('SettingsMenu');
+        this.cameras.main.fadeOut(100, 0, 0, 0);
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('SettingsMenu'))
     }
     
     StartCredits(){
-        this.scene.start('CreditsMenu');
+        this.cameras.main.fadeOut(100, 0, 0, 0);
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('CreditsMenu'))
     }
 }
