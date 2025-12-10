@@ -8,7 +8,7 @@ import buttonBackground from '../../assets/boton piedra.png';
 
 //importar clases
 import { Button } from '../entities/Button.js';
-import { AudioManager } from '../game/controllers/AudioManager.js';
+import { AudioManager } from '../game/controllers/AudioManager';
 
 //importar sonidos
 // @ts-ignore
