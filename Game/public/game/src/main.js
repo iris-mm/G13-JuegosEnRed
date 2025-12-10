@@ -1,12 +1,6 @@
 import Phaser from 'phaser';
-import { MenuScene } from './scenes/MenuScene.js';
-import { GameScene } from './scenes/GameScene.js';
-import { PauseScene } from './scenes/PauseScene.js';
-import { CreditsScene } from './scenes/CreditsScene.js';
-import { ConfigScene } from './scenes/ConfigScene.js';
 
-
-const config = {
+const _CONFIG = {
     type: Phaser.AUTO,
     width: 1200,
     height: 800,
@@ -18,9 +12,9 @@ const config = {
             debug: false
         }
     },
-    scene: [MenuScene, GameScene, PauseScene, CreditsScene, ConfigScene],
-    backgroundColor: '#47ddffff',
+    scene: [MainMenu],
+    backgroundColor: '#000000',
     pixelArt: true
 }
 
-const game = new Phaser.Game(config);
+const _GAME = new Phaser.Game(_CONFIG);
