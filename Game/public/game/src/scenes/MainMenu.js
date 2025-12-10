@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { Button } from '../ui/Button.js';
+import { AudioManager } from '../managers/AudioManager.js';
 
 // @ts-ignore
 import IMG_Background from '../../assets/images/MainMenuBackground.jpg';
@@ -7,6 +8,8 @@ import IMG_Background from '../../assets/images/MainMenuBackground.jpg';
 import SPR_Button from '../../assets/sprites/Button.png';
 // @ts-ignore
 import SFX_ButtonPress from '../../assets/sfx/ButtonPress.mp3';
+// @ts-ignore
+import MUSIC_MainMenu from '../../assets/music/MainMenu.mp3';
 
 export class MainMenu extends Phaser.Scene {
     constructor() {
@@ -17,6 +20,7 @@ export class MainMenu extends Phaser.Scene {
         this.load.image('IMG_Background', IMG_Background);
         this.load.image('SPR_Button', SPR_Button);
         this.load.audio('SFX_ButtonPress', SFX_ButtonPress);
+        this.load.audio('MUSIC_MainMenu', MUSIC_MainMenu);
     }
 
     create() {
@@ -29,6 +33,15 @@ export class MainMenu extends Phaser.Scene {
         new Button(600 - 300, 700, this, 'SPR_Button', "Tutorial", () => this.StartTutorial());
         new Button(600, 700, this, 'SPR_Button', "Ajustes", () => this.StartSettings());
         new Button(600 + 300, 700, this, 'SPR_Button', "Créditos", () => this.StartCredits());
+
+        //Volumen global
+        this.sound.volume = AudioManager.GetVolume();
+        this.sound.stopAll(); //para que no se superpongan las canciones
+        this.music = this.sound.add('MUSIC_MainMenu', {
+            volume: AudioManager.GetVolume(),
+            loop: true
+        });
+        this.music.play();
 
         this.cameras.main.fadeIn(100, 0, 0, 0)
     }
