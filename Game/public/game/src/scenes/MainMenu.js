@@ -1,78 +1,50 @@
 import Phaser from 'phaser';
+import { Button } from '../ui/Button.js';
 
-//importar imágenes
 // @ts-ignore
-import menuBackground from '../../assets/MainMenu2.jpg';
+import IMG_Background from '../../assets/images/MainMenuBackground.jpg';
 // @ts-ignore
-import buttonBackground from '../../assets/boton piedra.png';
+import SPR_Button from '../../assets/sprites/Button.png';
+// @ts-ignore
+import SFX_ButtonPress from '../../assets/sfx/ButtonPress.mp3';
 
-//importar clases
-import { Button } from '../entities/Button.js';
-import { AudioManager } from '../game/controllers/AudioManager.js';
-
-//importar sonidos
-// @ts-ignore
-import mainMusic from '../../assets/music_sounds/main_music.mp3';
-// @ts-ignore
-import buttonSound from '../../assets/music_sounds/button_sound.mp3';
-
-export class MenuScene extends Phaser.Scene {
+export class MainMenu extends Phaser.Scene {
     constructor() {
-        super('MenuScene');
+        super('MainMenu');
     }
 
     preload() {
-        this.load.image('menuBackground', menuBackground); 
-        this.load.image('buttonBackground', buttonBackground);
-        this.load.audio('main_music', mainMusic);
-        this.load.audio('button_sound', buttonSound);
+        this.load.image('IMG_Background', IMG_Background);
+        this.load.image('SPR_Button', SPR_Button);
+        this.load.audio('SFX_ButtonPress', SFX_ButtonPress);
     }
 
     create() {
-        // Fondo centrado y ajustado a 1200x800
-        const bg = this.add.image(600, 400, 'menuBackground')
-        .setOrigin(0.5);
+        const bg = this.add.image(600, 400, 'IMG_Background')
+        bg.setOrigin(0.5);
         bg.displayWidth = 1200;
         bg.displayHeight = 800;
 
-        //Volumen global
-        this.sound.volume = AudioManager.getVolume();
-        this.sound.stopAll(); //para que no se superpongan las canciones
-        this.music = this.sound.add('main_music', {
-            volume: AudioManager.getVolume(),
-            loop: true
-        });
-        this.music.play();
+        new Button(600, 400, this, 'SPR_Button', "Jugar", () => this.StartPlay());
+        new Button(600 - 300, 700, this, 'SPR_Button', "Tutorial", () => this.StartTutorial());
+        new Button(600, 700, this, 'SPR_Button', "Ajustes", () => this.StartSettings());
+        new Button(600 + 300, 700, this, 'SPR_Button', "Créditos", () => this.StartCredits());
+    }
 
-        // botones usando la clase Button
-        const playButton = new Button(
-            this,
-            350,
-            350,
-            'buttonBackground',  
-            'Jugar',
-            () => {AudioManager.playButtonSound(this); this.scene.start('GameScene'); }
-        );
 
-        const settingsButton = new Button(
-            this,
-            350,
-            500,
-            'buttonBackground',  
-            'Ajustes',
-            () => {
-                AudioManager.playButtonSound(this); 
-                this.scene.stop('PauseScene'); 
-                this.scene.start('ConfigScene',{ from: 'MenuScene' }); }
-        );
-        
-        const creditsButton = new Button(
-            this,
-            350,
-            650,
-            'buttonBackground',  
-            'Créditos',
-            () => {AudioManager.playButtonSound(this); this.scene.start('CreditsScene'); }
-        );
+    StartPlay(){
+        this.scene.start('PlayModeMenu');
+    }
+    
+    StartTutorial(){
+        this.scene.start('TutorialMenu');
+    }
+    
+    StartSettings(){
+        this.scene.start('SettingsMenu');
+    }
+    
+    StartCredits(){
+        this.scene.start('CreditsMenu');
     }
 }

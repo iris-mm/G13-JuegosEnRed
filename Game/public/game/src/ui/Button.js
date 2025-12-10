@@ -1,15 +1,16 @@
-import { AudioManager } from "../game/controllers/AudioManager";
+import { AudioManager } from "../managers/AudioManager.js";
 
 export class Button {
-    constructor(scene, x, y, texture, text, callback, style = {}) {
+    constructor(x, y, scene, texture, text, callback, style = {}) {
         this.scene = scene;
 
         this.style = {
-            fontFamily: 'ButtonsFont', 
-            fontSize: '29px',            
+            fontFamily: 'ButtonsFont',
+            fontSize: '29px',
             color: '#ffffff',
             ...style
         };
+
 
         this.image = scene.add.image(0, 0, texture);
         this.text = scene.add.text(0, 0, text, this.style).setOrigin(0.5);
@@ -31,7 +32,7 @@ export class Button {
                 this.text.setScale(1);
             })
             .on('pointerdown', () => {
-            AudioManager.PlayButtonSound(this.scene);
+                AudioManager.Play('SFX_ButtonPress', this.scene);
             callback();
             });
     }
