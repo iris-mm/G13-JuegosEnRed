@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: './src/main.js',
@@ -26,15 +27,16 @@ module.exports = {
       //manejar fuentes
       { test: /\.(woff2?|ttf|otf|eot)$/i, type: 'asset/resource' },
       //manejar audio
-      { test: /\.(mp3|wav|ogg)$/i,
+      {
+        test: /\.(mp3|wav|ogg)$/i,
         use: [
           {
-          loader: 'file-loader',
-          options: {
-            name: '[name].[ext]',
-            outputPath: 'assets/music_sounds/',
-            publicPath: 'assets/music_sounds/'
-            } 
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'assets/music_sounds/',
+              publicPath: 'assets/music_sounds/'
+            }
           }
         ]
       }
@@ -45,6 +47,14 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html',
       inject: false
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'assets/Fuentes',
+          to: 'Fuentes',
+        }
+      ]
     })
   ],
   resolve: {
