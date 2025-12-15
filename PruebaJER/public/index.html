@@ -5,7 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crepusculones</title>
   <style>
-    
+    @font-face {
+      font-family:ButtonsFont ;
+      src: url("Fuentes/alagard_font.ttf") format('truetype');
+    }
+
     body {
       margin: 0;
       padding: 0;
@@ -21,6 +25,7 @@
 </head>
 <body>
   <div id="game-container"></div>
+  <div style="font-family:alagard_font; position:absolute; left:-1000px; visibility:hidden;">.</div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.70.0/phaser.min.js"></script>
   <script src="bundle.js"></script>
 </body>
