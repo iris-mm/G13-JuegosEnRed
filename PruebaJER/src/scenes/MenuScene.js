@@ -26,6 +26,12 @@ export class MenuScene extends Phaser.Scene {
         this.load.image('buttonBackground', buttonBackground);
         this.load.audio('main_music', mainMusic);
         this.load.audio('button_sound', buttonSound);
+
+        const font = new FontFace('ButtonsFont','url(Fuentes/alagard_font.ttf)');
+
+        font.load().then((loadedFont) => {
+        document.fonts.add(loadedFont);
+        });
     }
 
     create() {
