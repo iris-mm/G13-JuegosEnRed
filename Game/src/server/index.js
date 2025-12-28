@@ -2,15 +2,37 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import { createConnectionModule } from './modules/ConnectionModule.js';
+import { createConnectionController } from './controllers/ConnectionController.js';
+import { createConnectionRoutes } from './routes/Connections.js';
+
+import { createUserModule } from './modules/UserModule.js';
+import { createUserController } from './controllers/UserController.js';
+import { createUserRoutes } from './routes/Users.js';
+
 // Para obtener __dirname en ES modules
 // @ts-ignore
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// ==================== CONFIGURACIÓN DE DEPENDENCIAS ====================
+
+// 1. Crear servicios (capa de datos)
+const userModule = createUserModule();
+const connectionModule = createConnectionModule();
+
+// 2. Crear controladores inyectando servicios (capa de lógica)
+const userController = createUserController(userModule);
+const connectionController = createConnectionController(connectionModule);
+
+// 3. Crear routers inyectando controladores (capa de rutas)
+const userRoutes = createUserRoutes(userController);
+const connectionRoutes = createConnectionRoutes(connectionController);
+
 // ==================== SERVIDOR ====================
 
 const app = express();
-const PORT = 3000;
+const PORT = 8080;
 
 // ==================== MIDDLEWARE ====================
 
@@ -39,6 +61,11 @@ app.use((req, res, next) => {
 
 // Servir archivos estáticos del juego (dist/)
 app.use(express.static(path.join(__dirname, '../../dist')));
+
+// ==================== RUTAS ====================
+
+app.use('/api/users', userRoutes);
+app.use('/api/connected', connectionRoutes);
 
 // SPA Fallback - Servir index.html para todas las rutas que no sean API
 // Esto debe ir DESPUÉS de las rutas de la API y ANTES del error handler

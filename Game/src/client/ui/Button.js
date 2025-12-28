@@ -40,6 +40,10 @@ export class Button {
         this.text.setText(newText);
     }
 
+    setPosition(x, y){
+        this.container.setPosition(x, y)
+    }
+
     destroy() {
         this.container.destroy();
     }

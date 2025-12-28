@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { Button } from '../ui/Button.js';
+import { _ConnectionManager, ConnectionManager } from '../../server/managers/ConnectionManager.js';
 
 // @ts-ignore
 import IMG_DefaultBackground from '../../../public/assets/images/DefaultBackground.png';
@@ -25,20 +26,48 @@ export class Lobby extends Phaser.Scene {
         bg.displayWidth = 1200;
         bg.displayHeight = 800;
 
-        new Button(600, 600, this, 'SPR_Button', "Comenzar", null);
-        new Button(600, 750, this, 'SPR_Button', "Volver", () => this.GoBack());
+        this.startButton = new Button(-128, -128, this, 'SPR_Button', "Comenzar", null);
+        new Button(600, 750, this, 'SPR_Button', "Salir", () => this.Leave());
         
         this.player1Icon = this.add.image(300, 300, 'SPR_Vampire');
-        this.youText = this.add.text(300, 120, "Tú", {fontSize: "32px"}).setOrigin(0.5, 0.5);
+        this.youText = this.add.text(300, 120, "Tú", {fontSize: "32px"}).setOrigin(0.5);
 
         this.player2Icon = this.add.image(1200 - 300, 300, 'SPR_Zombie');
-        this.enemyText = this.add.text(1200 - 300, 120, "Rival", {fontSize: "32px"}).setOrigin(0.5, 0.5);
+        this.enemyText = this.add.text(1200 - 300, 120, "Rival", {fontSize: "32px"}).setOrigin(0.5);
+
+        this.stateText = this.add.text(600, 500, "...", {fontSize: "32px"}).setOrigin(0.5);
 
         this.cameras.main.fadeIn(100, 0, 0, 0);
+
+        this.connectionListener = (data) => { this.UpdateSceneOnConnection(data); }
+        _ConnectionManager.addListener(this.connectionListener)
     }
 
-    GoBack(){
+    Leave(){
+        this.Shutdown();
         this.cameras.main.fadeOut(100, 0, 0, 0);
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('MainMenu'))
+    }
+
+    UpdateSceneOnConnection(data){
+        try {
+            if (data.connected) {
+                this.startButton.setPosition(600, 600)
+                this.stateText.setText(`¡Rival encontrado!`);
+                this.stateText.setColor('#00ff00');
+            } else {
+                this.startButton.setPosition(-128, -128)
+                this.stateText.setText('Esperando rival...');
+                this.stateText.setColor('#ff0000');
+            }
+        } catch (error) {
+            console.error('[Lobby] Error updating connection display:', error);
+        }
+    }
+
+    Shutdown() {
+        if (this.connectionListener) {
+            _ConnectionManager.removeListener(this.connectionListener);
+        }
     }
 }
