@@ -29,7 +29,7 @@ export class MainMenu extends Phaser.Scene {
         bg.displayWidth = 1200;
         bg.displayHeight = 800;
 
-        new Button(600, 400, this, 'SPR_Button', "Jugar", () => this.StartPlay());
+        new Button(600, 450, this, 'SPR_Button', "Jugar", () => this.StartPlay());
         new Button(600 - 300, 700, this, 'SPR_Button', "Tutorial", () => this.StartTutorial());
         new Button(600, 700, this, 'SPR_Button', "Ajustes", () => this.StartSettings());
         new Button(600 + 300, 700, this, 'SPR_Button', "Créditos", () => this.StartCredits());
@@ -49,7 +49,7 @@ export class MainMenu extends Phaser.Scene {
 
     StartPlay(){
         this.cameras.main.fadeOut(100, 0, 0, 0);
-        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('PlayModeMenu'))
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Lobby'))
     }
     
     StartTutorial(){

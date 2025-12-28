@@ -5,6 +5,7 @@ import { PlayModeMenu } from './scenes/PlayModeMenu.js';
 import { TutorialMenu } from './scenes/TutorialMenu.js';
 import { SettingsMenu } from './scenes/SettingsMenu.js';
 import { CreditsMenu } from './scenes/CreditsMenu.js';
+import { Lobby } from './scenes/Lobby.js';
 
 const _CONFIG = {
     type: Phaser.AUTO,
@@ -18,7 +19,7 @@ const _CONFIG = {
             debug: false
         }
     },
-    scene: [MainMenu, PlayModeMenu, TutorialMenu, SettingsMenu, CreditsMenu],
+    scene: [MainMenu, PlayModeMenu, TutorialMenu, SettingsMenu, CreditsMenu, Lobby],
     backgroundColor: '#000000',
     pixelArt: true
 }

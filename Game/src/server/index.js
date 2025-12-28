@@ -45,7 +45,7 @@ app.use(express.static(path.join(__dirname, '../../dist')));
 app.use((req, res, next) => {
   // Si la petición es a /api/*, pasar al siguiente middleware (404 para APIs)
   if (req.path.startsWith('/api/')) {
-    return res.status(404).json({ error: 'Endpoint no encontrado' });
+    return res.status(404).json({ error: '# Endpoint no encontrado #' });
   }
 
   // Para cualquier otra ruta, servir el index.html del juego
@@ -57,7 +57,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   console.error('Error:', err);
   res.status(err.status || 500).json({
-    error: err.message || 'Error interno del servidor'
+    error: err.message || '# Error interno del servidor #'
   });
 });
 
@@ -70,16 +70,5 @@ app.listen(PORT, () => {
   console.log(`  Servidor corriendo en http://localhost:${PORT}`);
   console.log(`  `);
   console.log(`  🎮 Juego: http://localhost:${PORT}`);
-  console.log(`  `);
-  console.log(`  API Endpoints disponibles:`);
-  console.log(`   - GET    /health`);
-  console.log(`   - GET    /api/connected`);
-  console.log(`   - GET    /api/users`);
-  console.log(`   - POST   /api/users`);
-  console.log(`   - GET    /api/users/:id`);
-  console.log(`   - PUT    /api/users/:id`);
-  console.log(`   - DELETE /api/users/:id`);
-  console.log(`   - GET    /api/messages`);
-  console.log(`   - POST   /api/messages`);
   console.log('========================================\n');
 });
