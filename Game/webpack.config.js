@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: './src/client/main.js',
@@ -25,6 +26,7 @@ module.exports = {
       { test: /\.(png|jpe?g|gif|svg)$/i, type: 'asset/resource' },
       // manejar fuentes
       { test: /\.(woff2?|ttf|otf|eot)$/i, type: 'asset/resource' },
+      
       // manejar audio
       {
         test: /\.(mp3|wav|ogg)$/i,
@@ -41,6 +43,14 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html',
       inject: false
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'assets/Fuentes',
+          to: 'Fuentes',
+        }
+      ]
     })
   ],
   resolve: {
