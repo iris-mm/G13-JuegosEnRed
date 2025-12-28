@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { Button } from '../ui/Button.js';
-import { _ConnectionManager, ConnectionManager } from '../../server/managers/ConnectionManager.js';
+import { _ConnectionManager } from '../../server/managers/ConnectionManager.js';
 
 // @ts-ignore
 import IMG_DefaultBackground from '../../../public/assets/images/DefaultBackground.png';
@@ -53,7 +53,7 @@ export class Lobby extends Phaser.Scene {
         try {
             if (data.connected) {
                 this.startButton.setPosition(600, 600)
-                this.stateText.setText(`¡Rival encontrado!`);
+                this.stateText.setText(`¡Rival encontrado! (${data.count})`);
                 this.stateText.setColor('#00ff00');
             } else {
                 this.startButton.setPosition(-128, -128)

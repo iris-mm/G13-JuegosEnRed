@@ -96,6 +96,6 @@ app.listen(PORT, () => {
   console.log('========================================');
   console.log(`  Servidor corriendo en http://localhost:${PORT}`);
   console.log(`  `);
-  console.log(`  🎮 Juego: http://localhost:${PORT}`);
+  console.log(`  Juego: http://localhost:${PORT}`);
   console.log('========================================\n');
 });
