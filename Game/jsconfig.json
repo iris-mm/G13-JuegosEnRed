@@ -18,11 +18,11 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "*": ["public/game/src/*"]
+      "*": ["src/*"]
     }
   },
   "include": [
-    "public/game/src/**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",

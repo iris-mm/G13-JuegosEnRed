@@ -3,11 +3,11 @@ import { Button } from '../ui/Button.js';
 import { AudioManager } from '../managers/AudioManager.js';
 
 // @ts-ignore
-import IMG_SettingsBackground from '../../../assets/images/SettingsBackground.jpg';
+import IMG_SettingsBackground from '../../../public/assets/images/SettingsBackground.jpg';
 // @ts-ignore
-import SPR_Button from '../../../assets/sprites/Button.png';
+import SPR_Button from '../../../public/assets/sprites/Button.png';
 // @ts-ignore
-import MUSIC_Settings from '../../../assets/music/Settings.mp3';
+import MUSIC_Settings from '../../../public/assets/music/Settings.mp3';
 
 export class SettingsMenu extends Phaser.Scene {
     constructor() {

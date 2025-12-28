@@ -2,9 +2,9 @@ import Phaser from 'phaser';
 import { Button } from '../ui/Button.js';
 
 // @ts-ignore
-import IMG_Background from '../../../assets/images/MainMenuBackground.jpg';
+import IMG_Background from '../../../public/assets/images/MainMenuBackground.jpg';
 // @ts-ignore
-import SPR_Button from '../../../assets/sprites/Button.png';
+import SPR_Button from '../../../public/assets/sprites/Button.png';
 
 export class PlayModeMenu extends Phaser.Scene {
     constructor() {

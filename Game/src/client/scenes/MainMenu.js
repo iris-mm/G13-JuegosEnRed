@@ -3,13 +3,13 @@ import { Button } from '../ui/Button.js';
 import { AudioManager } from '../managers/AudioManager.js';
 
 // @ts-ignore
-import IMG_Background from '../../../assets/images/MainMenuBackground.jpg';
+import IMG_Background from '../../../public/assets/images/MainMenuBackground.jpg';
 // @ts-ignore
-import SPR_Button from '../../../assets/sprites/Button.png';
+import SPR_Button from '../../../public/assets/sprites/Button.png';
 // @ts-ignore
-import SFX_ButtonPress from '../../../assets/sfx/ButtonPress.mp3';
+import SFX_ButtonPress from '../../../public/assets/sfx/ButtonPress.mp3';
 // @ts-ignore
-import MUSIC_MainMenu from '../../../assets/music/MainMenu.mp3';
+import MUSIC_MainMenu from '../../../public/assets/music/MainMenu.mp3';
 
 export class MainMenu extends Phaser.Scene {
     constructor() {

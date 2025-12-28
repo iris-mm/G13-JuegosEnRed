@@ -2,9 +2,9 @@ import Phaser from 'phaser';
 import { Button } from '../ui/Button.js';
 
 // @ts-ignore
-import IMG_DefaultBackground from '../../../assets/images/DefaultBackground.png';
+import IMG_DefaultBackground from '../../../public/assets/images/DefaultBackground.png';
 // @ts-ignore
-import SPR_Button from '../../../assets/sprites/Button.png';
+import SPR_Button from '../../../public/assets/sprites/Button.png';
 
 export class TutorialMenu extends Phaser.Scene {
     constructor() {
