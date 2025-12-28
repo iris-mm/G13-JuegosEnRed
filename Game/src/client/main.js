@@ -1,10 +1,10 @@
 import Phaser from 'phaser';
 
-import { MainMenu } from './client/scenes/MainMenu.js';
-import { PlayModeMenu } from './client/scenes/PlayModeMenu.js';
-import { TutorialMenu } from './client/scenes/TutorialMenu.js';
-import { SettingsMenu } from './client/scenes/SettingsMenu.js';
-import { CreditsMenu } from './client/scenes/CreditsMenu.js';
+import { MainMenu } from './scenes/MainMenu.js';
+import { PlayModeMenu } from './scenes/PlayModeMenu.js';
+import { TutorialMenu } from './scenes/TutorialMenu.js';
+import { SettingsMenu } from './scenes/SettingsMenu.js';
+import { CreditsMenu } from './scenes/CreditsMenu.js';
 
 const _CONFIG = {
     type: Phaser.AUTO,
