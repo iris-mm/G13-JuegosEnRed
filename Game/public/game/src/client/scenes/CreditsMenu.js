@@ -3,13 +3,13 @@ import { Button } from '../ui/Button.js';
 import { AudioManager } from '../managers/AudioManager.js';
 
 // @ts-ignore
-import IMG_CreditsBackground from '../../assets/images/CreditsBackground.jpg';
+import IMG_CreditsBackground from '../../../assets/images/CreditsBackground.jpg';
 // @ts-ignore
-import SPR_Button from '../../assets/sprites/Button.png';
+import SPR_Button from '../../../assets/sprites/Button.png';
 // @ts-ignore
-import MUSIC_Credits from '../../assets/music/Credits.mp3';
+import MUSIC_Credits from '../../../assets/music/Credits.mp3';
 // @ts-ignore
-import IMG_Logo from '../../assets/images/Logo.png';
+import IMG_Logo from '../../../assets/images/Logo.png';
 
 export class CreditsMenu extends Phaser.Scene {
     constructor() {
