@@ -46,9 +46,8 @@ export function createUserModule() {
    * @returns {Array} Array de usuarios
    */
   function getAllUsers() {
-    // TODO: Implementar
     // Retornar una copia del array de usuarios
-    throw new Error('getAllUsers() no implementado');
+    return users;
   }
 
   /**
@@ -62,28 +61,21 @@ export function createUserModule() {
   }
 
   /**
-   * Busca un usuario por email
-   * @param {string} email - Email del usuario
-   * @returns {Object|null} Usuario encontrado o null
-   */
-  function getUserByEmail(email) {
-    // TODO: Implementar
-    // Buscar y retornar el usuario por email, o null si no existe
-    // IMPORTANTE: Esta función será usada por el chat para verificar emails
-    throw new Error('getUserByEmail() no implementado');
-  }
-
-  /**
    * Actualiza un usuario
    * @param {string} id - ID del usuario
    * @param {Object} updates - Campos a actualizar
    * @returns {Object|null} Usuario actualizado o null si no existe
    */
   function updateUser(id, updates) {
-    // TODO: Implementar
     // 1. Buscar el usuario por id
+    let user = getUserById(id);
+
     // 2. Si no existe, retornar null
-    // 3. Actualizar solo los campos permitidos (name, avatar, level)
+    if(!user) return null;
+
+    // 3. Actualizar solo los campos permitidos
+    user
+
     // 4. NO permitir actualizar id, email, o createdAt
     // 5. Retornar el usuario actualizado
     throw new Error('updateUser() no implementado');
@@ -107,7 +99,6 @@ export function createUserModule() {
     createUser,
     getAllUsers,
     getUserById,
-    getUserByEmail,
     updateUser,
     deleteUser
   };
