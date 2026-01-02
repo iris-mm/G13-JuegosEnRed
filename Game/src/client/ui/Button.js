@@ -1,11 +1,12 @@
 import { AudioManager } from "../managers/AudioManager.js";
 
 export class Button {
-    constructor(x, y, scene, texture, text, callback, style = {}) {
+    constructor(x, y, scene, texture, text, callback, style = {}, fontSize = 29) {
         this.scene = scene;
 
         this.style = {
-            fontSize: '29px',
+            fontFamily: 'ButtonsFont', 
+            fontSize: `${fontSize}px`,            
             color: '#ffffff',
             ...style
         };
