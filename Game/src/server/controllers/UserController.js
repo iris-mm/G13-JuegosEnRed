@@ -92,7 +92,7 @@ export function createUserController(userService) {
       userService.updateUser(id);
 
       // 4. Si existe, retornar 200 con el usuario actualizado
-      res.status(204).json(res)
+      res.status(204).json(res);
     } catch (error) {
       res.status(404).json({
           error: `No se encontró a ningún usuario con esa ID.`
