@@ -21,6 +21,12 @@ export class MainMenu extends Phaser.Scene {
         this.load.image('SPR_Button', SPR_Button);
         this.load.audio('SFX_ButtonPress', SFX_ButtonPress);
         this.load.audio('MUSIC_MainMenu', MUSIC_MainMenu);
+
+        const font = new FontFace('ButtonsFont','url(fonts/alagard_font.ttf)');
+
+        font.load().then((loadedFont) => {
+        document.fonts.add(loadedFont);
+        });
     }
 
     create() {
@@ -30,9 +36,9 @@ export class MainMenu extends Phaser.Scene {
         bg.displayHeight = 800;
 
         new Button(600, 450, this, 'SPR_Button', "Jugar", () => this.StartPlay());
-        new Button(600 - 300, 700, this, 'SPR_Button', "Tutorial", () => this.StartTutorial());
+        new Button(600 - 300, 700, this, 'SPR_Button', "Tutorial", () => this.StartTutorial(), { fontSize: '25px' });
         new Button(600, 700, this, 'SPR_Button', "Ajustes", () => this.StartSettings());
-        new Button(600 + 300, 700, this, 'SPR_Button', "Créditos", () => this.StartCredits());
+        new Button(600 + 300, 700, this, 'SPR_Button', "Créditos", () => this.StartCredits(), { fontSize: '25px' });
 
         //Volumen global
         this.sound.volume = AudioManager.GetVolume();

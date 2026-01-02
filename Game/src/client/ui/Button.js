@@ -5,7 +5,8 @@ export class Button {
         this.scene = scene;
 
         this.style = {
-            fontSize: '29px',
+            fontFamily: 'ButtonsFont', 
+            fontSize: '29px',            
             color: '#ffffff',
             ...style
         };
