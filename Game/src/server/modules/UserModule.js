@@ -1,8 +1,8 @@
 /**
- * Servicio de gestión de usuarios usando closures
- * Este servicio mantiene el estado de los usuarios en memoria
- * y proporciona métodos para realizar operaciones CRUD
- */
+* Servicio de gestión de usuarios usando closures
+* Este servicio mantiene el estado de los usuarios en memoria
+* y proporciona métodos para realizar operaciones CRUD
+*/
 
 export function createUserModule() {
   // Estado privado: almacén de usuarios
@@ -11,23 +11,20 @@ export function createUserModule() {
 
   /**
    * Crea un nuevo usuario
-   * @param {Object} userData - {email, name, avatar, level}
+   * @param {Object} userData - {name, wins}
    * @returns {Object} Usuario creado
    */
-  function createUser(userData) {
+  function createUser( {username} ) {
     // 1. Validar que el email no exista ya
-    const existingUser = users.find(u => u.email === userData.email);
-    if (existingUser) {
-      throw new Error('El email ya está registrado');
+        if (!username || username.trim() === '') {
+      throw new Error('Username obligatorio');
     }
 
     // 2. Crear objeto usuario con id único y createdAt
     const newUser = {
       id: String(nextId),
-      email: userData.email,
-      name: userData.name,
-      avatar: userData.avatar || '',
-      level: userData.level || 1,
+      username: username.trim(),
+      wins: 0,
       createdAt: new Date().toISOString()
     };
 
@@ -61,24 +58,15 @@ export function createUserModule() {
   }
 
   /**
-   * Actualiza un usuario
-   * @param {string} id - ID del usuario
-   * @param {Object} updates - Campos a actualizar
-   * @returns {Object|null} Usuario actualizado o null si no existe
+   * Actualizar wins de usuario
+   * @param {String} id 
+   * @returns {Object} Usuario encontrado
    */
-  function updateUser(id, updates) {
-    // 1. Buscar el usuario por id
-    let user = getUserById(id);
-
-    // 2. Si no existe, retornar null
-    if(!user) return null;
-
-    // 3. Actualizar solo los campos permitidos
-    user
-
-    // 4. NO permitir actualizar id, email, o createdAt
-    // 5. Retornar el usuario actualizado
-    throw new Error('updateUser() no implementado');
+  function addWin(id) {
+    const user = getUserById(id);
+    if (!user) return null;
+    user.wins += 1;
+    return user;
   }
 
   /**
@@ -87,11 +75,10 @@ export function createUserModule() {
    * @returns {boolean} true si se eliminó, false si no existía
    */
   function deleteUser(id) {
-    // TODO: Implementar
-    // 1. Buscar el índice del usuario
-    // 2. Si existe, eliminarlo del array
-    // 3. Retornar true si se eliminó, false si no existía
-    throw new Error('deleteUser() no implementado');
+    const index = users.findIndex(u => u.id === id);
+    if (index === -1) return false;
+    users.splice(index, 1);
+    return true;
   }
 
   // Exponer la API pública del servicio
@@ -99,7 +86,7 @@ export function createUserModule() {
     createUser,
     getAllUsers,
     getUserById,
-    updateUser,
+    addWin,
     deleteUser
   };
 }
