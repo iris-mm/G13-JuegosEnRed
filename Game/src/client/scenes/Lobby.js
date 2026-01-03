@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { Button } from '../ui/Button.js';
-import { _ConnectionManager } from '../../server/managers/ConnectionManager.js';
+import { connectionManager } from '../../client/managers/ConnectionManager.js';
 
 // @ts-ignore
 import IMG_DefaultBackground from '../../../public/assets/images/DefaultBackground.png';
@@ -40,7 +40,7 @@ export class Lobby extends Phaser.Scene {
         this.cameras.main.fadeIn(100, 0, 0, 0);
 
         this.connectionListener = (data) => { this.UpdateSceneOnConnection(data); }
-        _ConnectionManager.addListener(this.connectionListener)
+        connectionManager.addListener(this.connectionListener)
     }
 
     Leave(){
@@ -67,7 +67,7 @@ export class Lobby extends Phaser.Scene {
 
     Shutdown() {
         if (this.connectionListener) {
-            _ConnectionManager.removeListener(this.connectionListener);
+            connectionManager.removeListener(this.connectionListener);
         }
     }
 }

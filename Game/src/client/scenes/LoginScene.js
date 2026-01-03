@@ -12,6 +12,9 @@ import SFX_ButtonPress from '../../../public/assets/sfx/ButtonPress.mp3';
 import MUSIC_MainMenu from '../../../public/assets/music/MainMenu.mp3';
 
 export class LoginScene extends Phaser.Scene {
+    constructor() {
+        super('LoginScene');
+    }
 
     preload () {
         this.load.image('IMG_Background', IMG_Background);
