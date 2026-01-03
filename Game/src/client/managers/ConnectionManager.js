@@ -138,4 +138,4 @@ export class ConnectionManager {
 }
 
 // Crear instancia singleton
-export const _ConnectionManager = new ConnectionManager();
+export const connectionManager = new ConnectionManager();

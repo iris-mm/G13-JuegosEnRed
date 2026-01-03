@@ -1,32 +1,51 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { WebSocketServer } from 'ws';
+import { createServer } from 'http';
 
-import { createConnectionModule } from './modules/ConnectionModule.js';
+// Servicios (factory functions)
+import { createUserService } from './services/UserService.js';
+import { createMessageService } from './services/MessageService.js';
+import { createConnectionService } from './services/ConnectionService.js';
+import { createGameRoomService } from './services/GameRoomService.js';
+import { createMatchmakingService } from './services/MatchmakingService.js';
+
+// Controladores (factory functions)
+import { createUserController } from './controllers/UserController.js';
+import { createMessageController } from './controllers/MessageController.js';
 import { createConnectionController } from './controllers/ConnectionController.js';
+
+// Rutas (factory functions)
+import { createUserRoutes } from './routes/Users.js';
+import { createMessageRoutes } from './routes/Messages.js';
 import { createConnectionRoutes } from './routes/Connections.js';
 
-import { createUserModule } from './modules/UserModule.js';
-import { createUserController } from './controllers/UserController.js';
-import { createUserRoutes } from './routes/Users.js';
-
 // Para obtener __dirname en ES modules
+
 // @ts-ignore
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // ==================== CONFIGURACIÓN DE DEPENDENCIAS ====================
+// Aquí se construye toda la cadena de dependencias de la aplicación
+// Esto facilita el testing al permitir inyectar mocks en cualquier nivel
 
 // 1. Crear servicios (capa de datos)
-const userModule = createUserModule();
-const connectionModule = createConnectionModule();
+const userService = createUserService();
+const messageService = createMessageService(userService);  // messageService depende de userService
+const connectionService = createConnectionService();
+const gameRoomService = createGameRoomService();
+const matchmakingService = createMatchmakingService(gameRoomService);
 
 // 2. Crear controladores inyectando servicios (capa de lógica)
-const userController = createUserController(userModule);
-const connectionController = createConnectionController(connectionModule);
+const userController = createUserController(userService);
+const messageController = createMessageController(messageService);
+const connectionController = createConnectionController(connectionService);
 
 // 3. Crear routers inyectando controladores (capa de rutas)
 const userRoutes = createUserRoutes(userController);
+const messageRoutes = createMessageRoutes(messageController);
 const connectionRoutes = createConnectionRoutes(connectionController);
 
 // ==================== SERVIDOR ====================
@@ -65,6 +84,7 @@ app.use(express.static(path.join(__dirname, '../../dist')));
 // ==================== RUTAS ====================
 
 app.use('/api/users', userRoutes);
+app.use('/api/messages', messageRoutes);
 app.use('/api/connected', connectionRoutes);
 
 // SPA Fallback - Servir index.html para todas las rutas que no sean API
@@ -72,7 +92,7 @@ app.use('/api/connected', connectionRoutes);
 app.use((req, res, next) => {
   // Si la petición es a /api/*, pasar al siguiente middleware (404 para APIs)
   if (req.path.startsWith('/api/')) {
-    return res.status(404).json({ error: '# Endpoint no encontrado #' });
+    return res.status(404).json({ error: 'Endpoint no encontrado' });
   }
 
   // Para cualquier otra ruta, servir el index.html del juego
@@ -84,18 +104,59 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   console.error('Error:', err);
   res.status(err.status || 500).json({
-    error: err.message || '# Error interno del servidor #'
+    error: err.message || 'Error interno del servidor'
+  });
+});
+
+// ==================== WEBSOCKET SERVER ====================
+
+const server = createServer(app);
+const wss = new WebSocketServer({ server });
+
+wss.on('connection', (ws) => {
+  console.log('Cliente WebSocket conectado');
+
+  ws.on('message', (message) => {
+    try {
+      const data = JSON.parse(message);
+
+      switch (data.type) {
+        case 'joinQueue':
+          matchmakingService.joinQueue(ws);
+          break;
+
+        case 'leaveQueue':
+          matchmakingService.leaveQueue(ws);
+          break;
+
+        default:
+          console.log('Mensaje desconocido:', data.type);
+      }
+    } catch (error) {
+      console.error('Error procesando mensaje:', error);
+    }
+  });
+
+  ws.on('close', () => {
+    console.log('Cliente WebSocket desconectado');
+    matchmakingService.leaveQueue(ws);
+    gameRoomService.handleDisconnect(ws);
+  });
+
+  ws.on('error', (error) => {
+    console.error('Error en WebSocket:', error);
   });
 });
 
 // ==================== INICIO DEL SERVIDOR ====================
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log('========================================');
-  console.log('  SERVIDOR DE CHAT PARA VIDEOJUEGO');
+  console.log('  SERVIDOR PARA VIDEOJUEGO');
   console.log('========================================');
   console.log(`  Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`  WebSocket disponible en ws://localhost:${PORT}`);
   console.log(`  `);
-  console.log(`  Juego: http://localhost:${PORT}`);
+  console.log(`  🎮 Juego: http://localhost:${PORT}`);
   console.log('========================================\n');
 });

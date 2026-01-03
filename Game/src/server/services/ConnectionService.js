@@ -1,7 +1,7 @@
 /**
  * Service para gestionar las conexiones activas de usuarios
  */
-export function createConnectionModule() {
+export function createConnectionService() {
   // Map para almacenar sesiones conectadas: sessionId -> timestamp de última conexión
   const connectedSessions = new Map();
 
