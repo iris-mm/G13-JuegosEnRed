@@ -15,7 +15,7 @@ export class LoginScene extends Phaser.Scene {
     constructor() {
         super('LoginScene');
     }
-
+    
     preload () {
         this.load.image('IMG_Background', IMG_Background);
         this.load.image('SPR_Button', SPR_Button);
@@ -30,6 +30,9 @@ export class LoginScene extends Phaser.Scene {
     }
 
     create () {
+
+        console.log('LOGIN SCENE CREATE');
+
         // Fondo
         const bg = this.add.image(600, 400, 'IMG_Background')
         bg.setOrigin(0.5);
