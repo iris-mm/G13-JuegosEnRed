@@ -1,12 +1,12 @@
 import Phaser from 'phaser';
 
+import { LoginScene } from './scenes/LoginScene.js';
 import { MainMenu } from './scenes/MainMenu.js';
 import { PlayModeMenu } from './scenes/PlayModeMenu.js';
 import { TutorialMenu } from './scenes/TutorialMenu.js';
 import { SettingsMenu } from './scenes/SettingsMenu.js';
 import { CreditsMenu } from './scenes/CreditsMenu.js';
 import { Lobby } from './scenes/Lobby.js';
-import { LoginScene } from './scenes/LoginScene.js';
 
 const _CONFIG = {
     type: Phaser.AUTO,
