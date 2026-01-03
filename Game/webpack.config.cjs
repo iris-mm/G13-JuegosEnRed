@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
@@ -26,6 +27,8 @@ module.exports = {
       { test: /\.(png|jpe?g|gif|svg)$/i, type: 'asset/resource' },
       // manejar fuentes
       { test: /\.(woff2?|ttf|otf|eot)$/i, type: 'asset/resource' },
+      // manejar textos externos
+      { test: /\.txt$/, use: 'raw-loader' },
       
       // manejar audio
       {

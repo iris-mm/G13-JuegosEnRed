@@ -49,7 +49,7 @@ export class MainMenu extends Phaser.Scene {
         });
         this.music.play();
 
-        this.cameras.main.fadeIn(100, 0, 0, 0)
+        this.cameras.main.fadeIn(100, 0, 0, 0);
     }
 
 
