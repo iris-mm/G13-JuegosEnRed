@@ -18,7 +18,6 @@ export class Lobby extends Phaser.Scene {
         this.load.image('IMG_DefaultBackground', IMG_DefaultBackground);
         this.load.image('SPR_Vampire', SPR_Vampire);
         this.load.image('SPR_Zombie', SPR_Zombie);
-
     }
 
     create() {
@@ -31,66 +30,27 @@ export class Lobby extends Phaser.Scene {
         new Button(600, 750, this, 'SPR_Button', "Salir", () => this.Leave());
         
         this.player1Icon = this.add.image(300, 300, 'SPR_Vampire');
-        this.youText = this.add.text(300, 120, "Tú", {fontSize: "32px"}).setOrigin(0.5);
+        this.youText = this.add.text(300, 120, "...", {fontSize: "32px"}).setOrigin(0.5);
 
         this.player2Icon = this.add.image(1200 - 300, 300, 'SPR_Zombie');
-        this.enemyText = this.add.text(1200 - 300, 120, "Rival", {fontSize: "32px"}).setOrigin(0.5);
+        this.enemyText = this.add.text(1200 - 300, 120, "...", {fontSize: "32px"}).setOrigin(0.5);
 
         this.stateText = this.add.text(600, 500, "...", {fontSize: "32px"}).setOrigin(0.5);
 
         this.cameras.main.fadeIn(100, 0, 0, 0);
 
-        this.connectionListener = (data) => { this.UpdateSceneOnConnection(data); }
-        connectionManager.addListener(this.connectionListener)
+        this.stateText.setText(`Esperando rival...`);
+        this.stateText.setColor('#ff0000');
+        this.startButton.setPosition(-128, -128)
 
         this.socket = null;
         this.connectToServer();
-
-        // Status text
-        this.statusText = this.add.text(1200 / 2, 800 / 2 - 50, 'Connecting to server...', {
-        fontSize: '24px',
-        color: '#ffff00'
-        }).setOrigin(0.5);
     }
 
     Leave(){
-        this.Shutdown();
+        this.LeaveQueue();
         this.cameras.main.fadeOut(100, 0, 0, 0);
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('MainMenu'))
-    }
-
-    UpdateSceneOnConnection(data){
-        try {
-            if (data.connected) {
-                this.startButton=this.add.text(600, 600, '¡Rival encontrado! (${data.count})', {
-                    color: '#00ff00',
-                });
-                this.startButton.on('pointerdown', () => {
-                    this.socket.send(JSON.stringify({
-                         type: 'PLAYER_READY' }));
-                });
-
-                // this.startButton.setPosition(600, 600)
-                // this.stateText.setText(`¡Rival encontrado! (${data.count})`);
-                // this.stateText.setColor('#00ff00');
-                // this.startButton.on('pointerdown', () => {
-                //     this.socket.send(JSON.stringify({
-                //          type: 'PLAYER_READY' })));
-                
-            } else {
-                this.startButton.setPosition(-128, -128)
-                this.stateText.setText('Esperando rival...');
-                this.stateText.setColor('#ff0000');
-            }
-        } catch (error) {
-            console.error('[Lobby] Error updating connection display:', error);
-        }
-    }
-
-    Shutdown() {
-        if (this.connectionListener) {
-            connectionManager.removeListener(this.connectionListener);
-        }
     }
 
     
@@ -114,32 +74,55 @@ export class Lobby extends Phaser.Scene {
                     console.error('Error parsing server message:', error);
                 }
             };
+            
 
             this.ws.onerror = (error) => {
+                this.startButton.setPosition(-128, -128)
                 console.error('WebSocket error:', error);
-                this.statusText.setText('Connection error!');
-                this.statusText.setColor('#ff0000');
+                this.stateText.setText('# Error de conexión #');
+                this.stateText.setColor('#ff0000');
             };
             this.ws.onclose = () => {
+                this.startButton.setPosition(-128, -128)
                 console.log('WebSocket connection closed');
                 if (this.scene.isActive('LobbyScene')) {
-                    this.statusText.setText('Connection lost!');
-                    this.statusText.setColor('#ff0000');
+                    this.stateText.setText('# Conexión perdida #');
+                    this.stateText.setColor('#ff0000');
                 }
             };
         } catch (error) {
+            this.startButton.setPosition(-128, -128)
             console.error('Error connecting to server:', error);
-            this.statusText.setText('Failed to connect!');
-            this.statusText.setColor('#ff0000');
+            this.stateText.setText('# Fallo al conectar#');
+            this.stateText.setColor('#ff0000');
 
         }
     }
 
     handleServerMessage(data) {
         switch (data.type) {
+            case 'playerDisconnected':
+                this.stateText.setText(`Esperando rival...`);
+                this.stateText.setColor('#ff0000');
+                this.startButton.setPosition(-128, -128)
+
+                this.socket = null;
+                this.connectToServer();
+                break;
+
+            case 'gameStart':
+                this.stateText.setText(`¡Rival encontrado!`);
+                this.stateText.setColor('#00ff00');
+                this.startButton.setPosition(600, 600)
+                this.startButton.container.on('pointerdown', () => {
+                    this.socket.send(JSON.stringify({
+                         type: 'PLAYER_READY' }));
+                });
+                break;
+
             case 'START_GAME':
                 console.log('Game starting in room:', data.roomId);
-                this.scene.start('PlayModeMenu', { 
+                this.scene.start('Game', { 
                     roomId: data.roomId,
                     role: data.role, 
                     socket: this.ws });
@@ -150,4 +133,10 @@ export class Lobby extends Phaser.Scene {
         }
     }
     
+    LeaveQueue() {
+      if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+        this.ws.send(JSON.stringify({ type: 'leaveQueue' }));
+        this.ws.close();
+      }
+    }
 }

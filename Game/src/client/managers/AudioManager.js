@@ -1,5 +1,5 @@
 export const AudioManager = {
-    volume: 0.5,
+    volume: 0.1,
 
     SetVolume(v) {
         this.volume = v;
