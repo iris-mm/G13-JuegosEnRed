@@ -29,3 +29,5 @@ const _CONFIG = {
 }
 
 const _GAME = new Phaser.Game(_CONFIG);
+// Asegurar que comienza en login
+_GAME.scene.start('LoginScene');
