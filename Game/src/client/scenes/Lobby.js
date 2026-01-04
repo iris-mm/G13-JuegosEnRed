@@ -18,6 +18,7 @@ export class Lobby extends Phaser.Scene {
         this.load.image('IMG_DefaultBackground', IMG_DefaultBackground);
         this.load.image('SPR_Vampire', SPR_Vampire);
         this.load.image('SPR_Zombie', SPR_Zombie);
+
     }
 
     create() {
@@ -46,7 +47,7 @@ export class Lobby extends Phaser.Scene {
         this.connectToServer();
 
         // Status text
-        this.statusText = this.add.text(width / 2, height / 2 - 50, 'Connecting to server...', {
+        this.statusText = this.add.text(1200 / 2, 800 / 2 - 50, 'Connecting to server...', {
         fontSize: '24px',
         color: '#ffff00'
         }).setOrigin(0.5);
