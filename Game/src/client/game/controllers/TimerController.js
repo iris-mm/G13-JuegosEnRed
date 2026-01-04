@@ -1,4 +1,4 @@
-import { AudioManager } from "./AudioManager";
+import { AudioManager } from "../../../client/managers/AudioManager.js";
 
 export class TimerController{
     constructor (scene, text){
@@ -48,7 +48,7 @@ export class TimerController{
         //Sonido de alerta cuando quedan 10 segundos o menos
           if (seconds <= 5 && !this.alertPlayed) {
             const timerAlert = this.scene.sound.add('timer_alert');
-            timerAlert.play({ volume: AudioManager.getVolume() * 4 });
+            timerAlert.play({ volume: AudioManager.GetVolume() * 4 });
             this.alertPlayed = true;
         }
     }

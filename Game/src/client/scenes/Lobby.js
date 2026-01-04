@@ -5,9 +5,9 @@ import { connectionManager } from '../../client/managers/ConnectionManager.js';
 // @ts-ignore
 import IMG_DefaultBackground from '../../../public/assets/images/DefaultBackground.png';
 // @ts-ignore
-import SPR_Vampire from '../../../public/assets/sprites/Vampire.png';
+import SPR_Vampire from '../../../public/assets/sprites/vampiresa_front.png';
 // @ts-ignore
-import SPR_Zombie from '../../../public/assets/sprites/Zombie.png';
+import SPR_Zombie from '../../../public/assets/sprites/zombie_front.png';
 
 export class Lobby extends Phaser.Scene {
     constructor() {

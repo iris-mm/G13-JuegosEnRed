@@ -3,67 +3,67 @@ import Phaser from 'phaser';
 //importar imagenes
 //JUEGO
 // @ts-ignore
-import floor from '../../assets/stone_tile.png';
+import floor from '../../../public/assets/sprites/stone_tile.png';
 // @ts-ignore
-import game_boundary from '../../assets/game_boundary.png';
+import game_boundary from '../../../public/assets/sprites/game_boundary.png';
 // @ts-ignore
-import leaves from '../../assets/leaves_overlay.png';
+import leaves from '../../../public/assets/sprites/leaves_overlay.png';
 // @ts-ignore
 
 //ITEMS
-import candySprite from '../../assets/sprites/caramelo.png';
+import candySprite from '../../../public/assets/sprites/caramelo.png';
 // @ts-ignore
-import pumpkin1 from '../../assets/sprites/obj calabaza.png';
+import pumpkin1 from '../../../public/assets/sprites/obj calabaza.png';
 // @ts-ignore
-import pumpkin2 from '../../assets/sprites/obj calabaza 2.png';
+import pumpkin2 from '../../../public/assets/sprites/obj calabaza 2.png';
 // @ts-ignore
-import pumpkin3 from '../../assets/sprites/obj calabaza 3.png';
+import pumpkin3 from '../../../public/assets/sprites/obj calabaza 3.png';
 // @ts-ignore
-import rock from '../../assets/sprites/obj piedra.png';
+import rock from '../../../public/assets/sprites/obj piedra.png';
 
 //POWER UPS
 // @ts-ignore
-import speedPowerUpSprite from '../../assets/sprites/obj_foco_def.png';
+import speedPowerUpSprite from '../../../public/assets/sprites/obj_foco_def.png';
 
 //PERSONAJES
 //Para el idle (temporal)
 // @ts-ignore
-import vampiresaFrontEst from '../../assets/sprites/vampiresa_front.png';
+import vampiresaFrontEst from '../../../public/assets/sprites/vampiresa_front.png';
 // @ts-ignore
-import zombiFrontEst from '../../assets/sprites/zombi_front.png';
+import zombiFrontEst from '../../../public/assets/sprites/zombie_front.png';
 //Animaciones
 // @ts-ignore
-import vampiresaFront from '../../assets/sprites/Spritesheets/SS_vampiresa_front.png';
+import vampiresaFront from '../../../public/assets/sprites/Spritesheets/SS_vampiresa_front.png';
 // @ts-ignore
-import vampiresaback from '../../assets/sprites/Spritesheets/SS_vampiresa_back.png';
+import vampiresaback from '../../../public/assets/sprites/Spritesheets/SS_vampiresa_back.png';
 // @ts-ignore
-import vampiresaLeft from '../../assets/sprites/Spritesheets/SS_vampiresa_left.png';
+import vampiresaLeft from '../../../public/assets/sprites/Spritesheets/SS_vampiresa_left.png';
 // @ts-ignore
-import vampiresaRight from '../../assets/sprites/Spritesheets/SS_vampiresa_right.png';
+import vampiresaRight from '../../../public/assets/sprites/Spritesheets/SS_vampiresa_right.png';
 // @ts-ignore
-import zombiFront from '../../assets/sprites/Spritesheets/SS_zombie_front.png';
+import zombiFront from '../../../public/assets/sprites/Spritesheets/SS_zombie_front.png';
 // @ts-ignore
-import zombiBack from '../../assets/sprites/Spritesheets/SS_zombie_back.png';
+import zombiBack from '../../../public/assets/sprites/Spritesheets/SS_zombie_back.png';
 // @ts-ignore
-import zombiLeft from '../../assets/sprites/Spritesheets/SS_zombie_left.png';
+import zombiLeft from '../../../public/assets/sprites/Spritesheets/SS_zombie_left.png';
 // @ts-ignore
-import zombiRight from '../../assets/sprites/Spritesheets/SS_zombie_right.png';
+import zombiRight from '../../../public/assets/sprites/Spritesheets/SS_zombie_right.png';
 
 //SONIDOS
 // @ts-ignore
-import gameMusic from '../../assets/music_sounds/game_music.mp3';
+import gameMusic from '../../../public/assets/music/game_music.mp3';
 // @ts-ignore
-import timerAlert from '../../assets/music_sounds/timer_alert.mp3';
+import timerAlert from '../../../public/assets/music/timer_alert.mp3';
 
 //CLASES
-import { TimerController } from '../game/controllers/TimerController.js';
-import { EntitiesController } from '../game/controllers/EntitiesController.js';
-import { Candy } from '../game/items/Candy.js';
-import { Player } from '../game/player/playerController.js';
-import { ThrowableItem } from '../game/items/ThrowableItem.js';
-import { CandyBasket } from '../game/controllers/CandyBasket.js';
-import { AudioManager } from '../managers/AudioManager';
-import { SpeedPowerUp } from '../game/items/SpeedPowerUp.js';
+import { TimerController } from '../../client/game/controllers/TimerController.js';
+import { EntitiesController } from '../../client/game/controllers/EntitiesController.js';
+import { Candy } from '../../client/game/items/Candy.js';
+import { Player } from '../../client/game/player/playerController.js';
+import { ThrowableItem } from '../../client/game/items/ThrowableItem.js';
+import { CandyBasket } from '../../client/game/controllers/CandyBasket.js';
+import { AudioManager } from '../../client/managers/AudioManager.js';
+import { SpeedPowerUp } from '../../client/game/items/SpeedPowerUp.js';
 
 
 export class GameScene extends Phaser.Scene {
@@ -118,10 +118,10 @@ export class GameScene extends Phaser.Scene {
         .setAlpha(0.75);
 
         //Volumen global
-                this.sound.volume = AudioManager.getVolume();
+                this.sound.volume = AudioManager.GetVolume();
                 this.sound.stopAll(); //para que no se superpongan las canciones
                 this.music = this.sound.add('game_music', {
-                    volume: AudioManager.getVolume(),
+                    volume: AudioManager.GetVolume(),
                     loop: true
                 });
                 this.music.play();
