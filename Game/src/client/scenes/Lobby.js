@@ -41,6 +41,15 @@ export class Lobby extends Phaser.Scene {
 
         this.connectionListener = (data) => { this.UpdateSceneOnConnection(data); }
         connectionManager.addListener(this.connectionListener)
+
+        this.socket = null;
+        this.connectToServer();
+
+        // Status text
+        this.statusText = this.add.text(width / 2, height / 2 - 50, 'Connecting to server...', {
+        fontSize: '24px',
+        color: '#ffff00'
+        }).setOrigin(0.5);
     }
 
     Leave(){
@@ -52,9 +61,21 @@ export class Lobby extends Phaser.Scene {
     UpdateSceneOnConnection(data){
         try {
             if (data.connected) {
-                this.startButton.setPosition(600, 600)
-                this.stateText.setText(`¡Rival encontrado! (${data.count})`);
-                this.stateText.setColor('#00ff00');
+                this.startButton=this.add.text(600, 600, '¡Rival encontrado! (${data.count})', {
+                    color: '#00ff00',
+                });
+                this.startButton.on('pointerdown', () => {
+                    this.socket.send(JSON.stringify({
+                         type: 'PLAYER_READY' }));
+                });
+
+                // this.startButton.setPosition(600, 600)
+                // this.stateText.setText(`¡Rival encontrado! (${data.count})`);
+                // this.stateText.setColor('#00ff00');
+                // this.startButton.on('pointerdown', () => {
+                //     this.socket.send(JSON.stringify({
+                //          type: 'PLAYER_READY' })));
+                
             } else {
                 this.startButton.setPosition(-128, -128)
                 this.stateText.setText('Esperando rival...');
@@ -70,4 +91,62 @@ export class Lobby extends Phaser.Scene {
             connectionManager.removeListener(this.connectionListener);
         }
     }
+
+    
+    connectToServer() {
+        try {
+            // Connect to WebSocket server (same host as web server)
+            const wsUrl = `ws://${window.location.host}`;
+
+            this.ws= new WebSocket(wsUrl);
+
+            this.ws.onopen = () => {
+                console.log('Connected to WebSocket server');
+                // Join matchmaking queue
+                this.ws.send(JSON.stringify({ type: 'JOIN_QUEUE' }));
+            };
+            this.ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    this.handleServerMessage(data);
+                } catch (error) {
+                    console.error('Error parsing server message:', error);
+                }
+            };
+
+            this.ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                this.statusText.setText('Connection error!');
+                this.statusText.setColor('#ff0000');
+            };
+            this.ws.onclose = () => {
+                console.log('WebSocket connection closed');
+                if (this.scene.isActive('LobbyScene')) {
+                    this.statusText.setText('Connection lost!');
+                    this.statusText.setColor('#ff0000');
+                }
+            };
+        } catch (error) {
+            console.error('Error connecting to server:', error);
+            this.statusText.setText('Failed to connect!');
+            this.statusText.setColor('#ff0000');
+
+        }
+    }
+
+    handleServerMessage(data) {
+        switch (data.type) {
+            case 'START_GAME':
+                console.log('Game starting in room:', data.roomId);
+                this.scene.start('PlayModeMenu', { 
+                    roomId: data.roomId,
+                    role: data.role, 
+                    socket: this.ws });
+                break;
+
+            default:
+                console.log('Unknown server message type:', data.type);
+        }
+    }
+    
 }

@@ -34,4 +34,9 @@ export class PlayModeMenu extends Phaser.Scene {
         this.cameras.main.fadeOut(100, 0, 0, 0);
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('MainMenu'))
     }
+
+    init(data){
+        this.socket = data.socket;
+        this.roomId = data.roomId;
+    }
 }

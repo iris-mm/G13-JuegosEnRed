@@ -108,45 +108,71 @@ app.use((err, req, res, next) => {
   });
 });
 
+
 // ==================== WEBSOCKET SERVER ====================
 
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
+// Manejar conexiones WebSocket
 wss.on('connection', (ws) => {
   console.log('Cliente WebSocket conectado');
 
   ws.on('message', (message) => {
     try {
       const data = JSON.parse(message);
+      console.log('Mensaje recibido:', data);
 
+      // Manejar los diferentes tipos de mensajes ----
       switch (data.type) {
-        case 'joinQueue':
+        case 'JOIN_QUEUE':
           matchmakingService.joinQueue(ws);
           break;
 
-        case 'leaveQueue':
+        case 'LEAVE_QUEUE':
+          //----Implementar lógica de salir de la cola-------------- 
           matchmakingService.leaveQueue(ws);
+          break;
+
+        case 'PLAYER_READY':
+          //----Implementar lógica de jugador listo-------------- 
+          gameRoomService.setPlayerReady(ws);
+          break;
+
+        case 'PLAYER_ACTION':
+          //----Implementar lógica de acción del jugador-------------- 
+          gameRoomService.handlePlayerAction(ws, data.action);
+          break;
+        case 'POINT':
+          //----Implementar lógica de puntuación-------------- 
+          //gameRoomService.handlePoint(ws, data.point);
           break;
 
         default:
           console.log('Mensaje desconocido:', data.type);
       }
+
+
+
     } catch (error) {
       console.error('Error procesando mensaje:', error);
     }
   });
 
+  //Cuando el cliente se desconecta
   ws.on('close', () => {
     console.log('Cliente WebSocket desconectado');
     matchmakingService.leaveQueue(ws);
     gameRoomService.handleDisconnect(ws);
   });
 
+  // Manejar errores en la conexión WebSocket --- Implementar según sea necesario ---
   ws.on('error', (error) => {
     console.error('Error en WebSocket:', error);
   });
 });
+
+
 
 // ==================== INICIO DEL SERVIDOR ====================
 
