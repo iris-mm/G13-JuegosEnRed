@@ -39,45 +39,18 @@ export class Lobby extends Phaser.Scene {
 
         this.cameras.main.fadeIn(100, 0, 0, 0);
 
-        this.connectionListener = (data) => { this.UpdateSceneOnConnection(data); }
-        connectionManager.addListener(this.connectionListener)
+        this.stateText.setText(`Esperando rival...`);
+        this.stateText.setColor('#ff0000');
+        this.startButton.setPosition(-128, -128)
 
         this.socket = null;
         this.connectToServer();
     }
 
     Leave(){
-        this.Shutdown();
         this.LeaveQueue();
         this.cameras.main.fadeOut(100, 0, 0, 0);
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('MainMenu'))
-    }
-
-    UpdateSceneOnConnection(data){
-        try {
-            if (data.connected) {
-                this.stateText.setText(`¡Rival encontrado!`);
-                this.stateText.setColor('#00ff00');
-                this.startButton.setPosition(600, 600)
-                this.startButton.container.on('pointerdown', () => {
-                    this.socket.send(JSON.stringify({
-                         type: 'PLAYER_READY' }));
-                });
-                
-            } else {
-                this.startButton.setPosition(-128, -128)
-                this.stateText.setText('Esperando rival...');
-                this.stateText.setColor('#ff0000');
-            }
-        } catch (error) {
-            console.error('[Lobby] Error updating connection display:', error);
-        }
-    }
-
-    Shutdown() {
-        if (this.connectionListener) {
-            connectionManager.removeListener(this.connectionListener);
-        }
     }
 
     
@@ -128,14 +101,28 @@ export class Lobby extends Phaser.Scene {
 
     handleServerMessage(data) {
         switch (data.type) {
-            case 'queueStatus':
-                this.stateText.setText(`${data.position}º en cola.`);
-                this.stateText.setColor('#aaaaaa')
+            case 'playerDisconnected':
+                this.stateText.setText(`Esperando rival...`);
+                this.stateText.setColor('#ff0000');
+                this.startButton.setPosition(-128, -128)
+
+                this.socket = null;
+                this.connectToServer();
+                break;
+
+            case 'gameStart':
+                this.stateText.setText(`¡Rival encontrado!`);
+                this.stateText.setColor('#00ff00');
+                this.startButton.setPosition(600, 600)
+                this.startButton.container.on('pointerdown', () => {
+                    this.socket.send(JSON.stringify({
+                         type: 'PLAYER_READY' }));
+                });
                 break;
 
             case 'START_GAME':
                 console.log('Game starting in room:', data.roomId);
-                this.scene.start('PlayModeMenu', { 
+                this.scene.start('Game', { 
                     roomId: data.roomId,
                     role: data.role, 
                     socket: this.ws });
