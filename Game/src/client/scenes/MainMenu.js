@@ -41,7 +41,7 @@ export class MainMenu extends Phaser.Scene {
         new Button(600 + 300, 700, this, 'SPR_Button', "Créditos", () => this.StartCredits(), { fontSize: '25px' });
 
         // Boton solo local
-        new Button(600, 500, this, 'SPR_Button', "Local", () => this.StartGame(),);
+        new Button(600, 500, this, 'SPR_Button', "Local", () => this.StartLocalGame(),);
 
         //Volumen global
         this.sound.volume = AudioManager.GetVolume();
@@ -76,7 +76,7 @@ export class MainMenu extends Phaser.Scene {
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('CreditsMenu'))
     }
 
-    StartGame(){
+    StartLocalGame(){
         this.cameras.main.fadeOut(100, 0, 0, 0);
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('GameScene'))
     }

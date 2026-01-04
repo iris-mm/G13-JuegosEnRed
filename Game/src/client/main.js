@@ -20,7 +20,7 @@ const _CONFIG = {
             debug: false
         }
     },
-    scene: [LoginScene, MainMenu, PlayModeMenu, TutorialMenu, SettingsMenu, CreditsMenu, Lobby],
+    scene: [LoginScene, MainMenu, PlayModeMenu, TutorialMenu, SettingsMenu, CreditsMenu, Lobby,],
     backgroundColor: '#000000',
     pixelArt: true,
     dom: {
