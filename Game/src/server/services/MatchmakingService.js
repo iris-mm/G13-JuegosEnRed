@@ -36,6 +36,9 @@ export function createMatchmakingService(gameRoomService) {
     if (index !== -1) {
       queue.splice(index, 1);
     }
+    ws.send(JSON.stringify({
+      type: 'leftQueue'
+    }));
   }
 
   /**
@@ -48,30 +51,21 @@ export function createMatchmakingService(gameRoomService) {
 
       // Create a game room
       const roomId = gameRoomService.createRoom(player1.ws, player2.ws);
-
-      // Generate random ball direction
-      const angle = (Math.random() * 60 - 30) * (Math.PI / 180); // -30 to 30 degrees
-      const speed = 300;
-      const ballData = {
-        x: 400,
-        y: 300,
-        vx: speed * Math.cos(angle),
-        vy: speed * Math.sin(angle)
-      };
+      // Assign roomId to WebSocket connections
+      player1.ws.roomId = roomId;
+      player2.ws.roomId = roomId;
 
       // Notify both players
       player1.ws.send(JSON.stringify({
         type: 'gameStart',
         role: 'player1',
         roomId,
-        ball: ballData
       }));
 
       player2.ws.send(JSON.stringify({
         type: 'gameStart',
         role: 'player2',
         roomId,
-        ball: ballData
       }));
     }
   }
