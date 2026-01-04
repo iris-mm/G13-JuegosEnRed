@@ -8,6 +8,7 @@ import { SettingsMenu } from './scenes/SettingsMenu.js';
 import { CreditsMenu } from './scenes/CreditsMenu.js';
 import { Lobby } from './scenes/Lobby.js';
 import { GameScene } from './scenes/GameScene.js';
+import { PauseScene } from './scenes/PauseScene.js';
 
 const _CONFIG = {
     type: Phaser.AUTO,
@@ -21,7 +22,7 @@ const _CONFIG = {
             debug: false
         }
     },
-    scene: [LoginScene, MainMenu, PlayModeMenu, TutorialMenu, SettingsMenu, CreditsMenu, Lobby, GameScene],
+    scene: [LoginScene, MainMenu, PlayModeMenu, TutorialMenu, SettingsMenu, CreditsMenu, Lobby, GameScene, PauseScene],
     backgroundColor: '#000000',
     pixelArt: true,
     dom: {
