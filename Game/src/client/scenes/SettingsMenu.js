@@ -98,10 +98,10 @@ export class SettingsMenu extends Phaser.Scene {
 
     GoBack(){
         //Botón de "Volver" según desde dónde se abrió la escena
-        if(this.openedFrom === 'MenuScene'){
+        if(this.openedFrom === 'MainMenu'){
             this.scene.stop(); // Detener la escena de configuración
             this.scene.stop('PauseScene'); // Asegurarse de detener la escena de pausa si estaba abierta
-            this.scene.start('MenuScene'); // Ir al menú principal
+            this.scene.start('MainMenu'); // Ir al menú principal
         }
         else if(this.openedFrom === 'PauseScene'){
             this.scene.stop(); // Detener la escena de configuración
@@ -120,6 +120,6 @@ export class SettingsMenu extends Phaser.Scene {
     }
 
     Init(data){
-        this.openedFrom = data?.from || 'MenuScene'; // MenuScene o PauseScene
+        this.openedFrom = data?.from || 'MainMenu'; // MainMenu o PauseScene
     }
 }
