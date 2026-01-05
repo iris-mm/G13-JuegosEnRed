@@ -52,7 +52,30 @@ export class MainMenu extends Phaser.Scene {
         });
         this.music.play();
 
+        this.showCurrentUser();
+
         this.cameras.main.fadeIn(100, 0, 0, 0);
+    }
+
+    showCurrentUser() {
+        const userId = localStorage.getItem('userId');
+        if (!userId) return;
+
+        fetch(`/api/users/${userId}`)
+        .then(res => {
+            if (!res.ok) throw new Error();
+            return res.json();
+        })
+        .then(user => {
+            this.add.text(1170, 30, `${user.username}`, {
+                fontFamily: 'ButtonsFont',
+                fontSize: '40px',
+                color: '#ffffff'
+            }).setOrigin(1, 0);
+        })
+        .catch(() => {
+        console.warn('No se pudo cargar el usuario');
+        });
     }
 
 
