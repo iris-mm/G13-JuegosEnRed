@@ -2,7 +2,7 @@
  * Servicio de gestión de usuarios usando closures
  * Este servicio mantiene el estado de los usuarios en memoria
  * y proporciona métodos para realizar operaciones CRUD
- */
+*/
 
 export function createUserService() {
   // Estado privado: almacén de usuarios

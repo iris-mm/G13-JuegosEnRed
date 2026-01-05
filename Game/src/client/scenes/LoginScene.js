@@ -127,14 +127,18 @@ export class LoginScene extends Phaser.Scene {
         );
 
         // Auto login
-        fetch(`/api/users/${userId}`)
+        const userId = localStorage.getItem('userId');
+
+        if (userId) {
+            fetch(`/api/users/${userId}`)
             .then(res => {
-            if (!res.ok) throw new Error();
+                if (!res.ok) throw new Error();
                 this.StartMenu();
             })
             .catch(() => {
             localStorage.removeItem('userId');
-        });
+            });
+        }
         
 
         this.add.text(600, 250, 'Introduce tu nombre', {
