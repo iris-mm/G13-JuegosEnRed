@@ -79,6 +79,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.ws = data.ws;                 // WebSocket
         this.playerRole = data.playerRole; // 'player1' | 'player2'
         this.gameStarted = false;
+        this.gameEnded = false;
     }
 
     preload(){
@@ -174,10 +175,13 @@ export class MultiplayerGameScene extends Phaser.Scene {
 
         // Avisar al servidor que estamos listos
         this.send({ type: 'playerReady' });
+
+        this.ws.inLobby = false;
     }
 
     setupWebSocket() {
         this.ws.onmessage = (event) => {
+            if(this.gameEnded) return;
             const data = JSON.parse(event.data);
             switch(data.type) {
                 case 'startGame':
@@ -193,12 +197,57 @@ export class MultiplayerGameScene extends Phaser.Scene {
                     this.endGame(data.winner);
                     break;
 
+                case 'playerDisconnected':
+                    this.handleDisconnect();
+                    break;
                 // otros casos según lo que envíe tu server
             }
         };
 
-        this.ws.onclose = () => this.endGame('disconnect');
-        this.ws.onerror = () => this.endGame('disconnect');
+        
+    }
+
+    setupWebSocketListeners() {
+        this.ws.onclose = () => {
+            console.log('WebSocket connection closed');
+            if (!this.gameEnded) {
+                this.handleDisconnect();
+            }
+        };
+
+        this.ws.onerror = (error) => {
+            console.error('WebSocket error:', error);
+            if (!this.gameEnded) {
+                this.handleDisconnect();
+            }
+        };
+    }
+
+    handleDisconnect() {
+        console.error('EJECUTANDO HANDLE DISCONNECT');
+        this.gameEnded=true;
+        this.gameStarted=false;
+        //Para todas las entidades
+
+        this.add.text(400, 250, 'El otro jugador se ha desconectado', { 
+            fontSize: '48px', 
+            color: '#ff0000ff' 
+        }).setOrigin(0.5);
+
+        this.createMenuButton();
+    }
+
+    createMenuButton() {
+        const menuButton = this.add.text(600, 400, 'Volver al menú', { 
+            fontSize: '32px',
+            color: '#ffffff',
+        }).setOrigin(0.5).setInteractive({ useHandCursor: true })
+        .on('pointerdown', () => {
+            if(this.ws && this.ws.readyState === WebSocket.OPEN) {
+                this.ws.close();
+            }
+            this.scene.start('MainMenu');
+        });
     }
 
     send(msg) {
@@ -208,7 +257,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
     }
 
     update() {
-        if(!this.gameStarted) return;
+        if(!this.gameStarted||this.gameEnded) return;
 
         // Actualizar local
         this.localPlayer.Update();
