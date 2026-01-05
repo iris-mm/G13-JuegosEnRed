@@ -12,26 +12,22 @@ export function createUserController(userService) {
    */
   async function create(req, res, next) {
     try {
-      // 1. Extraer datos del body: email, name, avatar, level
-      const { email, name, avatar, level } = req.body;
+      // 1. Extraer nombre del body
+      const { username } = req.body;
 
       // 2. Validar que los campos requeridos estén presentes (email, name)
-      if (!email || !name) {
+      if (!username || username.trim() === '') {
         return res.status(400).json({
-          error: 'Los campos email y name son obligatorios'
+          error: 'Username es obligatorio'
         });
       }
 
       // 3. Llamar a userService.createUser()
-      const newUser = userService.createUser({ email, name, avatar, level });
+      const newUser = userService.createUser({ username });
 
       // 4. Retornar 201 con el usuario creado
       res.status(201).json(newUser);
     } catch (error) {
-      // 5. Si hay error (ej: email duplicado), retornar 400
-      if (error.message === 'El email ya está registrado') {
-        return res.status(400).json({ error: error.message });
-      }
       next(error);
     }
   }
@@ -79,19 +75,18 @@ export function createUserController(userService) {
   /**
    * PUT /api/users/:id - Actualizar un usuario
    */
-  async function update(req, res, next) {
+  async function addWin(req, res, next) {
     try {
-      // 1. Extraer el id de req.params
       const { id } = req.params;
 
-      // 2. Extraer los campos a actualizar del body
-      const { email, name, avatar, level } = req.body;
+      const user = userService.addWin(id);
 
-      // 3. Llamar a userService.updateUser()
-      userService.updateUser(id);
+      if (!user) {
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
 
-      // 4. Si existe, retornar 200 con el usuario actualizado
-      res.status(204).json(res);
+      res.status(200).json(user);
+
     } catch (error) {
       res.status(404).json({
           error: `No se encontró a ningún usuario con esa ID.`
@@ -126,7 +121,7 @@ export function createUserController(userService) {
     create,
     getAll,
     getById,
-    update,
+    addWin,
     remove
   };
 }

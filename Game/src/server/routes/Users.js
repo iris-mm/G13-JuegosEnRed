@@ -19,8 +19,8 @@ export function createUserRoutes(userController) {
   // GET /api/users/:id - Obtener un usuario por ID
   router.get('/:id', userController.getById);
 
-  // PUT /api/users/:id - Actualizar un usuario
-  router.put('/:id', userController.update);
+  // PUT /api/users/:id/win - Actualizar wins de un usuario
+  router.put('/:id/win', userController.addWin);
 
   // DELETE /api/users/:id - Eliminar un usuario
   router.delete('/:id', userController.remove);
