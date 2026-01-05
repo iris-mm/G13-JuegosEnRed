@@ -54,6 +54,8 @@ export class Lobby extends Phaser.Scene {
 
         this.socket = null;
         this.connectToServer();
+        
+
     }
 
     Leave() {
@@ -69,6 +71,8 @@ export class Lobby extends Phaser.Scene {
             const wsUrl = `ws://${window.location.host}`;
 
             this.ws = new WebSocket(wsUrl);
+            this.ws.inLobby = true;
+
 
             this.ws.onopen = () => {
                 console.log('Connected to WebSocket server');
@@ -110,7 +114,7 @@ export class Lobby extends Phaser.Scene {
 
     handleServerMessage(data) {
         switch (data.type) {
-            case 'playerDisconnected':
+            case 'playerNotConnected':
                 this.stateText.setText(`Esperando rival...`);
                 this.stateText.setColor('#ff0000');
                 this.startButton.setPosition(-128, -128)
