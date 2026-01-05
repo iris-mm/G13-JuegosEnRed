@@ -26,7 +26,7 @@ export class Lobby extends Phaser.Scene {
         bg.displayWidth = 1200;
         bg.displayHeight = 800;
 
-        this.startButton = new Button(-128, -128, this, 'SPR_Button', "Comenzar", null);
+        this.startButton = new Button(-128, -128, this, 'SPR_Button', "Start", null);
         new Button(600, 750, this, 'SPR_Button', "Salir", () => this.Leave());
         
         this.player1Icon = this.add.image(300, 300, 'SPR_Vampire');
