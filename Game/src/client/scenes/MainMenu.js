@@ -58,7 +58,7 @@ export class MainMenu extends Phaser.Scene {
 
     StartPlay(){
         this.cameras.main.fadeOut(100, 0, 0, 0);
-        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('MultiplayerGameScene'))
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Lobby'))
     }
     
     StartTutorial(){
