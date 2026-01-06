@@ -27,7 +27,18 @@ export function createGameRoomService() {
         ready:false
       },
       active: true, // Room is active
-      ballActive: true // Track if ball is in play (prevents duplicate goals)
+      //ballActive: true // Track if ball is in play (prevents duplicate goals)
+
+      // MODIFICADO PARA ITEMS
+      items: [
+        { id: 'candy', x: 600, y: 400, type: 'Candy', grabbedBy: null },
+        { id: 'pumpkin1', x: 200, y: 300, type: 'Throwable', grabbedBy: null },
+        { id: 'pumpkin2', x: 400, y: 300, type: 'Throwable', grabbedBy: null },
+        { id: 'pumpkin3', x: 600, y: 300, type: 'Throwable', grabbedBy: null },
+        { id: 'rock1', x: 800, y: 300, type: 'Throwable', grabbedBy: null },
+        { id: 'rock2', x: 1000, y: 300, type: 'Throwable', grabbedBy: null },
+        { id: 'speedPowerUp', x: 600, y: 200, type: 'PowerUp', grabbedBy: null }
+      ]
     };
 
     rooms.set(roomId, room);
@@ -55,6 +66,14 @@ export function createGameRoomService() {
     // If both players are ready, start the game
     if (room.player1.ready && room.player2.ready) {
       startGame(room);
+
+      // MODIFICADO PARA ITEMS: enviar estado inicial de items a ambos jugadores
+      const itemsMsg = JSON.stringify({
+        type: 'initialItems',
+        items: room.items
+      });
+      room.player1.ws.send(itemsMsg);
+      room.player2.ws.send(itemsMsg);
     }
   }
 
@@ -67,6 +86,38 @@ export function createGameRoomService() {
     room.player1.ws.send(startMsg);
     room.player2.ws.send(startMsg);
   }
+
+  // MODIFICADO PARA ITEMS
+  function handleItemAction(ws, data) {
+    const roomId = ws.roomId;
+    if (!roomId) return;
+
+    const room = rooms.get(roomId);
+    if (!room || !room.active) return;
+
+    const item = room.items.find(i => i.id === data.id);
+    if (!item) return;
+
+    switch(data.type){
+      case 'grabItem':
+        item.grabbedBy = data.playerId;
+        item.x = data.x;
+        item.y = data.y;
+        break;
+
+      case 'moveItem': // si se lanza
+        item.x = data.x;
+        item.y = data.y;
+        item.grabbedBy = null;
+        break;
+    }
+
+    // Replicar a ambos jugadores
+    const msg = JSON.stringify({ type: 'itemUpdate', item });
+    if (room.player1.ws.readyState === 1) room.player1.ws.send(msg);
+    if (room.player2.ws.readyState === 1) room.player2.ws.send(msg);
+  }
+
 
   /**
    * Handle paddle movement from a player
@@ -224,6 +275,7 @@ export function createGameRoomService() {
   return {
     createRoom,
     setPlayerReady,
+    handleItemAction, // MODIFICADO PARA ITEMS
     // handlePaddleMove,
     // handleGoal,
     handleDisconnect,

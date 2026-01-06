@@ -143,6 +143,12 @@ wss.on('connection', (ws) => {
           //----Implementar lógica de acción del jugador-------------- 
           gameRoomService.handlePlayerAction(ws, data.action);
           break;
+
+        case 'ITEM_ACTION': 
+         //----Implementar lógica de los items--------------   
+          gameRoomService.handleItemAction(ws, data.action);
+          break;
+
         case 'POINT':
           //----Implementar lógica de puntuación-------------- 
           //gameRoomService.handlePoint(ws, data.point);
