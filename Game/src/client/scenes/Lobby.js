@@ -26,16 +26,25 @@ export class Lobby extends Phaser.Scene {
         bg.displayWidth = 1200;
         bg.displayHeight = 800;
 
-        this.startButton = new Button(-128, -128, this, 'SPR_Button', "Comenzar", null);
+        this.startButton = new Button(600, 600, this, 'SPR_Button', "Comenzar", () => {
+            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                this.ws.send(JSON.stringify({ type: 'PLAYER_READY' }));
+                this.startButton.setPosition(-128, -128); // ocultar botón tras pulsar
+                this.stateText.setText('Esperando que el rival esté listo...');
+                this.stateText.setColor('#ffff00');
+            }
+        });
+        this.startButton.setPosition(-128, -128); // oculto al inicio
+
         new Button(600, 750, this, 'SPR_Button', "Salir", () => this.Leave());
-        
+
         this.player1Icon = this.add.image(300, 300, 'SPR_Vampire');
-        this.youText = this.add.text(300, 120, "...", {fontSize: "32px"}).setOrigin(0.5);
+        this.youText = this.add.text(300, 120, "...", { fontSize: "32px" }).setOrigin(0.5);
 
         this.player2Icon = this.add.image(1200 - 300, 300, 'SPR_Zombie');
-        this.enemyText = this.add.text(1200 - 300, 120, "...", {fontSize: "32px"}).setOrigin(0.5);
+        this.enemyText = this.add.text(1200 - 300, 120, "...", { fontSize: "32px" }).setOrigin(0.5);
 
-        this.stateText = this.add.text(600, 500, "...", {fontSize: "32px"}).setOrigin(0.5);
+        this.stateText = this.add.text(600, 500, "...", { fontSize: "32px" }).setOrigin(0.5);
 
         this.cameras.main.fadeIn(100, 0, 0, 0);
 
@@ -45,21 +54,25 @@ export class Lobby extends Phaser.Scene {
 
         this.socket = null;
         this.connectToServer();
+        
+
     }
 
-    Leave(){
+    Leave() {
         this.LeaveQueue();
         this.cameras.main.fadeOut(100, 0, 0, 0);
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('MainMenu'))
     }
 
-    
+
     connectToServer() {
         try {
             // Connect to WebSocket server (same host as web server)
             const wsUrl = `ws://${window.location.host}`;
 
-            this.ws= new WebSocket(wsUrl);
+            this.ws = new WebSocket(wsUrl);
+            this.ws.inLobby = true;
+
 
             this.ws.onopen = () => {
                 console.log('Connected to WebSocket server');
@@ -74,7 +87,7 @@ export class Lobby extends Phaser.Scene {
                     console.error('Error parsing server message:', error);
                 }
             };
-            
+
 
             this.ws.onerror = (error) => {
                 this.startButton.setPosition(-128, -128)
@@ -101,7 +114,7 @@ export class Lobby extends Phaser.Scene {
 
     handleServerMessage(data) {
         switch (data.type) {
-            case 'playerDisconnected':
+            case 'playerNotConnected':
                 this.stateText.setText(`Esperando rival...`);
                 this.stateText.setColor('#ff0000');
                 this.startButton.setPosition(-128, -128)
@@ -113,30 +126,29 @@ export class Lobby extends Phaser.Scene {
             case 'gameStart':
                 this.stateText.setText(`¡Rival encontrado!`);
                 this.stateText.setColor('#00ff00');
-                this.startButton.setPosition(600, 600)
-                this.startButton.container.on('pointerdown', () => {
-                    this.socket.send(JSON.stringify({
-                         type: 'PLAYER_READY' }));
-                });
+                this.startButton.setPosition(600, 600); // ahora sí es clicable
                 break;
 
             case 'START_GAME':
                 console.log('Game starting in room:', data.roomId);
-                this.scene.start('GameScene', { 
+
+                this.scene.start('MultiplayerGameScene', {
+
                     roomId: data.roomId,
-                    role: data.role, 
-                    socket: this.ws });
+                    role: data.role,
+                    socket: this.ws
+                });
                 break;
 
             default:
                 console.log('Unknown server message type:', data.type);
         }
     }
-    
+
     LeaveQueue() {
-      if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-        this.ws.send(JSON.stringify({ type: 'leaveQueue' }));
-        this.ws.close();
-      }
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify({ type: 'leaveQueue' }));
+            this.ws.close();
+        }
     }
 }

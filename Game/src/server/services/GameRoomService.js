@@ -26,7 +26,7 @@ export function createGameRoomService() {
         score: 0,
         ready:false
       },
-      active: true,
+      active: true, // Room is active
       ballActive: true // Track if ball is in play (prevents duplicate goals)
     };
 
@@ -202,6 +202,12 @@ export function createGameRoomService() {
       const opponent = room.player1.ws === ws ? room.player2.ws : room.player1.ws;
 
       if (opponent.readyState === 1) { // WebSocket.OPEN
+        //Diferenciar entre Lobby y MultiplayerGameScene
+        if(opponent.inLobby){
+        opponent.send(JSON.stringify({
+          type: 'playerNotConnected'
+        }));
+      } else {
         opponent.send(JSON.stringify({
           type: 'playerDisconnected'
         }));
@@ -212,6 +218,9 @@ export function createGameRoomService() {
     room.active = false;
     rooms.delete(roomId);
   }
+  }
+
+  
 
   /**
    * Get number of active rooms

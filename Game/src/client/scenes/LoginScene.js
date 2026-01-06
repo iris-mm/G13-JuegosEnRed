@@ -56,18 +56,21 @@ export class LoginScene extends Phaser.Scene {
         let username = '';
         let focused = false;
 
-        const inputBg = this.add.rectangle(600, 300, INPUT_WIDTH, INPUT_HEIGHT, 0xffffff)
+        // Fondo del texto
+        const titleBg = this.add.rectangle(600, 450, 500, 350, 0x000000, 0.6).setOrigin(0.5);
+
+        const inputBg = this.add.rectangle(600, 420, INPUT_WIDTH, INPUT_HEIGHT, 0xffffff)
         .setStrokeStyle(2, 0x000000)
         .setInteractive({ useHandCursor: true });
 
-        const inputText = this.add.text(600 - INPUT_WIDTH / 2 + 12, 300, '', {
+        const inputText = this.add.text(600 - INPUT_WIDTH / 2 + 12, 420, '', {
             fontFamily: 'ButtonsFont',
             fontSize: '28px',
             color: '#000000'
         }).setOrigin(0, 0.5);
 
         // Línea vertical de escritura
-        const line = this.add.rectangle( inputText.x + 2, 300, 2, 30, 0x000000);
+        const line = this.add.rectangle( inputText.x + 2, 420, 2, 30, 0x000000);
 
         // Parpadeo
         this.time.addEvent({
@@ -108,7 +111,7 @@ export class LoginScene extends Phaser.Scene {
 
         // Botón de inicio de sesión
 
-        new Button(600, 420, this, 'SPR_Button', 'Login',() => 
+        new Button(600, 540, this, 'SPR_Button', 'Login',() => 
             {
                 if (!username.trim()) return; // Si no hay nombre, devolver
 
@@ -128,14 +131,26 @@ export class LoginScene extends Phaser.Scene {
 
         // Auto login
         const userId = localStorage.getItem('userId');
-        if (userId) this.StartMenu();
+
+        if (userId) {
+            fetch(`/api/users/${userId}`)
+            .then(res => {
+                if (!res.ok) throw new Error();
+                this.StartMenu();
+            })
+            .catch(() => {
+            localStorage.removeItem('userId');
+            });
+        }
         
 
-        this.add.text(600, 250, 'Introduce tu nombre', {
+        this.add.text(600, 330, 'Introduce tu nombre', {
             fontFamily: 'ButtonsFont',
             fontSize: '32px',
             color: '#ffffff'
         }).setOrigin(0.5);
+
+        
     }
 
     StartMenu(){

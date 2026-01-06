@@ -21,6 +21,12 @@ import pumpkin3 from '../../assets/sprites/obj calabaza 3.png';
 // @ts-ignore
 import rock from '../../assets/sprites/obj piedra.png';
 
+//CONTROLES
+// @ts-ignore
+import controlWASD from '../../assets/images/ControlsWASD.png';
+// @ts-ignore
+import controlIJLK from '../../assets/images/ControlsIJLK.png';
+
 //PERSONAJES
 //Para el idle (temporal)
 // @ts-ignore
@@ -79,6 +85,9 @@ export class GameScene extends Phaser.Scene {
         this.load.image('pumpkin2', pumpkin2);
         this.load.image('pumpkin3', pumpkin3);
         this.load.image('rock', rock);
+        //Controls
+        this.load.image('controlWASD', controlWASD);
+        this.load.image('controlIJLK', controlIJLK);
         //Players
         //para el idle (temporal)
         this.load.image('vampiresa_frontEst', vampiresaFrontEst);
@@ -216,6 +225,40 @@ export class GameScene extends Phaser.Scene {
             left: 'J',
             right: 'L'
         });
+
+        //Mostrar controles al inicio
+        this.controlsUI1= this.add.image(180, 20, 'controlWASD')
+        .setOrigin(0,0)
+        .setDepth(100)
+        .setScale(0.25);
+
+        this.time.delayedCall(5000, () => {
+            this.tweens.add({
+                targets: this.controlsUI1,
+                alpha: 0,
+                duration: 500,
+                onComplete: () => {
+                    this.controlsUI1.destroy();
+                }
+            });
+        });
+
+        this.controlsUI2= this.add.image(830, 20, 'controlIJLK')
+        .setOrigin(0,0)
+        .setDepth(100)
+        .setScale(0.25);
+
+        this.time.delayedCall(5000, () => {
+            this.tweens.add({
+                targets: this.controlsUI2,
+                alpha: 0,
+                duration: 500,
+                onComplete: () => {
+                    this.controlsUI2.destroy();
+                }
+            });
+        });
+    
 
         //Instanciar jugadores
         this.player1 = new Player(100, 400, 0.4, 'zombi', this, this.keys1, 'E');

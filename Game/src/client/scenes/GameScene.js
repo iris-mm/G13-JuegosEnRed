@@ -21,6 +21,12 @@ import pumpkin3 from '../../../public/assets/sprites/obj calabaza 3.png';
 // @ts-ignore
 import rock from '../../../public/assets/sprites/obj piedra.png';
 
+//CONTROLES
+// @ts-ignore
+import controlWASD from '../../../public/assets/images/ControlsWASD.png';
+// @ts-ignore
+import controlIJLK from '../../../public/assets/images/ControlsIJKL.png';
+
 //POWER UPS
 // @ts-ignore
 import speedPowerUpSprite from '../../../public/assets/sprites/obj_foco_def.png';
@@ -90,6 +96,9 @@ export class GameScene extends Phaser.Scene {
         this.load.image('pumpkin2', pumpkin2);
         this.load.image('pumpkin3', pumpkin3);
         this.load.image('rock', rock);
+        //Controls
+        this.load.image('controlWASD', controlWASD);
+        this.load.image('controlIJLK', controlIJLK);
         //Power Ups
         this.load.image('speed_powerup', speedPowerUpSprite);
         //Players
@@ -144,7 +153,7 @@ export class GameScene extends Phaser.Scene {
         .setAlpha(0.5);
 
         //Temporizador
-        let timerText = this.add.text(600, 100, "45", {fontSize: "48px",color: "#ffffff"})
+        let timerText = this.add.text(600, 100, "45", {fontSize: "48px",color: "#ffffff",  backgroundColor: "#000000a7"})
         .setOrigin(0.5, 0.5);
         timerText.depth = 100;
 
@@ -230,6 +239,40 @@ export class GameScene extends Phaser.Scene {
             right: 'L'
         });
 
+        //Mostrar controles al inicio
+        this.controlsUI1= this.add.image(180, 20, 'controlWASD')
+        .setOrigin(0,0)
+        .setDepth(100)
+        .setScale(0.25);
+
+        this.time.delayedCall(5000, () => {
+            this.tweens.add({
+                targets: this.controlsUI1,
+                alpha: 0,
+                duration: 500,
+                onComplete: () => {
+                    this.controlsUI1.destroy();
+                }
+            });
+        });
+
+        this.controlsUI2= this.add.image(830, 20, 'controlIJLK')
+        .setOrigin(0,0)
+        .setDepth(100)
+        .setScale(0.25);
+
+        this.time.delayedCall(5000, () => {
+            this.tweens.add({
+                targets: this.controlsUI2,
+                alpha: 0,
+                duration: 500,
+                onComplete: () => {
+                    this.controlsUI2.destroy();
+                }
+            });
+        });
+    
+
         //Instanciar jugadores
         this.player1 = new Player(100, 400, 0.4, 'zombi', this, this.keys1, 'E');
         this.player2 = new Player(1100, 400, 0.4, 'vampiresa', this, this.keys2, 'O');
@@ -277,9 +320,9 @@ export class GameScene extends Phaser.Scene {
         this.basket2 = new CandyBasket(1200 - 60, 400, 1200 - 90, 310, this.player2, this);
 
         this.player1Score = 0;
-        this.player1ScoreText = this.add.text(100, 100, "0", {fontSize: "48px",color: "#ffffff"});
+        this.player1ScoreText = this.add.text(100, 100, "0", {fontSize: "48px",color: "#ffffff",  backgroundColor: "#000000a7"});
         this.player2Score = 0;
-        this.player2ScoreText = this.add.text(1200 - 100, 100, "0", {fontSize: "48px",color: "#ffffff"});
+        this.player2ScoreText = this.add.text(1200 - 100, 100, "0", {fontSize: "48px",color: "#ffffff",  backgroundColor: "#000000a7"});
 
         // Power Up
         this.speedPowerUp = new SpeedPowerUp(600, 400, 0.3, this);
@@ -346,7 +389,7 @@ export class GameScene extends Phaser.Scene {
             this.time.delayedCall(3000, () => {
                 msgGameOver.destroy();
                 msgWinner.destroy();
-                this.scene.start("MenuScene");
+                this.scene.start("MainMenu");
             });
 
             return;
