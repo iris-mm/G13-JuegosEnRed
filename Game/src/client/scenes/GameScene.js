@@ -147,7 +147,7 @@ export class GameScene extends Phaser.Scene {
         .setAlpha(0.5);
 
         //Temporizador
-        let timerText = this.add.text(600, 100, "45", {fontSize: "48px",color: "#ffffff"})
+        let timerText = this.add.text(600, 100, "45", {fontSize: "48px",color: "#ffffff",  backgroundColor: "#000000a7"})
         .setOrigin(0.5, 0.5);
         timerText.depth = 100;
 
@@ -295,9 +295,9 @@ export class GameScene extends Phaser.Scene {
         this.basket2 = new CandyBasket(1200 - 60, 400, 1200 - 90, 310, this.player2, this);
 
         this.player1Score = 0;
-        this.player1ScoreText = this.add.text(100, 100, "0", {fontSize: "48px",color: "#ffffff"});
+        this.player1ScoreText = this.add.text(100, 100, "0", {fontSize: "48px",color: "#ffffff",  backgroundColor: "#000000a7"});
         this.player2Score = 0;
-        this.player2ScoreText = this.add.text(1200 - 100, 100, "0", {fontSize: "48px",color: "#ffffff"});
+        this.player2ScoreText = this.add.text(1200 - 100, 100, "0", {fontSize: "48px",color: "#ffffff",  backgroundColor: "#000000a7"});
 
         // Power Up
         this.speedPowerUp = new SpeedPowerUp(600, 400, 0.3, this);
@@ -355,7 +355,7 @@ export class GameScene extends Phaser.Scene {
             this.time.delayedCall(3000, () => {
                 msgGameOver.destroy();
                 msgWinner.destroy();
-                this.scene.start("MenuScene");
+                this.scene.start("MainMenu");
             });
 
             return;
