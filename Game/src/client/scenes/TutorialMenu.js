@@ -34,17 +34,17 @@ export class TutorialMenu extends Phaser.Scene {
         bg.displayWidth = 1200;
         bg.displayHeight = 800;
 
-        this.player1Icon = this.add.image(300, 450, 'SPR_Zombie');
-        this.player2Icon = this.add.image(1200 - 300, 450, 'SPR_Vampire');
+        this.player1Icon = this.add.image(350, 450, 'SPR_Zombie');
+        this.player2Icon = this.add.image(1200 - 350, 450, 'SPR_Vampire');
 
-        this.controlsUI1= this.add.image(190, 150, 'controlWASD')
+        this.controlsUI1= this.add.image(190, 100, 'controlWASD')
         .setOrigin(0,0)
         .setDepth(100)
-        .setScale(0.25);
-        this.controlsUI2= this.add.image(790, 150, 'controlIJLK')
+        .setScale(0.35);
+        this.controlsUI2= this.add.image(700, 100, 'controlIJLK')
         .setOrigin(0,0)
         .setDepth(100)
-        .setScale(0.25);
+        .setScale(0.35);
 
 
         new Button(100, 750, this, 'SPR_Button', "Volver", () => this.GoBack());
