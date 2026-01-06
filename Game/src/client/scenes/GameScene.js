@@ -355,7 +355,7 @@ export class GameScene extends Phaser.Scene {
             this.time.delayedCall(3000, () => {
                 msgGameOver.destroy();
                 msgWinner.destroy();
-                this.scene.start("MenuScene");
+                this.scene.start("MainMenu");
             });
 
             return;
