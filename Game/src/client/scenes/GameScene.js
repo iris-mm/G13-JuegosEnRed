@@ -8,9 +8,14 @@ import floor from '../../../public/assets/sprites/stone_tile.png';
 import game_boundary from '../../../public/assets/sprites/game_boundary.png';
 // @ts-ignore
 import leaves from '../../../public/assets/sprites/leaves_overlay.png';
+
+//TIMER
 // @ts-ignore
+import timerImg from '../../../public/assets/sprites/Timer1.png';
+
 
 //ITEMS
+// @ts-ignore
 import candySprite from '../../../public/assets/sprites/caramelo.png';
 // @ts-ignore
 import pumpkin1 from '../../../public/assets/sprites/obj calabaza.png';
@@ -82,6 +87,7 @@ export class GameScene extends Phaser.Scene {
         this.load.image('floor', floor);
         this.load.image('game_boundary', game_boundary);
         this.load.image('leaves', leaves);
+        this.load.image('timerImg', timerImg);
         this.load.audio('game_music', gameMusic);
         this.load.audio('timer_alert', timerAlert);
         //Items
@@ -110,7 +116,7 @@ export class GameScene extends Phaser.Scene {
         this.load.spritesheet('zombi_right', zombiRight, { frameWidth: 256, frameHeight: 256 });
     }
 
-        create(){
+    create(){
         //Escenario
         const floor = this.add.tileSprite(0, 0, 1200, 800, 'floor') 
         .setOrigin(0,0) 
@@ -147,9 +153,14 @@ export class GameScene extends Phaser.Scene {
         .setAlpha(0.5);
 
         //Temporizador
+
+        const timerImage = this.add.image(600, 95, 'timerImg')
+        .setDepth(99)
+        .setScale(6)
+        .setAlpha(0.75);
         let timerText = this.add.text(600, 100, "45", {fontSize: "48px",color: "#ffffff"})
-        .setOrigin(0.5, 0.5);
-        timerText.depth = 100;
+        .setOrigin(0.5, 0.5)
+        .setDepth(100);
 
         this.countdown = new TimerController(this, timerText);
         this.round = 1;
@@ -295,9 +306,11 @@ export class GameScene extends Phaser.Scene {
         this.basket2 = new CandyBasket(1200 - 60, 400, 1200 - 90, 310, this.player2, this);
 
         this.player1Score = 0;
-        this.player1ScoreText = this.add.text(100, 100, "0", {fontSize: "48px",color: "#ffffff"});
+        this.player1ScoreText = this.add.text(447, 80, "0", {fontSize: "48px",color: "#ffffff"})
+        .setDepth(100);
         this.player2Score = 0;
-        this.player2ScoreText = this.add.text(1200 - 100, 100, "0", {fontSize: "48px",color: "#ffffff"});
+        this.player2ScoreText = this.add.text(723, 80, "0", {fontSize: "48px",color: "#ffffff"})
+        .setDepth(100);
 
         // Power Up
         this.speedPowerUp = new SpeedPowerUp(600, 400, 0.3, this);
