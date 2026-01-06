@@ -153,7 +153,6 @@ export class GameScene extends Phaser.Scene {
         .setAlpha(0.5);
 
         //Temporizador
-
         const timerImage = this.add.image(600, 95, 'timerImg')
         .setDepth(99)
         .setScale(6)
@@ -161,6 +160,7 @@ export class GameScene extends Phaser.Scene {
         let timerText = this.add.text(600, 100, "45", {fontSize: "48px",color: "#ffffff"})
         .setOrigin(0.5, 0.5)
         .setDepth(100);
+
 
         this.countdown = new TimerController(this, timerText);
         this.round = 1;
@@ -312,6 +312,7 @@ export class GameScene extends Phaser.Scene {
         this.player2ScoreText = this.add.text(723, 80, "0", {fontSize: "48px",color: "#ffffff"})
         .setDepth(100);
 
+
         // Power Up
         this.speedPowerUp = new SpeedPowerUp(600, 400, 0.3, this);
         this.entitiesController.AddEntity(this.speedPowerUp);
@@ -368,7 +369,7 @@ export class GameScene extends Phaser.Scene {
             this.time.delayedCall(3000, () => {
                 msgGameOver.destroy();
                 msgWinner.destroy();
-                this.scene.start("MenuScene");
+                this.scene.start("MainMenu");
             });
 
             return;
