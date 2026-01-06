@@ -117,12 +117,15 @@ const wss = new WebSocketServer({ server });
 // Manejar conexiones WebSocket
 wss.on('connection', (ws) => {
   console.log('Cliente WebSocket conectado');
+  // @ts-ignore
+  ws.roomId = null;
 
   ws.on('message', (message) => {
     try {
-      const data = JSON.parse(message);
+      const msgString = message.toString();
+      const data = JSON.parse(msgString);
       console.log('Mensaje recibido:', data);
-
+      
       // Manejar los diferentes tipos de mensajes ----
       switch (data.type) {
         case 'JOIN_QUEUE':
@@ -143,6 +146,20 @@ wss.on('connection', (ws) => {
           //----Implementar lógica de acción del jugador-------------- 
           gameRoomService.handlePlayerAction(ws, data.action);
           break;
+
+        case 'PLAYER_MOVE':
+          //---Implementar lógica de movimiento de un jugador---
+          wss.clients.forEach(client => {
+            if (client !== ws && client.readyState === 1) {
+              client.send(JSON.stringify({
+              type: 'PLAYER_MOVED',
+              x: data.x,
+              y: data.y 
+            }));
+          }
+        });
+          break;
+
         case 'POINT':
           //----Implementar lógica de puntuación-------------- 
           //gameRoomService.handlePoint(ws, data.point);
@@ -151,7 +168,6 @@ wss.on('connection', (ws) => {
         default:
           console.log('Mensaje desconocido:', data.type);
       }
-
 
 
     } catch (error) {

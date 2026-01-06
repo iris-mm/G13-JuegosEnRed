@@ -33,7 +33,9 @@ export function createGameRoomService() {
     rooms.set(roomId, room);
 
     // Store room ID on WebSocket for quick lookup
+    // @ts-ignore
     player1Ws.roomId = roomId;
+    // @ts-ignore
     player2Ws.roomId = roomId;
 
     return roomId;
@@ -60,12 +62,18 @@ export function createGameRoomService() {
 
   function startGame(room) {
     // Notify both players that the game is starting
-    const startMsg = JSON.stringify({
+    const startMsgPlayer1 = JSON.stringify({
       type: 'START_GAME',
-      roomId: room.id
+      roomId: room.id,
+      role: 'player1'
     });
-    room.player1.ws.send(startMsg);
-    room.player2.ws.send(startMsg);
+    const startMsgPlayer2 = JSON.stringify({
+    type: 'START_GAME',
+    roomId: room.id,
+    role: 'player2'
+    });
+    room.player1.ws.send(startMsgPlayer1);
+    room.player2.ws.send(startMsgPlayer2);
   }
 
   /**
@@ -181,6 +189,7 @@ export function createGameRoomService() {
    * @param {WebSocket} ws - Disconnected player's WebSocket
    */
   function handleDisconnect(ws) {
+    // @ts-ignore
     const roomId = ws.roomId;
     if (!roomId) return;
 

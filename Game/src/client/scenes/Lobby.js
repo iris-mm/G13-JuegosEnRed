@@ -122,7 +122,7 @@ export class Lobby extends Phaser.Scene {
 
             case 'START_GAME':
                 console.log('Game starting in room:', data.roomId);
-                this.scene.start('Game', { 
+                this.scene.start('GameScene', { 
                     roomId: data.roomId,
                     role: data.role, 
                     socket: this.ws });
