@@ -212,23 +212,24 @@ export class MultiplayerGameScene extends Phaser.Scene {
                 case 'CANDY_SPAWN':
                     console.log('CANDY_SPAWN recibido', data.candy);
 
-                    // Por seguridad: si ya existe, lo borramos
-                    /* if (this.candy) {
-                         this.candy.destroy();
-                         this.candy = null;
-                     }*/
-
-                    this.candy = new OnlineCandy(
-                        data.candy.x,
-                        data.candy.y,
-                        0.2,
-                        'candy',
-                        this,
-                        data.candy.id
-                    );
-                    this.entitiesController.AddEntity(this.candy);
-                    this.candy.setupOverlap(this.localPlayer, this.remotePlayer, this);
+                    if (!this.candy) {
+                        this.candy = new OnlineCandy(
+                            data.candy.x,
+                            data.candy.y,
+                            0.2,
+                            'candy',
+                            this,
+                            data.candy.id
+                        );
+                        this.entitiesController.AddEntity(this.candy);
+                        this.candy.setupOverlap(this.localPlayer, this.remotePlayer, this);
+                    } else {
+                        // Si ya existe, solo moverlo a la posición enviada por el server
+                        this.candy.MoveTo(data.candy.x, data.candy.y);
+                        this.candy.hasSpawned = true;
+                    }
                     break;
+
 
 
                 case 'gameOver':

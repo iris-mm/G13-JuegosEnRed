@@ -69,36 +69,44 @@ export function createGameRoomService() {
     }
   }
 
-  function startGame(room) {
-    // Crear caramelo con posición única
-    room.candy = {
-      id: 'candy_1',
-      x: 600,
-      y: 400,
-      active: true
-    };
-
+ function startGame(room) {
+    //Notifica a los jugadores
     const startMsgPlayer1 = JSON.stringify({
-      type: 'START_GAME',
-      roomId: room.id,
-      role: 'player1'
+        type: 'START_GAME',
+        roomId: room.id,
+        role: 'player1'
     });
     const startMsgPlayer2 = JSON.stringify({
-      type: 'START_GAME',
-      roomId: room.id,
-      role: 'player2'
+        type: 'START_GAME',
+        roomId: room.id,
+        role: 'player2'
     });
     room.player1.ws.send(startMsgPlayer1);
     room.player2.ws.send(startMsgPlayer2);
 
-    const candySpawnMsg = {
-      type: 'CANDY_SPAWN',
-      candy: room.candy
+    //Genera caramelo inicial en posición random
+    room.candy = spawnCandy(room);
+}
+
+
+  //Crea y envía la posición del caramelo a ambos jugadores
+  function spawnCandy(room) {
+    const candy = {
+        id: `candy_${Date.now()}`, // ID único
+        x: Math.floor(Math.random() * (1200 - 512) + 256), // entre 256 y 1200-256
+        y: Math.floor(Math.random() * (800 - 256) + 128)   // entre 128 y 800-128
     };
 
-    room.player1.ws.send(JSON.stringify(candySpawnMsg));
-    room.player2.ws.send(JSON.stringify(candySpawnMsg));
-  }
+    // Mandar a los dos jugadores
+    if (room.player1.ws.readyState === 1) {
+        room.player1.ws.send(JSON.stringify({ type: 'CANDY_SPAWN', candy }));
+    }
+    if (room.player2.ws.readyState === 1) {
+        room.player2.ws.send(JSON.stringify({ type: 'CANDY_SPAWN', candy }));
+    }
+
+    return candy;
+}
 
   /**
    * Handle paddle movement from a player

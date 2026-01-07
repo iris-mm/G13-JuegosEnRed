@@ -13,17 +13,31 @@ export class OnlineCandy extends Item {
         super(x, y, scale, sprite, scene);
 
         this.id = id;
-        this.hasSpawned = true;  
+        this.hasSpawned = true;
     }
- 
+
     Update() {
         super.Update();
         // No spawn, no spawnTime, nada de random
     }
 
+    OnCollected() {
+        this.ClearPlayer();
+        this.MoveTo(-64, -64); // ocultarlo mientras llega la nueva posición
+        this.hasSpawned = false;
+
+        if (this.scene.ws && this.scene.ws.readyState === WebSocket.OPEN) {
+            this.scene.ws.send(JSON.stringify({
+                type: 'REQUEST_CANDY_RESPAWN',
+                candyId: this.id
+            }));
+        }
+    }
+    
     Reset() {
         this.ClearPlayer();
         // no mover a -64, -64
         // no spawnTime
     }
+
 }
