@@ -74,7 +74,7 @@ export class MainMenu extends Phaser.Scene {
             }).setOrigin(1, 0);
         })
         .catch(() => {
-        console.warn('No se pudo cargar el usuario');
+            console.warn('No se pudo cargar el usuario');
         });
     }
 
