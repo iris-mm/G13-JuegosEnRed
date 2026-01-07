@@ -171,7 +171,6 @@ wss.on('connection', (ws) => {
           break;
 
         case 'POINT':
-          //----Implementar lógica de puntuación-------------- 
           gameRoomService.handleCandyCollected(ws);
           break;
 
