@@ -19,15 +19,16 @@ export function createGameRoomService() {
       player1: {
         ws: player1Ws,
         score: 0,
-        ready:false
+        ready: false
       },
       player2: {
         ws: player2Ws,
         score: 0,
-        ready:false
+        ready: false
       },
       active: true, // Room is active
-      ballActive: true // Track if ball is in play (prevents duplicate goals)
+
+      candy: null 
     };
 
     rooms.set(roomId, room);
@@ -42,18 +43,18 @@ export function createGameRoomService() {
   }
 
   function setPlayerReady(ws) {
-      const room = Array.from(rooms.values()).find(r =>
+    const room = Array.from(rooms.values()).find(r =>
       r.player1.ws === ws || r.player2.ws === ws
-  );
+    );
 
     if (!room || !room.active) return;
 
     if (room.player1.ws === ws) {
-        room.player1.ready = true;
-        console.log('Player 1 ready');
+      room.player1.ready = true;
+      console.log('Player 1 ready');
     } else if (room.player2.ws === ws) {
-        room.player2.ready = true;
-        console.log('Player 2 ready');
+      room.player2.ready = true;
+      console.log('Player 2 ready');
     }
 
     console.log(
@@ -68,21 +69,44 @@ export function createGameRoomService() {
     }
   }
 
-  function startGame(room) {
-    // Notify both players that the game is starting
+ function startGame(room) {
+    //Notifica a los jugadores
     const startMsgPlayer1 = JSON.stringify({
-      type: 'START_GAME',
-      roomId: room.id,
-      role: 'player1'
+        type: 'START_GAME',
+        roomId: room.id,
+        role: 'player1'
     });
     const startMsgPlayer2 = JSON.stringify({
-    type: 'START_GAME',
-    roomId: room.id,
-    role: 'player2'
+        type: 'START_GAME',
+        roomId: room.id,
+        role: 'player2'
     });
     room.player1.ws.send(startMsgPlayer1);
     room.player2.ws.send(startMsgPlayer2);
-  }
+
+    //Genera caramelo inicial en posición random
+    room.candy = spawnCandy(room);
+}
+
+
+  //Crea y envía la posición del caramelo a ambos jugadores
+  function spawnCandy(room) {
+    const candy = {
+        id: `candy_${Date.now()}`, // ID único
+        x: Math.floor(Math.random() * (1200 - 512) + 256), // entre 256 y 1200-256
+        y: Math.floor(Math.random() * (800 - 256) + 128)   // entre 128 y 800-128
+    };
+
+    // Mandar a los dos jugadores
+    if (room.player1.ws.readyState === 1) {
+        room.player1.ws.send(JSON.stringify({ type: 'CANDY_SPAWN', candy }));
+    }
+    if (room.player2.ws.readyState === 1) {
+        room.player2.ws.send(JSON.stringify({ type: 'CANDY_SPAWN', candy }));
+    }
+
+    return candy;
+}
 
   /**
    * Handle paddle movement from a player
@@ -211,24 +235,24 @@ export function createGameRoomService() {
 
       if (opponent.readyState === 1) { // WebSocket.OPEN
         //Diferenciar entre Lobby y MultiplayerGameScene
-        if(opponent.inLobby){
-        opponent.send(JSON.stringify({
-          type: 'playerNotConnected'
-        }));
-      } else {
-        opponent.send(JSON.stringify({
-          type: 'playerDisconnected'
-        }));
+        if (opponent.inLobby) {
+          opponent.send(JSON.stringify({
+            type: 'playerNotConnected'
+          }));
+        } else {
+          opponent.send(JSON.stringify({
+            type: 'playerDisconnected'
+          }));
+        }
       }
+
+      // Clean up room
+      room.active = false;
+      rooms.delete(roomId);
     }
-
-    // Clean up room
-    room.active = false;
-    rooms.delete(roomId);
-  }
   }
 
-  
+
 
   /**
    * Get number of active rooms
