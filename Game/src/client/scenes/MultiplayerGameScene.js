@@ -69,6 +69,7 @@ import { Candy } from '../../client/game/items/Candy.js';
 import { ThrowableItem } from '../../client/game/items/ThrowableItem.js';
 import { CandyBasket } from '../../client/game/controllers/CandyBasket.js';
 import { SpeedPowerUp } from '../../client/game/items/SpeedPowerUp.js';
+import { OnlineCandy } from '../../client/game/items/OnlineCandy.js';
 
 export class MultiplayerGameScene extends Phaser.Scene {
     constructor() {
@@ -80,9 +81,12 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.playerRole = data.playerRole; // 'player1' | 'player2'
         this.gameStarted = false;
         this.gameEnded = false;
+
+        this.candy = null;
+
     }
 
-    preload(){
+    preload() {
         //Game
         this.load.image('floor', floor);
         this.load.image('game_boundary', game_boundary);
@@ -107,17 +111,17 @@ export class MultiplayerGameScene extends Phaser.Scene {
         //
         this.load.spritesheet('vampiresa_front', vampiresaFront, { frameWidth: 256, frameHeight: 256 });
         this.load.spritesheet('vampiresa_back', vampiresaback, { frameWidth: 256, frameHeight: 256 });
-        this.load.spritesheet('vampiresa_left',  vampiresaLeft, { frameWidth: 256, frameHeight: 256 });
+        this.load.spritesheet('vampiresa_left', vampiresaLeft, { frameWidth: 256, frameHeight: 256 });
         this.load.spritesheet('vampiresa_right', vampiresaRight, { frameWidth: 256, frameHeight: 256 });
-        this.load.spritesheet('zombi_front',  zombiFront, { frameWidth: 256, frameHeight: 256 });
+        this.load.spritesheet('zombi_front', zombiFront, { frameWidth: 256, frameHeight: 256 });
         this.load.spritesheet('zombi_back', zombiBack, { frameWidth: 256, frameHeight: 256 });
-        this.load.spritesheet('zombi_left',  zombiLeft, { frameWidth: 256, frameHeight: 256 });
+        this.load.spritesheet('zombi_left', zombiLeft, { frameWidth: 256, frameHeight: 256 });
         this.load.spritesheet('zombi_right', zombiRight, { frameWidth: 256, frameHeight: 256 });
     }
 
     create() {
         // Escenario igual que GameScene
-        this.add.tileSprite(0, 0, 1200, 800, 'floor').setOrigin(0,0).setScale(3);
+        this.add.tileSprite(0, 0, 1200, 800, 'floor').setOrigin(0, 0).setScale(3);
         const boundary = this.physics.add.image(600, 400, 'game_boundary').setScale(3).setImmovable(true);
         this.add.image(600, 400, 'leaves').setScale(3).setAlpha(0.75);
 
@@ -133,25 +137,25 @@ export class MultiplayerGameScene extends Phaser.Scene {
         // Instanciar jugadores
         this.keys1 = this.input.keyboard.addKeys({ up: 'W', down: 'S', left: 'A', right: 'D' });
         this.keys2 = this.input.keyboard.addKeys({ up: 'I', down: 'K', left: 'J', right: 'L' });
-        
-        if(this.playerRole === 'player1') {
 
-            this.localPlayer  = new Player(100, 400, 0.4, 'zombi', this, this.keys1, 'E', true);
+        if (this.playerRole === 'player1') {
+
+            this.localPlayer = new Player(100, 400, 0.4, 'zombi', this, this.keys1, 'E', true);
             this.remotePlayer = new Player(1100, 400, 0.4, 'vampiresa', this, null, null, false);
 
-        } else if(this.playerRole === 'player2'){
+        } else if (this.playerRole === 'player2') {
 
-            this.localPlayer  = new Player(1100, 400, 0.4, 'vampiresa', this, this.keys2, 'O', true);
+            this.localPlayer = new Player(1100, 400, 0.4, 'vampiresa', this, this.keys2, 'O', true);
             this.remotePlayer = new Player(100, 400, 0.4, 'zombi', this, null, null, false);
 
         }
 
         this.entitiesController.AddEntity(this.localPlayer);
         this.entitiesController.AddEntity(this.remotePlayer);
-        
+
         // Items, candy baskets, power-ups
-        this.candy = new Candy(0.2, 'candy', this);
-        this.entitiesController.AddEntity(this.candy);
+        /* this.candy = new Candy(0.2, 'candy', this);
+         this.entitiesController.AddEntity(this.candy);*/
 
         // Agregar throwable items
         this.items = [
@@ -162,7 +166,6 @@ export class MultiplayerGameScene extends Phaser.Scene {
             new ThrowableItem(0.3, 'rock', this)
         ];
         this.items.forEach(item => this.entitiesController.AddEntity(item));
-        this.candy.setupOverlap(this.localPlayer, this.remotePlayer, this);
         this.items.forEach(item => item.setupOverlap(this.localPlayer, this.remotePlayer, this));
 
         this.basket1 = new CandyBasket(60, 400, 70, 310, this.localPlayer, this);
@@ -171,7 +174,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.speedPowerUp = new SpeedPowerUp(600, 400, 0.3, this);
         this.entitiesController.AddEntity(this.speedPowerUp);
         this.speedPowerUp.setupOverlap(this.localPlayer, this.remotePlayer, this);
-        
+
 
         // ======================
         // INPUT LOCAL
@@ -190,9 +193,9 @@ export class MultiplayerGameScene extends Phaser.Scene {
 
     setupWebSocket() {
         this.ws.onmessage = (event) => {
-            if(this.gameEnded) return;
+            if (this.gameEnded) return;
             const data = JSON.parse(event.data);
-            switch(data.type) {
+            switch (data.type) {
                 case 'START_GAME':
                     console.log('START_GAME recibido');
                     this.gameStarted = true;
@@ -201,10 +204,32 @@ export class MultiplayerGameScene extends Phaser.Scene {
                 case 'PLAYER_MOVED':
                     // Solo mover al jugador REMOTO
                     if (data.player !== this.playerRole) {
-        
-                    this.remotePlayer.MoveTo(data.x, data.y);
-                }
+
+                        this.remotePlayer.MoveTo(data.x, data.y);
+                    }
                     break;
+
+                case 'CANDY_SPAWN':
+                    console.log('CANDY_SPAWN recibido', data.candy);
+
+                    // Por seguridad: si ya existe, lo borramos
+                    /* if (this.candy) {
+                         this.candy.destroy();
+                         this.candy = null;
+                     }*/
+
+                    this.candy = new OnlineCandy(
+                        data.candy.x,
+                        data.candy.y,
+                        0.2,
+                        'candy',
+                        this,
+                        data.candy.id
+                    );
+                    this.entitiesController.AddEntity(this.candy);
+                    this.candy.setupOverlap(this.localPlayer, this.remotePlayer, this);
+                    break;
+
 
                 case 'gameOver':
                     this.endGame(data.winner);
@@ -213,11 +238,10 @@ export class MultiplayerGameScene extends Phaser.Scene {
                 case 'playerDisconnected':
                     this.handleDisconnect();
                     break;
-                // otros casos según lo que envíe tu server
             }
         };
 
-        
+
     }
 
     setupWebSocketListeners() {
@@ -238,39 +262,39 @@ export class MultiplayerGameScene extends Phaser.Scene {
 
     handleDisconnect() {
         console.error('EJECUTANDO HANDLE DISCONNECT');
-        this.gameEnded=true;
-        this.gameStarted=false;
+        this.gameEnded = true;
+        this.gameStarted = false;
         //Para todas las entidades
 
-        this.add.text(400, 250, 'El otro jugador se ha desconectado', { 
-            fontSize: '48px', 
-            color: '#ff0000ff' 
+        this.add.text(400, 250, 'El otro jugador se ha desconectado', {
+            fontSize: '48px',
+            color: '#ff0000ff'
         }).setOrigin(0.5);
 
         this.createMenuButton();
     }
 
     createMenuButton() {
-        const menuButton = this.add.text(600, 400, 'Volver al menú', { 
+        const menuButton = this.add.text(600, 400, 'Volver al menú', {
             fontSize: '32px',
             color: '#ffffff',
         }).setOrigin(0.5).setInteractive({ useHandCursor: true })
-        .on('pointerdown', () => {
-            if(this.ws && this.ws.readyState === WebSocket.OPEN) {
-                this.ws.close();
-            }
-            this.scene.start('MainMenu');
-        });
+            .on('pointerdown', () => {
+                if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                    this.ws.close();
+                }
+                this.scene.start('MainMenu');
+            });
     }
 
     send(msg) {
-        if(this.ws && this.ws.readyState === WebSocket.OPEN) {
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
             this.ws.send(JSON.stringify(msg));
         }
     }
 
     update() {
-        if(!this.gameStarted||this.gameEnded) return;
+        if (!this.gameStarted || this.gameEnded) return;
 
         // Actualizar local
         this.localPlayer.Update();
@@ -295,6 +319,6 @@ export class MultiplayerGameScene extends Phaser.Scene {
     }
 
     shutdown() {
-        if(this.ws) this.ws.close();
+        if (this.ws) this.ws.close();
     }
 }
