@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import os from 'os';
 import { fileURLToPath } from 'url';
 import { WebSocketServer } from 'ws';
 import { createServer } from 'http';
@@ -52,6 +53,7 @@ const connectionRoutes = createConnectionRoutes(connectionController);
 
 const app = express();
 const PORT = 8080;
+const HOST = '0.0.0.0';
 
 // ==================== MIDDLEWARE ====================
 
@@ -156,9 +158,9 @@ wss.on('connection', (ws) => {
               player: data.player,
               x: data.x,
               y: data.y 
-            }));
-          }
-        });
+              }));
+            }
+          });
           break;
 
         case 'POINT':
@@ -189,17 +191,31 @@ wss.on('connection', (ws) => {
   });
 });
 
+function getLocalIPs() {
+  const interfaces = os.networkInterfaces();
+  const ips = [];
 
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name]) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        ips.push(iface.address);
+      }
+    }
+  }
+  return ips;
+}
 
 // ==================== INICIO DEL SERVIDOR ====================
 
-server.listen(PORT, () => {
+server.listen(PORT, HOST, () => {
+  const ip = getLocalIPs();
+
   console.log('========================================');
   console.log('  SERVIDOR PARA VIDEOJUEGO');
   console.log('========================================');
-  console.log(`  Servidor corriendo en http://localhost:${PORT}`);
-  console.log(`  WebSocket disponible en ws://localhost:${PORT}`);
+  console.log(`  Servidor corriendo en http://${ip}:${PORT}`);
+  console.log(`  WebSocket disponible en ws://${ip}:${PORT}`);
   console.log(`  `);
-  console.log(`  🎮 Juego: http://localhost:${PORT}`);
+  console.log(`  🎮 Juego: http://${ip}:${PORT}`);
   console.log('========================================\n');
 });
