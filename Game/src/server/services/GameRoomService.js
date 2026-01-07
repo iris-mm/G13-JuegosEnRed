@@ -28,7 +28,9 @@ export function createGameRoomService() {
       },
       active: true, // Room is active
 
-      candy: null 
+      candy: null,
+
+      item: null
     };
 
     rooms.set(roomId, room);
@@ -86,7 +88,29 @@ export function createGameRoomService() {
 
     //Genera caramelo inicial en posición random
     room.candy = spawnCandy(room);
+
+    room.items = spawnItem(room);
 }
+
+// Generar y enviar un item
+ function spawnItem(room) {
+    const item = {
+        id: `item_${Date.now()}`, // ID único
+        x: Math.floor(Math.random() * (1200 - 512) + 256), // entre 256 y 1200-256
+        y: Math.floor(Math.random() * (800 - 256) + 128)   // entre 128 y 800-128
+    };
+
+    // Mandar a los dos jugadores
+    if (room.player1.ws.readyState === 1) {
+        room.player1.ws.send(JSON.stringify({ type: 'ITEM_SPAWN', item }));
+    }
+    if (room.player2.ws.readyState === 1) {
+        room.player2.ws.send(JSON.stringify({ type: 'ITEM_SPAWN', item }));
+    }
+
+    return item;
+}
+
 
 
   //Crea y envía la posición del caramelo a ambos jugadores

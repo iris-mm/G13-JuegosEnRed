@@ -77,6 +77,7 @@ import { CandyBasket } from '../../client/game/controllers/CandyBasket.js';
 import { SpeedPowerUp } from '../../client/game/items/SpeedPowerUp.js';
 import { OnlineCandy } from '../../client/game/items/OnlineCandy.js';
 import { Button } from '../ui/Button.js';
+import { OnlineThrowableItem } from '../../client/game/items/OnlineThrowableItem.js';
 
 export class MultiplayerGameScene extends Phaser.Scene {
     constructor() {
@@ -90,6 +91,8 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.gameEnded = false;
 
         this.candy = null;
+        this.item = null;
+
 
     }
 
@@ -176,7 +179,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
          this.entitiesController.AddEntity(this.candy);*/
 
         // Agregar throwable items
-        this.items = [
+        /* this.items = [
             new ThrowableItem(0.3, 'pumpkin1', this),
             new ThrowableItem(0.3, 'pumpkin2', this),
             new ThrowableItem(0.3, 'pumpkin3', this),
@@ -184,7 +187,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
             new ThrowableItem(0.3, 'rock', this)
         ];
         this.items.forEach(item => this.entitiesController.AddEntity(item));
-        this.items.forEach(item => item.setupOverlap(this.localPlayer, this.remotePlayer, this));
+        this.items.forEach(item => item.setupOverlap(this.localPlayer, this.remotePlayer, this));*/
 
         this.basket1 = new CandyBasket(60, 400, 70, 310, this.localPlayer, this);
         this.basket2 = new CandyBasket(1200 - 60, 400, 1200 - 90, 310, this.remotePlayer, this);
@@ -246,6 +249,24 @@ export class MultiplayerGameScene extends Phaser.Scene {
                     }
                     break;
 
+                case 'ITEM_SPAWN':
+                    console.log('ITEM_SPAWN recibido', data.item);
+                    if (!this.item) {
+                        this.item = new OnlineThrowableItem(
+                            data.item.x,
+                            data.item.y,
+                            0.3,
+                            'rock',
+                            this,
+                            data.item.id
+                        );
+                        this.entitiesController.AddEntity(this.item);
+                        this.item.setupOverlap(this.localPlayer, this.remotePlayer, this);
+                    } else {
+                        this.item.MoveTo(data.item.x, data.item.y);
+                        this.item.hasSpawned = true;
+                    }
+                    break;
 
 
                 case 'gameOver':
