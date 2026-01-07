@@ -162,6 +162,13 @@ wss.on('connection', (ws) => {
             }
           });
           break;
+         
+        case 'REQUEST_CANDY_RESPAWN':
+          const room = gameRoomService.getRoomByWebSocket(ws); 
+          if (room && room.candy && room.candy.id === data.candyId) {
+            room.candy = gameRoomService.spawnCandy(room); // Genera nueva posición y envía CANDY_SPAWN a ambos
+          }
+          break;
 
           
         case 'UPDATE_TIME':
@@ -178,7 +185,7 @@ wss.on('connection', (ws) => {
 
         case 'POINT':
           //----Implementar lógica de puntuación-------------- 
-          //gameRoomService.handlePoint(ws, data.point);
+          gameRoomService.handleCandyCollected(ws);
           break;
 
         default:
