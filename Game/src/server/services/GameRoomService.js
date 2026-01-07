@@ -42,20 +42,28 @@ export function createGameRoomService() {
   }
 
   function setPlayerReady(ws) {
-    const roomId = ws.roomId;
-    if (!roomId) return;
+      const room = Array.from(rooms.values()).find(r =>
+      r.player1.ws === ws || r.player2.ws === ws
+  );
 
-    const room = rooms.get(roomId);
     if (!room || !room.active) return;
 
-    // Mark player as ready
     if (room.player1.ws === ws) {
-      room.player1.ready = true;
+        room.player1.ready = true;
+        console.log('Player 1 ready');
     } else if (room.player2.ws === ws) {
-      room.player2.ready = true;
+        room.player2.ready = true;
+        console.log('Player 2 ready');
     }
-    // If both players are ready, start the game
+
+    console.log(
+      'Ready status:',
+      room.player1.ready,
+      room.player2.ready
+    );
+
     if (room.player1.ready && room.player2.ready) {
+      console.log('Both players ready → START_GAME');
       startGame(room);
     }
   }

@@ -6,8 +6,11 @@ export class Item extends Entity{
 
         this.playerGrabbing = null;
 
-        scene.physics.add.overlap(scene.player1.gameObject, this.gameObject, () => { scene.player1.GrabItem(this) } );
-        scene.physics.add.overlap(scene.player2.gameObject, this.gameObject, () => { scene.player2.GrabItem(this) } );
+    }
+
+    setupOverlap(player1, player2, scene) {
+        scene.physics.add.overlap(player1.gameObject, this.gameObject, () => { player1.GrabItem(this) });
+        scene.physics.add.overlap(player2.gameObject, this.gameObject, () => { player2.GrabItem(this) });
     }
 
     GrabItem(player){

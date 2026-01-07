@@ -332,15 +332,6 @@ export class GameScene extends Phaser.Scene {
     update(){
         this.countdown.update();
         this.entitiesController.Update();
-
-        //Se actualiza la posición del jugador local
-        if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-            this.socket.send(JSON.stringify({
-                type: 'PLAYER_MOVE',
-                x: this.localPlayer.x,
-                y: this.localPlayer.y
-            }));
-        }
     }
 
     startRound(seconds) {

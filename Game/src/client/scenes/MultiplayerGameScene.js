@@ -131,17 +131,24 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.entitiesController = new EntitiesController();
 
         // Instanciar jugadores
+        this.keys1 = this.input.keyboard.addKeys({ up: 'W', down: 'S', left: 'A', right: 'D' });
+        this.keys2 = this.input.keyboard.addKeys({ up: 'I', down: 'K', left: 'J', right: 'L' });
+        
         if(this.playerRole === 'player1') {
-            this.localPlayer  = new Player(100, 400, 0.4, 'zombi', this, null); // input después
-            this.remotePlayer = new Player(1100, 400, 0.4, 'vampiresa', this, null);
-        } else {
-            this.localPlayer  = new Player(1100, 400, 0.4, 'vampiresa', this, null);
-            this.remotePlayer = new Player(100, 400, 0.4, 'zombi', this, null);
+
+            this.localPlayer  = new Player(100, 400, 0.4, 'zombi', this, this.keys1, 'E', true);
+            this.remotePlayer = new Player(1100, 400, 0.4, 'vampiresa', this, null, null, false);
+
+        } else if(this.playerRole === 'player2'){
+
+            this.localPlayer  = new Player(1100, 400, 0.4, 'vampiresa', this, this.keys2, 'O', true);
+            this.remotePlayer = new Player(100, 400, 0.4, 'zombi', this, null, null, false);
+
         }
 
         this.entitiesController.AddEntity(this.localPlayer);
         this.entitiesController.AddEntity(this.remotePlayer);
-
+        
         // Items, candy baskets, power-ups
         this.candy = new Candy(0.2, 'candy', this);
         this.entitiesController.AddEntity(this.candy);
@@ -155,18 +162,20 @@ export class MultiplayerGameScene extends Phaser.Scene {
             new ThrowableItem(0.3, 'rock', this)
         ];
         this.items.forEach(item => this.entitiesController.AddEntity(item));
+        this.candy.setupOverlap(this.localPlayer, this.remotePlayer, this);
+        this.items.forEach(item => item.setupOverlap(this.localPlayer, this.remotePlayer, this));
 
         this.basket1 = new CandyBasket(60, 400, 70, 310, this.localPlayer, this);
         this.basket2 = new CandyBasket(1200 - 60, 400, 1200 - 90, 310, this.remotePlayer, this);
 
         this.speedPowerUp = new SpeedPowerUp(600, 400, 0.3, this);
         this.entitiesController.AddEntity(this.speedPowerUp);
+        this.speedPowerUp.setupOverlap(this.localPlayer, this.remotePlayer, this);
+        
 
         // ======================
         // INPUT LOCAL
         // ======================
-        // El jugador local usa WASD
-        this.keys = this.input.keyboard.addKeys({ up: 'W', down: 'S', left: 'A', right: 'D' });
 
         // ======================
         // WEBSOCKET
@@ -174,7 +183,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.setupWebSocket();
 
         // Avisar al servidor que estamos listos
-        this.send({ type: 'playerReady' });
+        this.send({ type: 'PLAYER_READY' });
 
         this.ws.inLobby = false;
     }
@@ -184,13 +193,17 @@ export class MultiplayerGameScene extends Phaser.Scene {
             if(this.gameEnded) return;
             const data = JSON.parse(event.data);
             switch(data.type) {
-                case 'startGame':
+                case 'START_GAME':
+                    console.log('START_GAME recibido');
                     this.gameStarted = true;
                     break;
 
-                case 'playerMove':
-                    // Actualizar posición del jugador remoto
-                    this.remotePlayer.sprite.setPosition(data.x, data.y);
+                case 'PLAYER_MOVED':
+                    // Solo mover al jugador REMOTO
+                    if (data.player !== this.playerRole) {
+        
+                    this.remotePlayer.MoveTo(data.x, data.y);
+                }
                     break;
 
                 case 'gameOver':
@@ -264,9 +277,10 @@ export class MultiplayerGameScene extends Phaser.Scene {
 
         // Enviar posición al server
         this.send({
-            type: 'playerMove',
-            x: this.localPlayer.sprite.x,
-            y: this.localPlayer.sprite.y
+            type: 'PLAYER_MOVE',
+            player: this.playerRole,
+            x: this.localPlayer.x,
+            y: this.localPlayer.y
         });
 
         // Actualizar todo lo demás

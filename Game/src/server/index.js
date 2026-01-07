@@ -153,6 +153,7 @@ wss.on('connection', (ws) => {
             if (client !== ws && client.readyState === 1) {
               client.send(JSON.stringify({
               type: 'PLAYER_MOVED',
+              player: data.player,
               x: data.x,
               y: data.y 
             }));

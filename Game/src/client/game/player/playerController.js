@@ -3,7 +3,7 @@ import { Entity } from "../core/Entity.js";
 import { Candy } from "../items/Candy.js";
 
 export class Player extends Entity {
-    constructor(x, y, scale, characterName, scene, cursors, grabItemKey) {
+    constructor(x, y, scale, characterName, scene, cursors, grabItemKey, isLocal=true) {
         super(x, y, scale, `${characterName}_frontEst`, scene, true); //Default player al iniciar
 
         this.scene = scene;
@@ -13,7 +13,8 @@ export class Player extends Entity {
 
         this.grabItemKey = grabItemKey;
         this.currentItemGrabbing = null;
-
+        this.isLocal = isLocal;
+        
         this.hasInteractedWithItems = false;
         this.hasUpdatedItemInteraction = false;
         this.scene.input.keyboard.on(`keydown-${this.grabItemKey}`, () => this.grabItemInputOn = true );
@@ -27,12 +28,17 @@ export class Player extends Entity {
     }
 
     Update() {
+        if (this.isLocal){
         this.Movement();
         this.ItemInputs();
         if(this.currentItemGrabbing) this.GrabItem(this.currentItemGrabbing)
+        }
+        
     }
 
     Movement(){
+        if(!this.cursors) return;
+
         this.vx = 0;
         this.vy = 0;
         let moving = false;
@@ -41,16 +47,16 @@ export class Player extends Entity {
         this.facingY = 0;
 
         //Para que soporte las diagonales, primero se detecta la dirección
-        if (this.cursors.left.isDown) {
+        if (this.cursors.left?.isDown) {
              this.vx = -this.speed; this.facingX = -1; moving = true; 
         }
-        if (this.cursors.right.isDown) {
+        if (this.cursors.right?.isDown) {
              this.vx = this.speed; this.facingX = 1; moving = true; 
         }
-        if (this.cursors.up.isDown) {
+        if (this.cursors.up?.isDown) {
              this.vy = -this.speed; this.facingY = -1; moving = true; 
         }
-        if (this.cursors.down.isDown) {
+        if (this.cursors.down?.isDown) {
              this.vy = this.speed; this.facingY = 1; moving = true; 
         }
         //y luego se elige la animación del personaje

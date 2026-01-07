@@ -7,19 +7,21 @@ export class SpeedPowerUp extends Entity {
         this.scene = scene;
         this.active = true;
 
-        // Colisión con jugadores
+    }
+
+    setupOverlap(player1, player2, scene) {
         scene.physics.add.overlap(
             this.gameObject,
-            scene.player1.gameObject,
-            () => this.apply(scene.player1),
+            player1.gameObject,
+            () => this.apply(player1),
             null,
             this
         );
 
         scene.physics.add.overlap(
             this.gameObject,
-            scene.player2.gameObject,
-            () => this.apply(scene.player2),
+            player2.gameObject,
+            () => this.apply(player2),
             null,
             this
         );

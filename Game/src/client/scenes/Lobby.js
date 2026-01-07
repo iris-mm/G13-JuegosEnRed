@@ -133,10 +133,9 @@ export class Lobby extends Phaser.Scene {
                 console.log('Game starting in room:', data.roomId);
 
                 this.scene.start('MultiplayerGameScene', {
-
+                    ws: this.ws,
                     roomId: data.roomId,
-                    role: data.role,
-                    socket: this.ws
+                    playerRole: data.role,
                 });
                 break;
 

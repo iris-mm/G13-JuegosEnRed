@@ -4,9 +4,6 @@ export class ThrowableItem extends Item{
     constructor(scale, sprite, scene){
         super(-128, -128, scale, sprite, scene);
 
-        scene.physics.add.overlap(scene.player1.gameObject, this.gameObject, () => { if(this.throwOwner != null && this.throwOwner != scene.player1) scene.player1.KnockOut(); } );
-        scene.physics.add.overlap(scene.player2.gameObject, this.gameObject, () => { if(this.throwOwner != null && this.throwOwner != scene.player2) scene.player2.KnockOut(); } );
-
         this.MoveTo(Phaser.Math.Between(256, 1200 - 256), Phaser.Math.Between(128, 800 - 128));
 
         this.throwSpeedX = 0;
@@ -15,6 +12,29 @@ export class ThrowableItem extends Item{
         this.isThrown = false;
         this.throwOwner = null;
     }
+
+    setupOverlap(player1, player2, scene) {
+        scene.physics.add.overlap(
+            player1.gameObject,
+            this.gameObject,
+            () => {
+                if (this.throwOwner && this.throwOwner !== player1) {
+                    player1.KnockOut();
+                }
+            }
+        );
+
+        scene.physics.add.overlap(
+            player2.gameObject,
+            this.gameObject,
+            () => {
+                if (this.throwOwner && this.throwOwner !== player2) {
+                    player2.KnockOut();
+                }
+            }
+        );
+    }
+
 
     Throw(xDir, yDir){
         if(this.playerGrabbing == null) return;
