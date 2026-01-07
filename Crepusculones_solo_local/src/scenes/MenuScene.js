@@ -2,9 +2,9 @@ import Phaser from 'phaser';
 
 //importar imágenes
 // @ts-ignore
-import menuBackground from '../../assets/MainMenu2.jpg';
+import menuBackground from '../../public/assets/MainMenu2.jpg';
 // @ts-ignore
-import buttonBackground from '../../assets/boton piedra.png';
+import buttonBackground from '../../public/assets/boton piedra.png';
 
 //importar clases
 import { Button } from '../entities/Button.js';
@@ -12,9 +12,9 @@ import { AudioManager } from '../game/controllers/AudioManager';
 
 //importar sonidos
 // @ts-ignore
-import mainMusic from '../../assets/music_sounds/main_music.mp3';
+import mainMusic from '../../public/assets/music_sounds/main_music.mp3';
 // @ts-ignore
-import buttonSound from '../../assets/music_sounds/button_sound.mp3';
+import buttonSound from '../../public/assets/music_sounds/button_sound.mp3';
 
 export class MenuScene extends Phaser.Scene {
     constructor() {

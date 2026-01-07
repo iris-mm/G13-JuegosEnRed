@@ -84,8 +84,8 @@ export class CreditsMenu extends Phaser.Scene {
         ];
 
         const creditsOthers=[
-            'Assets de sprites GameScene: 13th CandyWeb',
-            'Assets pantallas: Canva',
+            'public/assets de sprites GameScene: 13th CandyWeb',
+            'public/assets pantallas: Canva',
             'Música y efectos de sonido: FreeSound',
         ];
 
