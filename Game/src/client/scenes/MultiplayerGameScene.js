@@ -77,10 +77,6 @@ import { CandyBasket } from '../../client/game/controllers/CandyBasket.js';
 import { SpeedPowerUp } from '../../client/game/items/SpeedPowerUp.js';
 import { OnlineCandy } from '../../client/game/items/OnlineCandy.js';
 import { Button } from '../ui/Button.js';
-import { OnlineThrowableItem } from '../../client/game/items/OnlineThrowableItem.js';
-import { OnlineSpeedPowerUp } from '../../client/game/items/OnlineSpeedPowerUp.js';
-import { TimerController } from '../game/controllers/TimerController.js';
-
 
 export class MultiplayerGameScene extends Phaser.Scene {
     constructor() {
@@ -96,8 +92,6 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.gameEnded = false;
 
         this.candy = null;
-        this.item = null;
-        this.speedPowerUp = null;
 
     }
 
@@ -197,23 +191,10 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.basket1 = new CandyBasket(60, 400, 70, 310, this.localPlayer, this);
         this.basket2 = new CandyBasket(1200 - 60, 400, 1200 - 90, 310, this.remotePlayer, this);
 
-        /*this.speedPowerUp = new SpeedPowerUp(600, 400, 0.3, this);
+        this.speedPowerUp = new SpeedPowerUp(600, 400, 0.3, this);
         this.entitiesController.AddEntity(this.speedPowerUp);
-        this.speedPowerUp.setupOverlap(this.localPlayer, this.remotePlayer, this);*/
+        this.speedPowerUp.setupOverlap(this.localPlayer, this.remotePlayer, this);
 
-        //  Temporizador
-        const timerImage = this.add.image(600, 95, 'timerImg')
-            .setDepth(99)
-            .setScale(6)
-            .setAlpha(0.75);
-        this.timerText = this.add.text(600, 100, "45", { fontSize: "48px", color: "#ffffff" })
-            .setOrigin(0.5)
-            .setDepth(100);
-
-        this.countdown = new TimerController(this, this.timerText);
-        if (this.playerRole !== "player1") this.countdown.disableCountdown();
-        this.round = 1;
-        this.startRound(45000);
 
         // ======================
         // INPUT LOCAL
@@ -268,75 +249,6 @@ export class MultiplayerGameScene extends Phaser.Scene {
                         this.candy.hasSpawned = true;
                     }
                     break;
-
-                case 'ITEM_SPAWN':
-                    console.log('ITEM_SPAWN recibido', data.item);
-
-                    // Inicializar array si no existe
-                    if (!this.items) this.items = [];
-
-                    // Buscar si ya existe un item con este id
-                    let existingItem = this.items.find(it => it.id === data.item.id);
-
-                    if (!existingItem) {
-                        // Crear nuevo OnlineThrowableItem
-                        const newItem = new OnlineThrowableItem(
-                            data.item.x,
-                            data.item.y,
-                            0.3,
-                            data.item.sprite,  // aquí usar sprite que viene del server
-                            this,
-                            data.item.id
-                        );
-                        this.entitiesController.AddEntity(newItem);
-                        newItem.setupOverlap(this.localPlayer, this.remotePlayer, this);
-
-                        // Guardar en el array
-                        this.items.push(newItem);
-                    } else {
-                        // Actualizar posición del item existente
-                        existingItem.MoveTo(data.item.x, data.item.y);
-                        existingItem.hasSpawned = true;
-                    }
-                    break;
-                case 'POWERUP_SPAWN':
-                    if (!this.speedPowerUp) {
-                        this.speedPowerUp = new OnlineSpeedPowerUp(
-                            data.powerUp.x,
-                            data.powerUp.y,
-                            0.3,
-                            this,
-                            data.powerUp.id
-                        );
-
-                        this.entitiesController.AddEntity(this.speedPowerUp);
-                        this.speedPowerUp.setupOverlap(this.localPlayer, this);
-                    }
-                    break;
-
-                case 'POWERUP_DESPAWN':
-                    if (this.speedPowerUp?.id === data.powerUpId) {
-                        this.speedPowerUp.deactivate();
-                    }
-
-                    // Aplicar efecto SOLO al jugador correcto
-                    if (data.player === this.playerRole) {
-                        const originalSpeed = this.localPlayer.speed;
-                        this.localPlayer.speed *= 1.5;
-
-                        this.time.delayedCall(5000, () => {
-                            this.localPlayer.speed = originalSpeed;
-                        });
-                    }
-                    break;
-
-                case 'POWERUP_RESPAWN':
-                    this.speedPowerUp.activate(
-                        data.powerUp.x,
-                        data.powerUp.y
-                    );
-                    break;
-
 
 
 
@@ -430,27 +342,9 @@ export class MultiplayerGameScene extends Phaser.Scene {
 
 
 
-        if (this.countdown.canCountDown) {
-            // Enviar tiempo actualizado
-            this.send({
-                type: 'UPDATE_TIME',
-                owner: this.playerRole,
-                timeLeft: this.countdown.remainingTime
-            });
-        }
-
         // Actualizar todo lo demás
         this.entitiesController.Update();
-
-    }
-
-    shutdown() {
-        if (this.ws) this.ws.close();
-    }
-
-    startRound(seconds) {
-        if (this.countdown.canCountDown) this.countdown.start(seconds, () => this.endRound());
-        else this.countdown.setNotCooldownEvent(() => this.endRound());
+        
     }
 
     endGame(reason) {
@@ -460,64 +354,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.time.delayedCall(3000, () => this.scene.start('MenuScene'));
     }
 
-    endRound() {
-        this.round++;
-
-        if (this.basket1.candies > this.basket2.candies) {
-            this.player1ScoreText.text = `${++this.player1Score}`;
-        }
-        else if (this.basket1.candies < this.basket2.candies) {
-            this.player2ScoreText.text = `${++this.player2Score}`;
-        }
-
-        this.basket1.Restart();
-        this.basket2.Restart();
-
-        // Si es la última ronda, mostrar GameOver
-        if (this.round > 4) {
-            const msgGameOver = this.add.text(600, 350, `FIN DE LA PARTIDA`, {
-                fontSize: "48px",
-                fontStyle: "bold",
-                color: "#ff0000ff",
-                backgroundColor: "#000000a7",
-            }).setOrigin(0.5);
-
-            let winnerText = "";
-            if (this.player1Score > this.player2Score) {
-                winnerText = "¡Gana Jugador 1!";
-            } else if (this.player2Score > this.player1Score) {
-                winnerText = "¡Gana Jugador 2!";
-            } else {
-                winnerText = "¡Empate!";
-            }
-
-            const msgWinner = this.add.text(600, 450, winnerText, {
-                fontSize: "36px",
-                fontStyle: "bold",
-                color: "#ffffff",
-                backgroundColor: "#000000a7",
-            }).setOrigin(0.5);
-
-            this.time.delayedCall(3000, () => {
-                msgGameOver.destroy();
-                msgWinner.destroy();
-                this.scene.start("MainMenu");
-            });
-
-            return;
-        }
-
-        const msgRound = this.add.text(600, 400, `Ronda ${this.round - 1} terminada`, {
-            fontSize: "48px",
-            fontStyle: "bold",
-            color: "#ffffff",
-            backgroundColor: "#000000a7",
-        }).setOrigin(0.5);
-
-        this.time.delayedCall(2000, () => {
-            msgRound.destroy();
-            const newDuration = Math.max(0, 45000 - (15000 * (this.round - 1)));
-            this.startRound(newDuration);
-        });
+    shutdown() {
+        if (this.ws) this.ws.close();
     }
 }
