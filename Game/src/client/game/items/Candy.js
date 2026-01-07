@@ -7,7 +7,11 @@ export class Candy extends Item{
         this.Reset();
     }
 
-
+    OnCollected() {
+        this.ClearPlayer();
+        this.MoveTo(-64, -64); 
+        this.hasSpawned = false;
+    } 
     Update(){
         super.Update();
 
