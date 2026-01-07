@@ -33,39 +33,55 @@ export function createGameRoomService() {
     rooms.set(roomId, room);
 
     // Store room ID on WebSocket for quick lookup
+    // @ts-ignore
     player1Ws.roomId = roomId;
+    // @ts-ignore
     player2Ws.roomId = roomId;
 
     return roomId;
   }
 
   function setPlayerReady(ws) {
-    const roomId = ws.roomId;
-    if (!roomId) return;
+      const room = Array.from(rooms.values()).find(r =>
+      r.player1.ws === ws || r.player2.ws === ws
+  );
 
-    const room = rooms.get(roomId);
     if (!room || !room.active) return;
 
-    // Mark player as ready
     if (room.player1.ws === ws) {
-      room.player1.ready = true;
+        room.player1.ready = true;
+        console.log('Player 1 ready');
     } else if (room.player2.ws === ws) {
-      room.player2.ready = true;
+        room.player2.ready = true;
+        console.log('Player 2 ready');
     }
-    // If both players are ready, start the game
+
+    console.log(
+      'Ready status:',
+      room.player1.ready,
+      room.player2.ready
+    );
+
     if (room.player1.ready && room.player2.ready) {
+      console.log('Both players ready → START_GAME');
       startGame(room);
     }
   }
 
   function startGame(room) {
     // Notify both players that the game is starting
-    const startMsg = JSON.stringify({
+    const startMsgPlayer1 = JSON.stringify({
       type: 'START_GAME',
-      roomId: room.id
+      roomId: room.id,
+      role: 'player1'
     });
-    room.player1.ws.send(startMsg);
-    room.player2.ws.send(startMsg);
+    const startMsgPlayer2 = JSON.stringify({
+    type: 'START_GAME',
+    roomId: room.id,
+    role: 'player2'
+    });
+    room.player1.ws.send(startMsgPlayer1);
+    room.player2.ws.send(startMsgPlayer2);
   }
 
   /**
@@ -181,6 +197,7 @@ export function createGameRoomService() {
    * @param {WebSocket} ws - Disconnected player's WebSocket
    */
   function handleDisconnect(ws) {
+    // @ts-ignore
     const roomId = ws.roomId;
     if (!roomId) return;
 

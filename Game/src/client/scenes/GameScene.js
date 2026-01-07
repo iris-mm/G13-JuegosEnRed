@@ -82,6 +82,12 @@ export class GameScene extends Phaser.Scene {
         super('GameScene');
     }
     
+    init(data){
+        //Pasa info del lobby a la game scene
+        this.socket = data.socket;
+        this.role = data.role;
+    }
+
     preload(){
         //Game
         this.load.image('floor', floor);
@@ -285,6 +291,25 @@ export class GameScene extends Phaser.Scene {
         this.entitiesController.AddEntity(this.player1);
         this.entitiesController.AddEntity(this.player2);
         
+        //Determinar qué jugador es local y cuál remoto
+        if (this.role === 'player1') {
+            this.localPlayer = this.player1;
+            this.remotePlayer = this.player2;
+        } else {
+            this.localPlayer = this.player2;
+            this.remotePlayer = this.player1;
+        }
+
+        // Actualizamos solo la posición del jugador remoto
+        this.socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+
+            if (data.type === 'PLAYER_MOVED') {
+                this.remotePlayer.x = data.x;
+                this.remotePlayer.y = data.y;
+            }
+        };
+
         //  Candy
         this.candy = new Candy(0.2, 'candy', this);
         this.entitiesController.AddEntity(this.candy);
@@ -332,10 +357,10 @@ export class GameScene extends Phaser.Scene {
         this.round++;
 
         if(this.basket1.candies > this.basket2.candies) {
-            this.player1ScoreText.text = ++this.player1Score;
+            this.player1ScoreText.text = `${++this.player1Score}`;
         }
         else if(this.basket1.candies < this.basket2.candies) {
-            this.player2ScoreText.text = ++this.player2Score;
+            this.player2ScoreText.text = `${++this.player2Score}`;
         }
 
         this.basket1.Restart();
