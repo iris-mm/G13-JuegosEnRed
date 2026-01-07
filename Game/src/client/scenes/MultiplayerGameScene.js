@@ -81,7 +81,7 @@ import { CandyBasket } from '../../client/game/controllers/CandyBasket.js';
 import { SpeedPowerUp } from '../../client/game/items/SpeedPowerUp.js';
 import { OnlineCandy } from '../../client/game/items/OnlineCandy.js';
 import { Button } from '../ui/Button.js';
-import { OnlineThrowableItem } from '../../client/game/items/OnlineThrowableItem.js';
+//import { OnlineThrowableItem } from '../../client/game/items/ThrowableItem.js';
 import { OnlineSpeedPowerUp } from '../../client/game/items/OnlineSpeedPowerUp.js';
 import { TimerController } from '../game/controllers/TimerController.js';
 
@@ -479,8 +479,6 @@ export class MultiplayerGameScene extends Phaser.Scene {
             const candy = this.remotePlayer.currentItemGrabbing;
             candy.MoveTo(this.remotePlayer.x, this.remotePlayer.y);
         }
-
-
 
         if (this.countdown.canCountDown) {
             // Enviar tiempo actualizado
