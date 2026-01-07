@@ -36,6 +36,49 @@ export class Player extends Entity {
 
 
     }
+    
+    CheckPickup() {
+
+    // Solo recoger si la tecla está presionada
+    if (!this.grabKey || !this.grabKey.isDown) return;
+
+    // Si ya tienes un objeto, no puedes recoger otro
+    if (this.currentItemGrabbing) return;
+
+    const entities = this.scene.entitiesController.entities;
+
+    for (let entity of entities) {
+
+        if (!(entity instanceof Candy || entity instanceof OnlineCandy)) continue;
+        if (!entity.hasSpawned) continue;
+
+        const dx = Math.abs(this.x - entity.x);
+        const dy = Math.abs(this.y - entity.y);
+        const distanceThreshold = 50;
+
+        // SOLO recoger si estás cerca Y presionas la tecla
+        if (dx < distanceThreshold && dy < distanceThreshold) {
+
+            this.currentItemGrabbing = entity;
+            this.hasCandy = true;
+
+            if (entity instanceof OnlineCandy) {
+                entity.OnCollected();
+
+                if (this.scene.ws && this.scene.ws.readyState === WebSocket.OPEN) {
+                    this.scene.ws.send(JSON.stringify({
+                        type: 'POINT',
+                        candyId: entity.id
+                    }));
+                }
+            }
+
+            break;
+        }
+    }
+}
+
+    
 
     Update() {
         super.Update();
