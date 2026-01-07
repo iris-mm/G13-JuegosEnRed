@@ -164,7 +164,98 @@ function handleCandyCollected(ws,candyId) {
     if (room.active) {
       room.candy = spawnCandy(room);
     }
-  }, 1000); // 1 segundo de retraso antes de reaparecer
+    // Update scores
+    //   // When ball hits LEFT goal (x=0), player2 scores (player1 missed)
+    //   // When ball hits RIGHT goal (x=800), player1 scores (player2 missed)
+    //   if (side === 'left') {
+    //     room.player2.score++;
+    //   } else if (side === 'right') {
+    //     room.player1.score++;
+    //   }
+
+    //   // Broadcast score update to both players
+    //   const scoreUpdate = {
+    //     type: 'scoreUpdate',
+    //     player1Score: room.player1.score,
+    //     player2Score: room.player2.score
+    //   };
+
+    //   room.player1.ws.send(JSON.stringify(scoreUpdate));
+    //   room.player2.ws.send(JSON.stringify(scoreUpdate));
+
+    //Determinar quién recogió el caramelo y si es válido (dentro del área correcta)
+    let player;
+    if (room.player1.ws === ws) {
+      player = room.player1;
+    } else if (room.player2.ws === ws) {
+      player = room.player2;
+    } else {
+      return; // Jugador no pertenece a la sala
+    }
+    //Actualizar puntuación
+    player.score += 1;
+    room.candy = null; // Caramelo recogido ya no existe
+    //Notificar a ambos jugadores
+    const scoreUpdate = {
+      type: 'SCORE_UPDATE',
+      player1Score: room.player1.score,
+      player2Score: room.player2.score
+    };
+    room.player1.ws.send(JSON.stringify(scoreUpdate));
+    room.player2.ws.send(JSON.stringify(scoreUpdate));
+
+    //Generar nuevo caramelo si la ronda sigue viva
+    setTimeout(() => {
+      if (room.active) {
+        room.candy = spawnCandy(room);
+      }
+    }, 1000); // 1 segundo de retraso antes de reaparecer
+
+  }
+
+
+  function handlePowerUpCollected(ws, powerUpId) {
+    console.log('handlePowerUpCollected llamado');
+    console.log('ws.roomId:', ws.roomId);
+    console.log('powerUpId recibido:', powerUpId);
+    
+
+    const roomId = ws.roomId;
+    if (!roomId) return;
+
+    const room = rooms.get(roomId);
+    if (!room || !room.active) return;
+    console.log('powerUp en room:', room.speedPowerUp);
+    if (!room.speedPowerUp || !room.speedPowerUp.active) return;
+    if (room.speedPowerUp.id !== powerUpId) return;
+
+    room.speedPowerUp.active = false;
+
+    let playerRole =
+      room.player1.ws === ws ? 'player1' :
+        room.player2.ws === ws ? 'player2' :
+          null;
+
+    if (!playerRole) return;
+
+    // Avisar a ambos
+    [room.player1.ws, room.player2.ws].forEach(client => {
+      if (client.readyState === 1) {
+        client.send(JSON.stringify({
+          type: 'POWERUP_DESPAWN',
+          powerUpId,
+          player: playerRole
+        }));
+      }
+    });
+
+    // Respawn tras 5s
+    setTimeout(() => {
+      if (room.active) {
+        room.speedPowerUp = spawnSpeedPowerUp(room);
+      }
+    }, 5000);
+  }
 
 }
 

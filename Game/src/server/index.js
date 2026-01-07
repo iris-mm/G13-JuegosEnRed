@@ -170,6 +170,29 @@ wss.on('connection', (ws) => {
           }
           break;
 
+        case 'POWERUP_COLLECTED':
+          console.log('POWERUP_COLLECTED recibido del cliente:', data);
+          gameRoomService.handlePowerUpCollected(ws, data.powerUpId);
+          break;
+
+
+
+        case 'UPDATE_TIME':
+          wss.clients.forEach(client => {
+            if (client !== ws && client.readyState === 1) {
+              client.send(JSON.stringify({
+                type: 'UPDATE_TIMER',
+                owner: data.owner,
+                timeLeft: data.timeLeft
+              }));
+            }
+          });
+          break;
+
+        case 'CANDY_DELIVERED':
+          gameRoomService.handleCandyDelivered(ws, data);
+          break;
+
         case 'POINT':
           gameRoomService.handleCandyCollected(ws);
           break;

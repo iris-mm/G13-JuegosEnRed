@@ -250,6 +250,82 @@ export class MultiplayerGameScene extends Phaser.Scene {
                     }
                     break;
 
+                case 'ITEM_SPAWN':
+                    console.log('ITEM_SPAWN recibido', data.item);
+
+                    // Inicializar array si no existe
+                    if (!this.items) this.items = [];
+
+                    // Buscar si ya existe un item con este id
+                    let existingItem = this.items.find(it => it.id === data.item.id);
+
+                    if (!existingItem) {
+                        // Crear nuevo OnlineThrowableItem
+                        const newItem = new OnlineThrowableItem(
+                            data.item.x,
+                            data.item.y,
+                            0.3,
+                            data.item.sprite,  // aquí usar sprite que viene del server
+                            this,
+                            data.item.id
+                        );
+                        this.entitiesController.AddEntity(newItem);
+                        newItem.setupOverlap(this.localPlayer, this.remotePlayer, this);
+
+                        // Guardar en el array
+                        this.items.push(newItem);
+                    } else {
+                        // Actualizar posición del item existente
+                        existingItem.MoveTo(data.item.x, data.item.y);
+                        existingItem.hasSpawned = true;
+                    }
+                    break;
+                case 'POWERUP_SPAWN':
+                    console.log('Recibido POWERUP_SPAWN:', data.powerUp);
+
+                    if (!this.speedPowerUp) {
+                        // Crear por primera vez
+                        this.speedPowerUp = new OnlineSpeedPowerUp(
+                            data.powerUp.x,
+                            data.powerUp.y,
+                            0.3,
+                            this,
+                            data.powerUp.id
+                        );
+                        this.entitiesController.AddEntity(this.speedPowerUp);
+                        this.speedPowerUp.setupOverlap(this.localPlayer, this);
+                    } else {
+                        // Ya existe → actualizar ID, posición y reactivarlo
+                        this.speedPowerUp.id = data.powerUp.id;
+                        this.speedPowerUp.activate(data.powerUp.x, data.powerUp.y);
+                    }
+                    break;
+
+                case 'POWERUP_DESPAWN':
+                    console.log('Recibido POWERUP_DESPAWN:', data.powerUpId);
+                    if (this.speedPowerUp?.id === data.powerUpId) {
+                        this.speedPowerUp.deactivate();
+                    }
+
+                    // Aplicar efecto SOLO al jugador correcto
+                    if (data.player === this.playerRole) {
+                        const originalSpeed = this.localPlayer.speed;
+                        this.localPlayer.speed *= 1.5;
+
+                        this.time.delayedCall(5000, () => {
+                            this.localPlayer.speed = originalSpeed;
+                        });
+                    }
+                    break;
+
+                case 'POWERUP_RESPAWN':
+                    this.speedPowerUp.activate(
+                        data.powerUp.x,
+                        data.powerUp.y
+                    );
+                    break;
+
+
 
 
                 case 'gameOver':
