@@ -162,6 +162,26 @@ wss.on('connection', (ws) => {
             }
           });
           break;
+         
+        case 'REQUEST_CANDY_RESPAWN':
+          const room = gameRoomService.getRoomByWebSocket(ws); 
+          if (room && room.candy && room.candy.id === data.candyId) {
+            room.candy = gameRoomService.spawnCandy(room); // Genera nueva posición y envía CANDY_SPAWN a ambos
+          }
+          break;
+
+          
+        case 'UPDATE_TIME':
+          wss.clients.forEach(client => {
+            if (client !== ws && client.readyState === 1) {
+              client.send(JSON.stringify({
+              type: 'UPDATE_TIMER',
+              owner: data.owner,
+              timeLeft: data.timeLeft
+              }));
+            }
+          });
+          break;
 
         case 'CANDY_DELIVERED':
           gameRoomService.handleCandyDelivered(ws, data);
@@ -169,7 +189,7 @@ wss.on('connection', (ws) => {
 
         case 'POINT':
           //----Implementar lógica de puntuación-------------- 
-          //gameRoomService.handlePoint(ws, data.point);
+          gameRoomService.handleCandyCollected(ws);
           break;
 
         default:

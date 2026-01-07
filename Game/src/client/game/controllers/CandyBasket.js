@@ -24,9 +24,21 @@ export class CandyBasket extends Entity {
         if (!this.owner.hasCandy) return;
 
         this.text.text = ++this.candies;
-
-        // El jugador sabe cómo entregar el candy
-        this.owner.DeliverCandy();
+        
+        // Reset del jugador
+        this.owner.hasCandy = false;
+        if (this.owner.currentItemGrabbing) {
+            this.owner.currentItemGrabbing.Reset();
+            this.owner.currentItemGrabbing = null;
+        }
+        // Notificar al servidor que se entregó un caramelo
+        if (this.scene.ws && this.scene.ws.readyState === WebSocket.OPEN) {
+            this.scene.ws.send(JSON.stringify({
+                type: 'CANDY_DELIVERED',
+                player: this.owner === this.scene.localPlayer ? 'player1' : 'player2'
+            }));
+    }
+        
     }
 
 

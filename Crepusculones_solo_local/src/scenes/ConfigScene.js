@@ -1,18 +1,18 @@
 import Phaser from 'phaser';
 //importar imagenes
 // @ts-ignore
-import menuConfig from '../../assets/menuAjustes.jpg';
+import menuConfig from '../../public/assets/menuAjustes.jpg';
 // @ts-ignore
-import buttonBackground from '../../assets/boton piedra.png';
+import buttonBackground from '../../public/assets/boton piedra.png';
 //importar clases Button
 import { Button } from '../entities/Button.js';
 import { AudioManager } from '../game/controllers/AudioManager';
 // @ts-ignore
-import configMusic from '../../assets/music_sounds/config_music.mp3';
+import configMusic from '../../public/assets/music_sounds/config_music.mp3';
 // @ts-ignore
-import gameMusic from '../../assets/music_sounds/game_music.mp3';
+import gameMusic from '../../public/assets/music_sounds/game_music.mp3';
 // @ts-ignore
-import buttonSound from '../../assets/music_sounds/button_sound.mp3';
+import buttonSound from '../../public/assets/music_sounds/button_sound.mp3';
 
 export class ConfigScene extends Phaser.Scene {
     constructor() {
