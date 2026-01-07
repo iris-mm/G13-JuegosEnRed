@@ -8,13 +8,13 @@ export function createMatchmakingService(gameRoomService) {
    * Add a player to the matchmaking queue
    * @param {WebSocket} ws - The WebSocket connection
    */
-  function joinQueue(ws) {
+  function joinQueue(ws, userId) {
     // Check if already in queue
     if (queue.some(player => player.ws === ws)) {
       return;
     }
 
-    queue.push({ ws });
+    queue.push({ ws, userId });
 
     // Notify player they're in queue
     ws.send(JSON.stringify({
@@ -55,16 +55,19 @@ export function createMatchmakingService(gameRoomService) {
       player1.ws.roomId = roomId;
       player2.ws.roomId = roomId;
 
+
       // Notify both players
       player1.ws.send(JSON.stringify({
         type: 'gameStart',
         role: 'player1',
+        enemyId: player2.userId,
         roomId,
       }));
 
       player2.ws.send(JSON.stringify({
         type: 'gameStart',
         role: 'player2',
+        enemyId: player1.userId,
         roomId,
       }));
     }

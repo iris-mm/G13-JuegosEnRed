@@ -129,7 +129,7 @@ wss.on('connection', (ws) => {
       // Manejar los diferentes tipos de mensajes ----
       switch (data.type) {
         case 'JOIN_QUEUE':
-          matchmakingService.joinQueue(ws);
+          matchmakingService.joinQueue(ws, data.userId);
           break;
 
         case 'LEAVE_QUEUE':
