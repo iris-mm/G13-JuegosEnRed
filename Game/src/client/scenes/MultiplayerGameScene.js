@@ -472,8 +472,6 @@ export class MultiplayerGameScene extends Phaser.Scene {
             candy.MoveTo(this.remotePlayer.x, this.remotePlayer.y);
         }
 
-
-
         if (this.countdown.canCountDown) {
             // Enviar tiempo actualizado
             this.send({
