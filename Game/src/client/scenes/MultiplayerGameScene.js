@@ -10,6 +10,10 @@ import game_boundary from '../../../public/assets/sprites/game_boundary.png';
 // @ts-ignore
 import leaves from '../../../public/assets/sprites/leaves_overlay.png';
 // @ts-ignore
+import blueBase from '../../../public/assets/sprites/blueBase.png';
+// @ts-ignore
+import redBase from '../../../public/assets/sprites/redBase.png';
+// @ts-ignore
 import desconectionScreenImg from '../../../public/assets/images/Disconection.jpg';
 
 //TIMER
@@ -110,10 +114,14 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.load.image('floor', floor);
         this.load.image('game_boundary', game_boundary);
         this.load.image('leaves', leaves);
+        this.load.image('blueBase',blueBase);
+        this.load.image('redBase',redBase);
         this.load.image('timerImg', timerImg);
         this.load.audio('game_music', gameMusic);
-        this.load.audio('timer_alert', timerAlert);
         this.load.audio('SFX_ButtonPress', SFX_ButtonPress);
+        //Timer
+        this.load.audio('timer_alert', timerAlert);
+        this.load.image('timerImg', timerImg);
         //Items
         this.load.image('candy', candySprite);
         this.load.image('pumpkin1', pumpkin1);
@@ -151,11 +159,23 @@ export class MultiplayerGameScene extends Phaser.Scene {
     }
 
     create() {
-        // Escenario igual que GameScene
+        // Guardar ID del jugador
+        const localUserId = localStorage.getItem('userId');
+
+        // Escenario
         this.add.tileSprite(0, 0, 1200, 800, 'floor').setOrigin(0, 0).setScale(3);
         const boundary = this.physics.add.image(600, 400, 'game_boundary').setScale(3).setImmovable(true);
         this.add.image(600, 400, 'leaves').setScale(3).setAlpha(0.75);
         
+
+        // Bases de jugadores
+        const base_SIZE = 96;
+        const offset = 33; //offset por el gameboundary, para que salga la base entera
+
+        const blueBase = this.add.image((base_SIZE/2) + offset, 400, 'blueBase')
+        .setScale(3);
+        const redBase = this.add.image((1200-base_SIZE)+ offset/2, 400, 'redBase')
+        .setScale(3);
 
         // Audio
         this.sound.volume = AudioManager.GetVolume();
@@ -190,8 +210,8 @@ export class MultiplayerGameScene extends Phaser.Scene {
          this.entitiesController.AddEntity(this.candy);*/
 
         //  Baskets
-        this.basket1 = new CandyBasket(1200 - 60, 400, 70, 310, this.localPlayer, this);
-        this.basket2 = new CandyBasket(60, 400, 1200 - 90, 310, this.remotePlayer, this);
+        this.basket1 = new CandyBasket((1200-base_SIZE)+ offset/2, 400, 70, 310, this.localPlayer, this);
+        this.basket2 = new CandyBasket((base_SIZE/2) + offset, 400, 1200 - 90, 310, this.remotePlayer, this);
 
         this.player1Score = 0;
         this.player1ScoreText = this.add.text(447, 80, "0", { fontSize: "48px", color: "#ffffff" })
@@ -219,13 +239,13 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.speedPowerUp.setupOverlap(this.localPlayer, this.remotePlayer, this);*/
 
         //  Temporizador
-        const timerImage = this.add.image(600, 95, 'timerImg')
-            .setDepth(99)
-            .setScale(6)
-            .setAlpha(0.75);
+        this.timerImage = this.add.image(600, 95, 'timerImg')
+        .setDepth(99)
+        .setScale(6)
+        .setAlpha(0.75);
         this.timerText = this.add.text(600, 100, "45", { fontSize: "48px", color: "#ffffff" })
-            .setOrigin(0.5)
-            .setDepth(100);
+        .setOrigin(0.5)
+        .setDepth(100);
 
         this.countdown = new TimerController(this, this.timerText);
         if (this.playerRole !== "player1") this.countdown.disableCountdown();
@@ -435,16 +455,21 @@ export class MultiplayerGameScene extends Phaser.Scene {
     }
 
     showDisconnectScreen() {
+        // Borrar timer y puntuaciones. Ambas están delante de la pantalla, así q es necesario borrar
+        this.timerImage.destroy();
+        this.timerText.destroy();
+        this.player1ScoreText.destroy();
+        this.player2ScoreText.destroy();
+
         // Mostrar imagen de desconexión
-        const bg = this.add.image(600, 400, 'disconectionScreen');
-        bg.setOrigin(0.5);
+        const bg = this.add.image(600, 400, 'disconectionScreen')
+        .setOrigin(0.5);
         bg.displayWidth = 1200;
         bg.displayHeight = 800;
 
         new Button(880, 600, this, 'SPR_Button', 'Menú', () => {
             this.scene.start('MainMenu');
-        }
-        );
+        });
     }
 
     send(msg) {
@@ -526,6 +551,8 @@ export class MultiplayerGameScene extends Phaser.Scene {
 
         // Si es la última ronda, mostrar GameOver
         if (this.round > 4) {
+            let winner = null;
+
             const msgGameOver = this.add.text(600, 350, `FIN DE LA PARTIDA`, {
                 fontSize: "48px",
                 fontStyle: "bold",
@@ -536,10 +563,13 @@ export class MultiplayerGameScene extends Phaser.Scene {
             let winnerText = "";
             if (this.player1Score > this.player2Score) {
                 winnerText = "¡Gana Jugador 1!";
+                winner = 'player1';
             } else if (this.player2Score > this.player1Score) {
                 winnerText = "¡Gana Jugador 2!";
+                winner = 'player2';
             } else {
                 winnerText = "¡Empate!";
+                 winner = 'empate';
             }
 
             const msgWinner = this.add.text(600, 450, winnerText, {
@@ -554,6 +584,11 @@ export class MultiplayerGameScene extends Phaser.Scene {
                 msgWinner.destroy();
                 this.scene.start("MainMenu");
             });
+
+            //Si empata o gana, añadir win
+            if ( winner === 'empate' || winner === this.playerRole) {
+                this.addWinToCurrentUser();
+            }
 
             return;
         }
@@ -570,5 +605,23 @@ export class MultiplayerGameScene extends Phaser.Scene {
             const newDuration = Math.max(0, 45000 - (15000 * (this.round - 1)));
             this.startRound(newDuration);
         });
+    }
+
+    addWinToCurrentUser() {
+        // Obtener id de localStorage
+        const userId = localStorage.getItem('userId');
+
+        if (!userId) return;
+
+            fetch(`/api/users/${userId}/win`, {
+                method: 'PUT'
+            })
+            .then(res => res.json())
+            .then(user => {
+                console.log('🏆 Win añadido:', user.wins);
+            })
+            .catch(err => {
+                console.error('Error al añadir win', err);
+            });
     }
 }
