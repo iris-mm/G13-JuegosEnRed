@@ -166,7 +166,7 @@ export class GameScene extends Phaser.Scene {
         .setScale(6)
         .setAlpha(0.75);
         let timerText = this.add.text(600, 100, "45", {fontSize: "48px",color: "#ffffff"})
-        .setOrigin(0.5, 0.5)
+        .setOrigin(0.5)
         .setDepth(100);
 
 
