@@ -618,10 +618,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
             })
             .then(res => res.json())
             .then(user => {
-                console.log('🏆 Win añadido:', user.wins);
-            })
-            .catch(err => {
-                console.error('Error al añadir win', err);
+                console.log('Win añadido:', user.wins);
             });
     }
 }
