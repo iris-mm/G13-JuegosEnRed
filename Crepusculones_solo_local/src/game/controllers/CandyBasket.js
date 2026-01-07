@@ -7,7 +7,7 @@ export class CandyBasket extends Entity{
         this.owner = playerOwner;
         this.candies = 0;
 
-        this.text = scene.add.text(textX, textY, 0, {fontSize: "32px",color: "#ffffff",  backgroundColor: "#000000a7"})
+        this.text = scene.add.text(textX, textY, 0, {fontSize: "32px",color: "#ffffff"})
 
         this.gameObject.visible = false;
         scene.physics.add.overlap(playerOwner.gameObject, this.gameObject, () => this.CheckForCandy())

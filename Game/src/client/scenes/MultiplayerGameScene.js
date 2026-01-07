@@ -77,8 +77,6 @@ import { CandyBasket } from '../../client/game/controllers/CandyBasket.js';
 import { SpeedPowerUp } from '../../client/game/items/SpeedPowerUp.js';
 import { OnlineCandy } from '../../client/game/items/OnlineCandy.js';
 import { Button } from '../ui/Button.js';
-import { OnlineThrowableItem } from '../../client/game/items/OnlineThrowableItem.js';
-import { TimerController } from '../game/controllers/TimerController.js';
 
 export class MultiplayerGameScene extends Phaser.Scene {
     constructor() {
@@ -94,8 +92,6 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.gameEnded = false;
 
         this.candy = null;
-        this.item = null;
-
 
     }
 
@@ -137,9 +133,9 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.load.image('disconectionScreen', desconectionScreenImg);
 
         //Cargar fuente
-        const font = new FontFace('ButtonsFont', 'url(fonts/alagard_font.ttf)');
+        const font = new FontFace('ButtonsFont','url(fonts/alagard_font.ttf)');
         font.load().then((loadedFont) => {
-            document.fonts.add(loadedFont);
+        document.fonts.add(loadedFont);
         });
     }
 
@@ -182,7 +178,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
          this.entitiesController.AddEntity(this.candy);*/
 
         // Agregar throwable items
-        /* this.items = [
+        this.items = [
             new ThrowableItem(0.3, 'pumpkin1', this),
             new ThrowableItem(0.3, 'pumpkin2', this),
             new ThrowableItem(0.3, 'pumpkin3', this),
@@ -190,7 +186,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
             new ThrowableItem(0.3, 'rock', this)
         ];
         this.items.forEach(item => this.entitiesController.AddEntity(item));
-        this.items.forEach(item => item.setupOverlap(this.localPlayer, this.remotePlayer, this));*/
+        this.items.forEach(item => item.setupOverlap(this.localPlayer, this.remotePlayer, this));
 
         this.basket1 = new CandyBasket(60, 400, 70, 310, this.localPlayer, this);
         this.basket2 = new CandyBasket(1200 - 60, 400, 1200 - 90, 310, this.remotePlayer, this);
@@ -235,6 +231,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
 
                 case 'CANDY_SPAWN':
                     console.log('CANDY_SPAWN recibido', data.candy);
+
                     if (!this.candy) {
                         this.candy = new OnlineCandy(
                             data.candy.x,
@@ -247,42 +244,11 @@ export class MultiplayerGameScene extends Phaser.Scene {
                         this.entitiesController.AddEntity(this.candy);
                         this.candy.setupOverlap(this.localPlayer, this.remotePlayer, this);
                     } else {
+                        // Si ya existe, solo moverlo a la posición enviada por el server
                         this.candy.MoveTo(data.candy.x, data.candy.y);
                         this.candy.hasSpawned = true;
                     }
                     break;
-
-                case 'ITEM_SPAWN':
-                    console.log('ITEM_SPAWN recibido', data.item);
-
-                    // Inicializar array si no existe
-                    if (!this.items) this.items = [];
-
-                    // Buscar si ya existe un item con este id
-                    let existingItem = this.items.find(it => it.id === data.item.id);
-
-                    if (!existingItem) {
-                        // Crear nuevo OnlineThrowableItem
-                        const newItem = new OnlineThrowableItem(
-                            data.item.x,
-                            data.item.y,
-                            0.3,
-                            data.item.sprite,  // aquí usar sprite que viene del server
-                            this,
-                            data.item.id
-                        );
-                        this.entitiesController.AddEntity(newItem);
-                        newItem.setupOverlap(this.localPlayer, this.remotePlayer, this);
-
-                        // Guardar en el array
-                        this.items.push(newItem);
-                    } else {
-                        // Actualizar posición del item existente
-                        existingItem.MoveTo(data.item.x, data.item.y);
-                        existingItem.hasSpawned = true;
-                    }
-                    break;
-
 
 
 
@@ -326,39 +292,21 @@ export class MultiplayerGameScene extends Phaser.Scene {
             color: '#ff0000ff'
         }).setOrigin(0.5);
 
-        this.createMenuButton();
-    }
-
-    createMenuButton() {
-        const menuButton = this.add.text(600, 400, 'Volver al menú', {
-            fontSize: '32px',
-            color: '#ffffff',
-        }).setOrigin(0.5).setInteractive({ useHandCursor: true })
-            .on('pointerdown', () => {
-                if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-                    this.ws.close();
-                }
-                this.scene.start('MainMenu');
-            });
-        this.gameEnded = true;
-        this.gameStarted = false;
-        this.physics.pause();
-        //Para todas las entidades
-
         this.showDisconnectScreen();
     }
 
-    showDisconnectScreen() {
+    showDisconnectScreen(){
         // Mostrar imagen de desconexión
         const bg = this.add.image(600, 400, 'disconectionScreen');
         bg.setOrigin(0.5);
         bg.displayWidth = 1200;
         bg.displayHeight = 800;
-
-        new Button(880, 600, this, 'SPR_Button', 'Menú', () => {
-            this.scene.start('MainMenu');
-        }
-        );
+        
+        new Button(880, 600, this, 'SPR_Button', 'Menú',() => 
+                    {
+                        this.scene.start('MainMenu');
+                    }
+                );
     }
 
     send(msg) {

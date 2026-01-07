@@ -35,7 +35,7 @@ module.exports = {
         test: /\.(mp3|wav|ogg)$/i,
         type: 'asset/resource',
         generator: {
-          filename: 'public/assets/music_sounds/[name][ext]'
+          filename: 'assets/music_sounds/[name][ext]'
         }
       }
     ]
