@@ -127,7 +127,7 @@ wss.on('connection', (ws) => {
       const msgString = message.toString();
       const data = JSON.parse(msgString);
       console.log('Mensaje recibido:', data);
-
+      
       // Manejar los diferentes tipos de mensajes ----
       switch (data.type) {
         case 'JOIN_QUEUE':
@@ -154,10 +154,10 @@ wss.on('connection', (ws) => {
           wss.clients.forEach(client => {
             if (client !== ws && client.readyState === 1) {
               client.send(JSON.stringify({
-                type: 'PLAYER_MOVED',
-                player: data.player,
-                x: data.x,
-                y: data.y
+              type: 'PLAYER_MOVED',
+              player: data.player,
+              x: data.x,
+              y: data.y 
               }));
             }
           });
@@ -193,7 +193,6 @@ wss.on('connection', (ws) => {
 
 
         case 'POINT':
-          //----Implementar lógica de puntuación-------------- 
           gameRoomService.handleCandyCollected(ws);
           break;
 

@@ -1,14 +1,14 @@
 import Phaser from 'phaser';
 //importar imagenes
 // @ts-ignore
-import menuPause from '../../public/assets/menuPause2.png';
+import menuPause from '../../assets/menuPause2.png';
 // @ts-ignore
-import buttonBackground from '../../public/assets/boton piedra.png';
+import buttonBackground from '../../assets/boton piedra.png';
 //importar clases Button
 import { Button } from '../entities/Button.js';
 import { AudioManager } from '../game/controllers/AudioManager.js';
 // @ts-ignore
-import buttonSound from '../../public/assets/music_sounds/button_sound.mp3';
+import buttonSound from '../../assets/music_sounds/button_sound.mp3';
 
 export class PauseScene extends Phaser.Scene {
     constructor() {
