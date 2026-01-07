@@ -13,6 +13,7 @@ import leaves from '../../../public/assets/sprites/leaves_overlay.png';
 import desconectionScreenImg from '../../../public/assets/images/Disconection.jpg';
 
 //ITEMS
+// @ts-ignore
 import candySprite from '../../../public/assets/sprites/caramelo.png';
 // @ts-ignore
 import pumpkin1 from '../../../public/assets/sprites/obj calabaza.png';
@@ -71,7 +72,6 @@ import SFX_ButtonPress from '../../../public/assets/sfx/ButtonPress.mp3';
 import { Player } from '../../client/game/player/playerController.js';
 import { AudioManager } from '../../client/managers/AudioManager.js';
 import { EntitiesController } from '../../client/game/controllers/EntitiesController.js';
-import { Candy } from '../../client/game/items/Candy.js';
 import { ThrowableItem } from '../../client/game/items/ThrowableItem.js';
 import { CandyBasket } from '../../client/game/controllers/CandyBasket.js';
 import { SpeedPowerUp } from '../../client/game/items/SpeedPowerUp.js';

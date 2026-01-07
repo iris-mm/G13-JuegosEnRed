@@ -8,6 +8,10 @@ import floor from '../../../public/assets/sprites/stone_tile.png';
 import game_boundary from '../../../public/assets/sprites/game_boundary.png';
 // @ts-ignore
 import leaves from '../../../public/assets/sprites/leaves_overlay.png';
+// @ts-ignore
+import blueBase from '../../../public/assets/sprites/blueBase.png';
+// @ts-ignore
+import redBase from '../../../public/assets/sprites/redBase.png';
 
 //TIMER
 // @ts-ignore
@@ -87,8 +91,11 @@ export class GameScene extends Phaser.Scene {
         this.load.image('floor', floor);
         this.load.image('game_boundary', game_boundary);
         this.load.image('leaves', leaves);
-        this.load.image('timerImg', timerImg);
+        this.load.image('blueBase',blueBase);
+        this.load.image('redBase',redBase);
         this.load.audio('game_music', gameMusic);
+        //Timer
+        this.load.image('timerImg', timerImg);
         this.load.audio('timer_alert', timerAlert);
         //Items
         this.load.image('candy', candySprite);
@@ -147,10 +154,11 @@ export class GameScene extends Phaser.Scene {
         const base_SIZE = 96;
         const offset = 33; //offset por el gameboundary, para que salga la base entera
 
-        const blueBase = this.add.rectangle((base_SIZE/2) + offset , 400, base_SIZE, base_SIZE, 0x3e3eac)
-        .setAlpha(0.5);
-        const redBase = this.add.rectangle((1200 - base_SIZE / 2) - offset, 400, base_SIZE, base_SIZE, 0xA30000)
-        .setAlpha(0.5);
+        const blueBase = this.add.image((base_SIZE/2) + offset, 400, 'blueBase')
+        .setScale(3);
+        const redBase = this.add.image((1200-base_SIZE)+ offset/2, 400, 'redBase')
+        .setScale(3);
+
 
         //Temporizador
         const timerImage = this.add.image(600, 95, 'timerImg')
@@ -308,8 +316,8 @@ export class GameScene extends Phaser.Scene {
         this.entitiesController.AddEntity(this.item5);
 
         //  Baskets
-        this.basket1 = new CandyBasket(60, 400, 70, 310, this.player1, this);
-        this.basket2 = new CandyBasket(1200 - 60, 400, 1200 - 90, 310, this.player2, this);
+        this.basket1 = new CandyBasket((base_SIZE/2) + offset, 400, 70, 310, this.player1, this);
+        this.basket2 = new CandyBasket((1200-base_SIZE)+ offset/2, 400, 1200 - 90, 310, this.player2, this);
 
         this.player1Score = 0;
         this.player1ScoreText = this.add.text(447, 80, "0", {fontSize: "48px",color: "#ffffff"})
