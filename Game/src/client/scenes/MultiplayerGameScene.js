@@ -90,7 +90,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
     constructor() {
         super('MultiplayerGameScene');
     }
-    
+
     init(data) {
         this.ws = data.ws;                 // WebSocket
         this.playerRole = data.playerRole; // 'player1' | 'player2'
@@ -155,7 +155,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.add.tileSprite(0, 0, 1200, 800, 'floor').setOrigin(0, 0).setScale(3);
         const boundary = this.physics.add.image(600, 400, 'game_boundary').setScale(3).setImmovable(true);
         this.add.image(600, 400, 'leaves').setScale(3).setAlpha(0.75);
-        
+
 
         // Audio
         this.sound.volume = AudioManager.GetVolume();
@@ -324,6 +324,24 @@ export class MultiplayerGameScene extends Phaser.Scene {
                         existingItem.hasSpawned = true;
                     }
                     break;
+
+                case "THROWABLE_PICKED":
+                    const item = this.items.find(i => i.id === data.itemId);
+                    if (!item) return;
+
+                    // Si lo cogió el otro → destruirlo del mapa
+                    if (data.owner !== this.playerRole) {
+                        item.destroy();
+                    }
+
+                    // Si lo cogí yo → asignarlo a mi jugador
+                    if (data.owner === this.playerRole) {
+                        this.localPlayer.pickThrowable(item);
+                    } else {
+                        this.remotePlayer.pickThrowable(item);
+                    }
+                    break;
+
                 case 'POWERUP_SPAWN':
                     console.log('Recibido POWERUP_SPAWN:', data.powerUp);
 
@@ -452,7 +470,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
             this.ws.send(JSON.stringify(msg));
         }
     }
-    
+
     update() {
         console.log("UPDATE ejecutándose");
 
