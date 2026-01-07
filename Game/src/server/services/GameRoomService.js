@@ -28,7 +28,10 @@ export function createGameRoomService() {
       },
       active: true, // Room is active
 
-      candy: null 
+      candy: null,
+      item: null,
+      speedPowerUp: null
+
     };
 
     rooms.set(roomId, room);
@@ -69,104 +72,205 @@ export function createGameRoomService() {
     }
   }
 
- function startGame(room) {
+  function startGame(room) {
     //Notifica a los jugadores
     const startMsgPlayer1 = JSON.stringify({
-        type: 'START_GAME',
-        roomId: room.id,
-        role: 'player1'
+      type: 'START_GAME',
+      roomId: room.id,
+      role: 'player1'
     });
     const startMsgPlayer2 = JSON.stringify({
-        type: 'START_GAME',
-        roomId: room.id,
-        role: 'player2'
+      type: 'START_GAME',
+      roomId: room.id,
+      role: 'player2'
     });
     room.player1.ws.send(startMsgPlayer1);
     room.player2.ws.send(startMsgPlayer2);
 
     //Genera caramelo inicial en posición random
     room.candy = spawnCandy(room);
-}
+
+    // Genera múltiples items
+    room.items = [];
+    for (let i = 0; i < 5; i++) {
+      const newItem = spawnItem(room);
+      room.items.push(newItem);
+    }
+
+    // Genera power-up de velocidad (foco)
+    room.speedPowerUp = spawnSpeedPowerUp(room);
+
+  }
+
+  // Generar y enviar power-up 
+  function spawnSpeedPowerUp(room) {
+    const powerUp = {
+      id: `speed_${Date.now()}`,
+      x: 600,
+      y: 400,
+      active: true
+    };
+
+    [room.player1.ws, room.player2.ws].forEach(ws => {
+      if (ws.readyState === 1) {
+        ws.send(JSON.stringify({
+          type: 'POWERUP_SPAWN',
+          powerUp
+        }));
+      }
+    });
+
+    return powerUp;
+  }
+
+
+  // Generar y enviar un item
+  function spawnItem(room) {
+    const itemTypes = ['pumpkin1', 'pumpkin2', 'pumpkin3', 'rock'];
+    const sprite = itemTypes[Math.floor(Math.random() * itemTypes.length)];
+
+    let x, y;
+    let tries = 0;
+    do {
+      x = Math.floor(Math.random() * (1200 - 128) + 64);
+      y = Math.floor(Math.random() * (800 - 128) + 64);
+      tries++;
+    } while (room.items.some(it => Math.abs(it.x - x) < 64 && Math.abs(it.y - y) < 64) && tries < 10);
+
+    const item = {
+      id: `item_${Date.now()}_${Math.random()}`, // id único
+      x,
+      y,
+      sprite
+    };
+
+    [room.player1.ws, room.player2.ws].forEach(ws => {
+      if (ws.readyState === 1) {
+        ws.send(JSON.stringify({ type: 'ITEM_SPAWN', item }));
+      }
+    });
+
+    return item;
+  }
 
 
   //Crea y envía la posición del caramelo a ambos jugadores
   function spawnCandy(room) {
     const candy = {
-        id: `candy_${Date.now()}`, // ID único
-        x: Math.floor(Math.random() * (1200 - 512) + 256), // entre 256 y 1200-256
-        y: Math.floor(Math.random() * (800 - 256) + 128)   // entre 128 y 800-128
+      id: `candy_${Date.now()}`, // ID único
+      x: Math.floor(Math.random() * (1200 - 512) + 256), // entre 256 y 1200-256
+      y: Math.floor(Math.random() * (800 - 256) + 128)   // entre 128 y 800-128
     };
 
     // Mandar a los dos jugadores
     if (room.player1.ws.readyState === 1) {
-        room.player1.ws.send(JSON.stringify({ type: 'CANDY_SPAWN', candy }));
+      room.player1.ws.send(JSON.stringify({ type: 'CANDY_SPAWN', candy }));
     }
     if (room.player2.ws.readyState === 1) {
-        room.player2.ws.send(JSON.stringify({ type: 'CANDY_SPAWN', candy }));
+      room.player2.ws.send(JSON.stringify({ type: 'CANDY_SPAWN', candy }));
     }
 
     return candy;
-}
-
-function handleCandyCollected(ws,candyId) {
-  const roomId = ws.roomId;
-  if (!roomId) return;
-
-  const room = rooms.get(roomId);
-  if (!room || !room.active) return;
-
-  //Evitar duplicados
-  if (!room.candy || room.candy.id !== candyId) {
-    return; // Caramelo no coincide o ya fue recogido
   }
-  // Update scores
-  //   // When ball hits LEFT goal (x=0), player2 scores (player1 missed)
-  //   // When ball hits RIGHT goal (x=800), player1 scores (player2 missed)
-  //   if (side === 'left') {
-  //     room.player2.score++;
-  //   } else if (side === 'right') {
-  //     room.player1.score++;
-  //   }
 
-  //   // Broadcast score update to both players
-  //   const scoreUpdate = {
-  //     type: 'scoreUpdate',
-  //     player1Score: room.player1.score,
-  //     player2Score: room.player2.score
-  //   };
+  function handleCandyCollected(ws, candyId) {
+    const roomId = ws.roomId;
+    if (!roomId) return;
 
-  //   room.player1.ws.send(JSON.stringify(scoreUpdate));
-  //   room.player2.ws.send(JSON.stringify(scoreUpdate));
+    const room = rooms.get(roomId);
+    if (!room || !room.active) return;
 
-  //Determinar quién recogió el caramelo y si es válido (dentro del área correcta)
-  let player;
-  if (room.player1.ws === ws) {
-    player = room.player1;
-  }else if (room.player2.ws === ws) {
-    player = room.player2;
-  } else {
-    return; // Jugador no pertenece a la sala
-  }
-  //Actualizar puntuación
-  player.score += 1; 
-  room.candy = null; // Caramelo recogido ya no existe
-  //Notificar a ambos jugadores
-  const scoreUpdate = {
-    type: 'SCORE_UPDATE',
-    player1Score: room.player1.score,
-    player2Score: room.player2.score
-  };
-  room.player1.ws.send(JSON.stringify(scoreUpdate));
-  room.player2.ws.send(JSON.stringify(scoreUpdate));
-
-  //Generar nuevo caramelo si la ronda sigue viva
-  setTimeout(() => {
-    if (room.active) {
-      room.candy = spawnCandy(room);
+    //Evitar duplicados
+    if (!room.candy || room.candy.id !== candyId) {
+      return; // Caramelo no coincide o ya fue recogido
     }
-  }, 1000); // 1 segundo de retraso antes de reaparecer
+    // Update scores
+    //   // When ball hits LEFT goal (x=0), player2 scores (player1 missed)
+    //   // When ball hits RIGHT goal (x=800), player1 scores (player2 missed)
+    //   if (side === 'left') {
+    //     room.player2.score++;
+    //   } else if (side === 'right') {
+    //     room.player1.score++;
+    //   }
 
-}
+    //   // Broadcast score update to both players
+    //   const scoreUpdate = {
+    //     type: 'scoreUpdate',
+    //     player1Score: room.player1.score,
+    //     player2Score: room.player2.score
+    //   };
+
+    //   room.player1.ws.send(JSON.stringify(scoreUpdate));
+    //   room.player2.ws.send(JSON.stringify(scoreUpdate));
+
+    //Determinar quién recogió el caramelo y si es válido (dentro del área correcta)
+    let player;
+    if (room.player1.ws === ws) {
+      player = room.player1;
+    } else if (room.player2.ws === ws) {
+      player = room.player2;
+    } else {
+      return; // Jugador no pertenece a la sala
+    }
+    //Actualizar puntuación
+    player.score += 1;
+    room.candy = null; // Caramelo recogido ya no existe
+    //Notificar a ambos jugadores
+    const scoreUpdate = {
+      type: 'SCORE_UPDATE',
+      player1Score: room.player1.score,
+      player2Score: room.player2.score
+    };
+    room.player1.ws.send(JSON.stringify(scoreUpdate));
+    room.player2.ws.send(JSON.stringify(scoreUpdate));
+
+    //Generar nuevo caramelo si la ronda sigue viva
+    setTimeout(() => {
+      if (room.active) {
+        room.candy = spawnCandy(room);
+      }
+    }, 1000); // 1 segundo de retraso antes de reaparecer
+
+  }
+
+  function handlePowerUpCollected(ws, powerUpId) {
+    const roomId = ws.roomId;
+    if (!roomId) return;
+
+    const room = rooms.get(roomId);
+    if (!room || !room.active) return;
+
+    if (!room.speedPowerUp || !room.speedPowerUp.active) return;
+    if (room.speedPowerUp.id !== powerUpId) return;
+
+    room.speedPowerUp.active = false;
+
+    let playerRole =
+      room.player1.ws === ws ? 'player1' :
+        room.player2.ws === ws ? 'player2' :
+          null;
+
+    if (!playerRole) return;
+
+    // Avisar a ambos
+    [room.player1.ws, room.player2.ws].forEach(client => {
+      if (client.readyState === 1) {
+        client.send(JSON.stringify({
+          type: 'POWERUP_DESPAWN',
+          powerUpId,
+          player: playerRole
+        }));
+      }
+    });
+
+    // Respawn tras 5s
+    setTimeout(() => {
+      if (room.active) {
+        room.speedPowerUp = spawnSpeedPowerUp(room);
+      }
+    }, 5000);
+  }
+
 
   /**
    * Handle paddle movement from a player
@@ -326,10 +430,10 @@ function handleCandyCollected(ws,candyId) {
     createRoom,
     setPlayerReady,
     spawnCandy,
-    // handlePaddleMove,
-    // handleGoal,
     handleCandyCollected,
+    handlePowerUpCollected,
     handleDisconnect,
     getActiveRoomCount
   };
+
 }
