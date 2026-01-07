@@ -251,22 +251,36 @@ export class MultiplayerGameScene extends Phaser.Scene {
 
                 case 'ITEM_SPAWN':
                     console.log('ITEM_SPAWN recibido', data.item);
-                    if (!this.item) {
-                        this.item = new OnlineThrowableItem(
+
+                    // Inicializar array si no existe
+                    if (!this.items) this.items = [];
+
+                    // Buscar si ya existe un item con este id
+                    let existingItem = this.items.find(it => it.id === data.item.id);
+
+                    if (!existingItem) {
+                        // Crear nuevo OnlineThrowableItem
+                        const newItem = new OnlineThrowableItem(
                             data.item.x,
                             data.item.y,
                             0.3,
-                            'rock',
+                            data.item.sprite,  // aquí usar sprite que viene del server
                             this,
                             data.item.id
                         );
-                        this.entitiesController.AddEntity(this.item);
-                        this.item.setupOverlap(this.localPlayer, this.remotePlayer, this);
+                        this.entitiesController.AddEntity(newItem);
+                        newItem.setupOverlap(this.localPlayer, this.remotePlayer, this);
+
+                        // Guardar en el array
+                        this.items.push(newItem);
                     } else {
-                        this.item.MoveTo(data.item.x, data.item.y);
-                        this.item.hasSpawned = true;
+                        // Actualizar posición del item existente
+                        existingItem.MoveTo(data.item.x, data.item.y);
+                        existingItem.hasSpawned = true;
                     }
                     break;
+
+
 
 
                 case 'gameOver':

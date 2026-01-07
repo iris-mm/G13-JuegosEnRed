@@ -89,27 +89,43 @@ export function createGameRoomService() {
     //Genera caramelo inicial en posición random
     room.candy = spawnCandy(room);
 
-    room.items = spawnItem(room);
+    // Genera múltiples items
+    room.items = [];
+    for (let i = 0; i < 5; i++) {
+        const newItem = spawnItem(room);
+        room.items.push(newItem);
+    }
 }
 
 // Generar y enviar un item
  function spawnItem(room) {
+    const itemTypes = ['pumpkin1', 'pumpkin2', 'pumpkin3', 'rock'];
+    const sprite = itemTypes[Math.floor(Math.random() * itemTypes.length)];
+
+    let x, y;
+    let tries = 0;
+    do {
+        x = Math.floor(Math.random() * (1200 - 128) + 64);
+        y = Math.floor(Math.random() * (800 - 128) + 64);
+        tries++;
+    } while (room.items.some(it => Math.abs(it.x - x) < 64 && Math.abs(it.y - y) < 64) && tries < 10);
+
     const item = {
-        id: `item_${Date.now()}`, // ID único
-        x: Math.floor(Math.random() * (1200 - 512) + 256), // entre 256 y 1200-256
-        y: Math.floor(Math.random() * (800 - 256) + 128)   // entre 128 y 800-128
+        id: `item_${Date.now()}_${Math.random()}`, // id único
+        x,
+        y,
+        sprite
     };
 
-    // Mandar a los dos jugadores
-    if (room.player1.ws.readyState === 1) {
-        room.player1.ws.send(JSON.stringify({ type: 'ITEM_SPAWN', item }));
-    }
-    if (room.player2.ws.readyState === 1) {
-        room.player2.ws.send(JSON.stringify({ type: 'ITEM_SPAWN', item }));
-    }
+    [room.player1.ws, room.player2.ws].forEach(ws => {
+        if (ws.readyState === 1) {
+            ws.send(JSON.stringify({ type: 'ITEM_SPAWN', item }));
+        }
+    });
 
     return item;
 }
+
 
 
 
