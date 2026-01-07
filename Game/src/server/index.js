@@ -170,6 +170,19 @@ wss.on('connection', (ws) => {
           }
           break;
 
+          
+        case 'UPDATE_TIME':
+          wss.clients.forEach(client => {
+            if (client !== ws && client.readyState === 1) {
+              client.send(JSON.stringify({
+              type: 'UPDATE_TIMER',
+              owner: data.owner,
+              timeLeft: data.timeLeft
+              }));
+            }
+          });
+          break;
+
         case 'POINT':
           //----Implementar lógica de puntuación-------------- 
           gameRoomService.handleCandyCollected(ws);
