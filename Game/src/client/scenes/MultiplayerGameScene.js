@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 
+
 //importar imagenes
 //JUEGO
 // @ts-ignore
@@ -9,6 +10,7 @@ import game_boundary from '../../../public/assets/sprites/game_boundary.png';
 // @ts-ignore
 import leaves from '../../../public/assets/sprites/leaves_overlay.png';
 // @ts-ignore
+import desconectionScreenImg from '../../../public/assets/images/Disconection.jpg';
 
 //ITEMS
 import candySprite from '../../../public/assets/sprites/caramelo.png';
@@ -21,11 +23,13 @@ import pumpkin3 from '../../../public/assets/sprites/obj calabaza 3.png';
 // @ts-ignore
 import rock from '../../../public/assets/sprites/obj piedra.png';
 
-//CONTROLES
+//CONTROLES/BOTONES
 // @ts-ignore
 import controlWASD from '../../../public/assets/images/ControlsWASD.png';
 // @ts-ignore
 import controlIJLK from '../../../public/assets/images/ControlsIJKL.png';
+// @ts-ignore
+import SPR_Button from '../../../public/assets/sprites/Button.png';
 
 //POWER UPS
 // @ts-ignore
@@ -60,6 +64,8 @@ import zombiRight from '../../../public/assets/sprites/Spritesheets/SS_zombie_ri
 import gameMusic from '../../../public/assets/music/game_music.mp3';
 // @ts-ignore
 import timerAlert from '../../../public/assets/music/timer_alert.mp3';
+// @ts-ignore
+import SFX_ButtonPress from '../../../public/assets/sfx/ButtonPress.mp3';
 
 //CLASES
 import { Player } from '../../client/game/player/playerController.js';
@@ -70,6 +76,7 @@ import { ThrowableItem } from '../../client/game/items/ThrowableItem.js';
 import { CandyBasket } from '../../client/game/controllers/CandyBasket.js';
 import { SpeedPowerUp } from '../../client/game/items/SpeedPowerUp.js';
 import { OnlineCandy } from '../../client/game/items/OnlineCandy.js';
+import { Button } from '../ui/Button.js';
 
 export class MultiplayerGameScene extends Phaser.Scene {
     constructor() {
@@ -93,15 +100,17 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.load.image('leaves', leaves);
         this.load.audio('game_music', gameMusic);
         this.load.audio('timer_alert', timerAlert);
+        this.load.audio('SFX_ButtonPress', SFX_ButtonPress);
         //Items
         this.load.image('candy', candySprite);
         this.load.image('pumpkin1', pumpkin1);
         this.load.image('pumpkin2', pumpkin2);
         this.load.image('pumpkin3', pumpkin3);
         this.load.image('rock', rock);
-        //Controls
+        //Controls y Botones
         this.load.image('controlWASD', controlWASD);
         this.load.image('controlIJLK', controlIJLK);
+        this.load.image('SPR_Button', SPR_Button);
         //Power Ups
         this.load.image('speed_powerup', speedPowerUpSprite);
         //Players
@@ -117,6 +126,15 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.load.spritesheet('zombi_back', zombiBack, { frameWidth: 256, frameHeight: 256 });
         this.load.spritesheet('zombi_left', zombiLeft, { frameWidth: 256, frameHeight: 256 });
         this.load.spritesheet('zombi_right', zombiRight, { frameWidth: 256, frameHeight: 256 });
+
+        //Desconection image
+        this.load.image('disconectionScreen', desconectionScreenImg);
+
+        //Cargar fuente
+        const font = new FontFace('ButtonsFont','url(fonts/alagard_font.ttf)');
+        font.load().then((loadedFont) => {
+        document.fonts.add(loadedFont);
+        });
     }
 
     create() {
@@ -286,6 +304,26 @@ export class MultiplayerGameScene extends Phaser.Scene {
                 }
                 this.scene.start('MainMenu');
             });
+        this.gameEnded=true;
+        this.gameStarted=false;
+        this.physics.pause();
+        //Para todas las entidades
+
+        this.showDisconnectScreen();
+    }
+
+    showDisconnectScreen(){
+        // Mostrar imagen de desconexión
+        const bg = this.add.image(600, 400, 'disconectionScreen');
+        bg.setOrigin(0.5);
+        bg.displayWidth = 1200;
+        bg.displayHeight = 800;
+        
+        new Button(880, 600, this, 'SPR_Button', 'Menú',() => 
+                    {
+                        this.scene.start('MainMenu');
+                    }
+                );
     }
 
     send(msg) {

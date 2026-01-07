@@ -74,33 +74,33 @@ export class MainMenu extends Phaser.Scene {
             }).setOrigin(1, 0);
         })
         .catch(() => {
-        console.warn('No se pudo cargar el usuario');
+            console.warn('No se pudo cargar el usuario');
         });
     }
 
 
     StartPlay(){
         this.cameras.main.fadeOut(100, 0, 0, 0);
-        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Lobby'))
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Lobby'));
     }
     
     StartTutorial(){
         this.cameras.main.fadeOut(100, 0, 0, 0);
-        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('TutorialMenu'))
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('TutorialMenu'));
     }
     
     StartSettings(){
         this.cameras.main.fadeOut(100, 0, 0, 0);
-        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('SettingsMenu'))
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('SettingsMenu'));
     }
     
     StartCredits(){
         this.cameras.main.fadeOut(100, 0, 0, 0);
-        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('CreditsMenu'))
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('CreditsMenu'));
     }
 
     StartLocalGame(){
         this.cameras.main.fadeOut(100, 0, 0, 0);
-        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('GameScene'))
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('GameScene'));
     }
 }
