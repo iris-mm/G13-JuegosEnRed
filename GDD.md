@@ -97,7 +97,7 @@ Mediante esta estrategia se espera crear expectación a la salida del juego, gen
 Se han planeado dos diagramas de flujo. Uno de ellos muestra cómo el jugador puede moverse entre las escenas planteadas para el juego y otra muestra de forma visual la jugabilidad. 
 ![Escenas](/imagenes/ddf_4.png)
 
-![Jugabilidad](/imagenes/ddf_4.png)
+![Jugabilidad](/imagenes/ddf_5.png)
 
 ## Referencias
 [Película Crepúsculo](https://es.wikipedia.org/wiki/Crep%C3%BAsculo_(pel%C3%ADcula_de_2008))    
@@ -113,6 +113,7 @@ Pantallas de menú, pausa, ajustes y créditos han sido realizadas con assets gr
 <br>
 Música del juego ha sido seleccionada de FreeSound.
 <br>
+
 
 
 
