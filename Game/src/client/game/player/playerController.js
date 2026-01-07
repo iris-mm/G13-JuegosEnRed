@@ -32,10 +32,9 @@ export class Player extends Entity {
 
         // Escuchar tecla de recoger
         if (this.grabItemKey) {
-            this.scene.input.keyboard.on(`keydown-${this.grabItemKey}`, () => this.grabItemInputOn = true);
-            this.scene.input.keyboard.on(`keyup-${this.grabItemKey}`, () => this.grabItemInputOn = false);
+            this.grabKey = this.scene.input.keyboard.addKey( Phaser.Input.Keyboard.KeyCodes[grabItemKey]
+            );
         }
-
 
     }
 
@@ -43,8 +42,10 @@ export class Player extends Entity {
         if (this.isLocal) {
             this.Movement();
             this.ItemInputs();
+            this.CheckPickup();
             if (this.currentItemGrabbing) this.GrabItem(this.currentItemGrabbing)
         }
+        
 
     }
 
@@ -130,39 +131,92 @@ export class Player extends Entity {
         if (this.itemInteractionCooldown > 0) this.itemInteractionCooldown--;
     }
 
+    // GrabItem(item) {
+    //     if (this.itemInteractionCooldown > 0) return;
+
+    //     if (!this.hasInteractedWithItems) return;
+
+    //     if (this.currentItemGrabbing != null) {
+    //         if (this.currentItemGrabbing instanceof ThrowableItem) {
+    //             this.currentItemGrabbing.Throw(this.facingX, this.facingY);
+    //             this.currentItemGrabbing = null;
+    //             this.itemInteractionCooldown = 3;
+    //         }
+    //         return;
+    //     }
+
+    //     if (item.playerGrabbing != null) return;
+
+    //     item.GrabItem(this);
+    //     this.currentItemGrabbing = item;
+
+    //     this.itemInteractionCooldown = 3;
+
+    //      if (this.isLocal && item instanceof OnlineCandy) {
+    //         this.hasCandy = true;
+    //         if (this.scene.send) {
+    //             this.scene.send({
+    //                 type: 'CANDY_PICKUP',
+    //                 candyId: item.id,
+    //             });
+    //         }
+    //     }
+
+    //     this.hasCandy = this.currentItemGrabbing instanceof Candy || this.currentItemGrabbing instanceof OnlineCandy;
+    // }
+
     GrabItem(item) {
-        if (this.itemInteractionCooldown > 0) return;
+    if (this.itemInteractionCooldown > 0) return;
 
-        if (!this.hasInteractedWithItems) return;
-
-        if (this.currentItemGrabbing != null) {
-            if (this.currentItemGrabbing instanceof ThrowableItem) {
-                this.currentItemGrabbing.Throw(this.facingX, this.facingY);
-                this.currentItemGrabbing = null;
-                this.itemInteractionCooldown = 3;
-            }
-            return;
-        }
-
-        if (item.playerGrabbing != null) return;
-
-        item.GrabItem(this);
+    if (item instanceof OnlineCandy || item instanceof Candy) {
         this.currentItemGrabbing = item;
-
-        this.itemInteractionCooldown = 3;
-
-         if (this.isLocal && item instanceof OnlineCandy) {
-            this.hasCandy = true;
-            if (this.scene.send) {
-                this.scene.send({
-                    type: 'CANDY_PICKUP',
-                    candyId: item.id,
-                });
-            }
-        }
-
-        this.hasCandy = this.currentItemGrabbing instanceof Candy || this.currentItemGrabbing instanceof OnlineCandy;
+        this.hasCandy = true;
+        this.itemInteractionCooldown = 10;
+        return;
     }
+    }
+
+    CheckPickup() {
+
+    // Solo recoger si la tecla está presionada
+    if (!this.grabKey || !this.grabKey.isDown) return;
+
+    // Si ya tienes un objeto, no puedes recoger otro
+    if (this.currentItemGrabbing) return;
+
+    const entities = this.scene.entitiesController.entities;
+
+    for (let entity of entities) {
+
+        if (!(entity instanceof Candy || entity instanceof OnlineCandy)) continue;
+        if (!entity.hasSpawned) continue;
+
+        const dx = Math.abs(this.x - entity.x);
+        const dy = Math.abs(this.y - entity.y);
+        const distanceThreshold = 50;
+
+        // SOLO recoger si estás cerca Y presionas la tecla
+        if (dx < distanceThreshold && dy < distanceThreshold) {
+
+            this.currentItemGrabbing = entity;
+            this.hasCandy = true;
+
+            if (entity instanceof OnlineCandy) {
+                entity.OnCollected();
+
+                if (this.scene.ws && this.scene.ws.readyState === WebSocket.OPEN) {
+                    this.scene.ws.send(JSON.stringify({
+                        type: 'POINT',
+                        candyId: entity.id
+                    }));
+                }
+            }
+
+            break;
+        }
+    }
+}
+
 
     // Llamar cuando el jugador sujeta un caramelo
     DeliverCandy() {

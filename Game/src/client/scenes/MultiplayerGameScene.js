@@ -85,7 +85,7 @@ import { CandyBasket } from '../../client/game/controllers/CandyBasket.js';
 import { SpeedPowerUp } from '../../client/game/items/SpeedPowerUp.js';
 import { OnlineCandy } from '../../client/game/items/OnlineCandy.js';
 import { Button } from '../ui/Button.js';
-import { OnlineThrowableItem } from '../../client/game/items/OnlineThrowableItem.js';
+//import { OnlineThrowableItem } from '../../client/game/items/ThrowableItem.js';
 import { OnlineSpeedPowerUp } from '../../client/game/items/OnlineSpeedPowerUp.js';
 import { TimerController } from '../game/controllers/TimerController.js';
 
@@ -94,7 +94,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
     constructor() {
         super('MultiplayerGameScene');
     }
-
+    
     init(data) {
         this.ws = data.ws;                 // WebSocket
         this.playerRole = data.playerRole; // 'player1' | 'player2'
@@ -166,6 +166,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.add.tileSprite(0, 0, 1200, 800, 'floor').setOrigin(0, 0).setScale(3);
         const boundary = this.physics.add.image(600, 400, 'game_boundary').setScale(3).setImmovable(true);
         this.add.image(600, 400, 'leaves').setScale(3).setAlpha(0.75);
+        
 
         // Bases de jugadores
         const base_SIZE = 96;
@@ -262,11 +263,15 @@ export class MultiplayerGameScene extends Phaser.Scene {
 
         // Avisar al servidor que estamos listos
         this.send({ type: 'PLAYER_READY' });
-
         this.ws.inLobby = false;
+        this.ws.send(JSON.stringify({ type: "GAME_SCENE_READY" }));
+        this.gameStarted = true;
+
     }
 
     setupWebSocket() {
+        console.log("MultiplayerGameScene: handler activado");
+
         this.ws.onmessage = (event) => {
             if (this.gameEnded) return;
             const data = JSON.parse(event.data);
@@ -309,7 +314,8 @@ export class MultiplayerGameScene extends Phaser.Scene {
                     break;
 
                 case 'ITEM_SPAWN':
-                    console.log('ITEM_SPAWN recibido', data.item);
+                    console.log(`ITEM_SPAWN recibido → ID: ${data.item.id}, x: ${data.item.x}, y: ${data.item.y}`);
+
 
                     // Inicializar array si no existe
                     if (!this.items) this.items = [];
@@ -471,8 +477,10 @@ export class MultiplayerGameScene extends Phaser.Scene {
             this.ws.send(JSON.stringify(msg));
         }
     }
-
+    
     update() {
+        console.log("UPDATE ejecutándose");
+
         if (!this.gameStarted || this.gameEnded) return;
 
         // Actualizar local
@@ -496,8 +504,6 @@ export class MultiplayerGameScene extends Phaser.Scene {
             const candy = this.remotePlayer.currentItemGrabbing;
             candy.MoveTo(this.remotePlayer.x, this.remotePlayer.y);
         }
-
-
 
         if (this.countdown.canCountDown) {
             // Enviar tiempo actualizado

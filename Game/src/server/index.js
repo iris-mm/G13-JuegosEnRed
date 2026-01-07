@@ -144,6 +144,11 @@ wss.on('connection', (ws) => {
           gameRoomService.setPlayerReady(ws);
           break;
 
+        case 'GAME_SCENE_READY':
+          gameRoomService.handleGameSceneReady(ws);
+          break;
+
+
         case 'PLAYER_ACTION':
           //----Implementar lógica de acción del jugador-------------- 
           gameRoomService.handlePlayerAction(ws, data.action);
