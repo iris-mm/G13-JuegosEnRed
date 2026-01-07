@@ -53,7 +53,7 @@ export class Lobby extends Phaser.Scene {
 
         this.socket = null;
         this.connectToServer();
-        
+
 
     }
 
@@ -134,31 +134,43 @@ export class Lobby extends Phaser.Scene {
                 let player2Username = "TÚ";
 
                 fetch(`/api/users/${data.enemyId}`)
-                .then(res => {
-                    if (!res.ok) throw new Error();
-                    return res.json();
-                })
-                .then(user => {
-                    if(data.role == "player1") player2Username = user.username; else player1Username = user.username;
+                    .then(res => {
+                        if (!res.ok) throw new Error();
+                        return res.json();
+                    })
+                    .then(user => {
+                        if (data.role == "player1") player2Username = user.username; else player1Username = user.username;
 
-                    this.player1Name.setText(player1Username);
-                    this.player2Name.setText(player2Username);
-                })
-                .catch(() => {
-                    console.warn('No se pudo cargar el usuario');
-                });
+                        this.player1Name.setText(player1Username);
+                        this.player2Name.setText(player2Username);
+                    })
+                    .catch(() => {
+                        console.warn('No se pudo cargar el usuario');
+                    });
 
                 break;
 
             case 'START_GAME':
                 console.log('Game starting in room:', data.roomId);
 
+                // IMPORTANTE: desactivar el handler del Lobby
+                this.ws.onmessage = null;
+
+                // Desactivar handler del Lobby
+                this.ws.onmessage = null;
+
+                // Parar la escena Lobby
+                this.scene.stop('Lobby');
+
+                // Iniciar la escena del juego
                 this.scene.start('MultiplayerGameScene', {
                     ws: this.ws,
                     roomId: data.roomId,
                     playerRole: data.role,
                 });
+
                 break;
+
 
             default:
                 console.log('Unknown server message type:', data.type);
