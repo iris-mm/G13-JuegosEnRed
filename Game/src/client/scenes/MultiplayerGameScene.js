@@ -76,14 +76,10 @@ export class MultiplayerGameScene extends Phaser.Scene {
     }
 
     init(data) {
-        this.ws = data.socket;
-        this.playerRole = data.role;
-
-        this.gameStarted = true;
+        this.ws = data.ws;                 // WebSocket
+        this.playerRole = data.playerRole; // 'player1' | 'player2'
+        this.gameStarted = false;
         this.gameEnded = false;
-
-        // AÑADIDO PARA ITEMS: almacenar items que vengan del servidor
-        this.remoteItems = new Map(); // id -> item instancia
     }
 
     preload(){
@@ -134,19 +130,8 @@ export class MultiplayerGameScene extends Phaser.Scene {
         // Controladores
         this.entitiesController = new EntitiesController();
 
-        // AÑADIDO PARA ITEMS: escuchar mensajes de items desde el servidor
-        this.ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.type === 'initialItems') {
-                this.createItemsFromServer(data.items);
-            }
-            if (data.type === 'itemUpdate') {
-                this.updateItemFromServer(data.item);
-            }
-        };
-
         // Instanciar jugadores
- /*       if(this.playerRole === 'player1') {
+        if(this.playerRole === 'player1') {
             this.localPlayer  = new Player(100, 400, 0.4, 'zombi', this, null); // input después
             this.remotePlayer = new Player(1100, 400, 0.4, 'vampiresa', this, null);
         } else {
@@ -154,58 +139,26 @@ export class MultiplayerGameScene extends Phaser.Scene {
             this.remotePlayer = new Player(100, 400, 0.4, 'zombi', this, null);
         }
 
-       this.entitiesController.AddEntity(this.localPlayer);
+        this.entitiesController.AddEntity(this.localPlayer);
         this.entitiesController.AddEntity(this.remotePlayer);
 
-        // Alias de los jugadores para que funcionen con los parámetros existentes en las clases
-       this.player1 = this.localPlayer;
-        this.player2 = this.remotePlayer;
-        */
-
-        ///PERSONAJES TEMPORAL
-        this.player1 = { x: 0, y: 0, gameObject: { x: 0, y: 0 } };
-        this.player2 = { x: 0, y: 0, gameObject: { x: 0, y: 0 } };
-
-        this.player1 = {
-            x: 0,
-            y: 0,
-            gameObject: this.add.sprite(100, 100, 'zombi_frontEst')
-        };
-        this.player2 = {
-            x: 0,
-            y: 0,
-            gameObject: this.add.sprite(100, 100, 'zombi_frontEst')
-        };
-
-
-        //  Candy
+        // Items, candy baskets, power-ups
         this.candy = new Candy(0.2, 'candy', this);
         this.entitiesController.AddEntity(this.candy);
-        console.log(this.candy.sprite);
 
+        // Agregar throwable items
+        this.items = [
+            new ThrowableItem(0.3, 'pumpkin1', this),
+            new ThrowableItem(0.3, 'pumpkin2', this),
+            new ThrowableItem(0.3, 'pumpkin3', this),
+            new ThrowableItem(0.3, 'rock', this),
+            new ThrowableItem(0.3, 'rock', this)
+        ];
+        this.items.forEach(item => this.entitiesController.AddEntity(item));
 
-        //  Throwable Items
-        this.item1 = new ThrowableItem(0.3, 'pumpkin1', this)
-        this.entitiesController.AddEntity(this.item1);
-        this.item2 = new ThrowableItem(0.3, 'pumpkin2', this)
-        this.entitiesController.AddEntity(this.item2);
-        this.item3 = new ThrowableItem(0.3, 'pumpkin3', this)
-        this.entitiesController.AddEntity(this.item3);
-        this.item4 = new ThrowableItem(0.3, 'rock', this)
-        this.entitiesController.AddEntity(this.item4);
-        this.item5 = new ThrowableItem(0.3, 'rock', this)
-        this.entitiesController.AddEntity(this.item5);
+        this.basket1 = new CandyBasket(60, 400, 70, 310, this.localPlayer, this);
+        this.basket2 = new CandyBasket(1200 - 60, 400, 1200 - 90, 310, this.remotePlayer, this);
 
-        //  Baskets
-        this.basket1 = new CandyBasket(60, 400, 70, 310, this.player1, this);
-        this.basket2 = new CandyBasket(1200 - 60, 400, 1200 - 90, 310, this.player2, this);
-
-        this.player1Score = 0;
-        this.player1ScoreText = this.add.text(100, 100, "0", {fontSize: "48px",color: "#ffffff",  backgroundColor: "#000000a7"});
-        this.player2Score = 0;
-        this.player2ScoreText = this.add.text(1200 - 100, 100, "0", {fontSize: "48px",color: "#ffffff",  backgroundColor: "#000000a7"});
-
-        // Power Up
         this.speedPowerUp = new SpeedPowerUp(600, 400, 0.3, this);
         this.entitiesController.AddEntity(this.speedPowerUp);
 
@@ -219,81 +172,11 @@ export class MultiplayerGameScene extends Phaser.Scene {
         // WEBSOCKET
         // ======================
         this.setupWebSocket();
-        this.ws.addEventListener('message', (event) => {
-    if(this.gameEnded) return;
-
-    const data = JSON.parse(event.data);
-
-    // --- Mensajes de items ---
-    if (data.type === 'initialItems') {
-        this.createItemsFromServer(data.items);
-    }
-    if (data.type === 'itemUpdate') {
-        this.updateItemFromServer(data.item);
-    }
-
-    // --- Otros mensajes del juego ---
-    switch(data.type) {
-        case 'startGame':
-            this.gameStarted = true;
-            break;
-        case 'playerMove':
-            // actualiza la posición del jugador remoto
-            //this.player1.gameObject.moveTo(data.x, data.y);
-            break;
-        case 'gameOver':
-            this.endGame(data.winner);
-            break;
-        case 'playerDisconnected':
-            this.handleDisconnect();
-            break;
-    }
-});
 
         // Avisar al servidor que estamos listos
         this.send({ type: 'playerReady' });
 
         this.ws.inLobby = false;
-    }
-
-     // AÑADIDO PARA ITEMS
-    createItemsFromServer(items) {
-        items.forEach(it => {
-            let itemInstance;
-            switch(it.type){
-                case 'Candy':
-                    itemInstance = new Candy(0.2, it.id, this);
-                    break;
-                case 'Throwable':
-                    itemInstance = new ThrowableItem(0.3, it.id, this);
-                    break;
-                case 'PowerUp':
-                    itemInstance = new SpeedPowerUp(it.x, it.y, 0.3, this);
-                    break;
-            }
-
-            if(itemInstance){
-                itemInstance.gameObject = this.add.sprite(it.x, it.y, it.id).setScale(0.3); // por si no se usa sprite interno
-                this.entitiesController.AddEntity(itemInstance);
-                this.remoteItems.set(it.id, itemInstance);
-            }
-        });
-    }
-
-    // AÑADIDO PARA ITEMS
-    updateItemFromServer(itemData){
-        const item = this.remoteItems.get(itemData.id);
-        if(!item) return;
-
-        // Actualizar posición y estado de quien lo agarra
-        item.x = itemData.x;
-        item.y = itemData.y;
-
-        if(item.gameObject) {
-            item.gameObject.setPosition(itemData.x, itemData.y);
-        }
-
-        item.playerGrabbing = itemData.grabbedBy || null;
     }
 
     setupWebSocket() {
@@ -307,7 +190,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
 
                 case 'playerMove':
                     // Actualizar posición del jugador remoto
-                    this.player1.sprite.setPosition(data.x, data.y);
+                    this.remotePlayer.sprite.setPosition(data.x, data.y);
                     break;
 
                 case 'gameOver':
@@ -376,7 +259,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
     update() {
         if(!this.gameStarted||this.gameEnded) return;
 
-        /*// Actualizar local
+        // Actualizar local
         this.localPlayer.Update();
 
         // Enviar posición al server
@@ -384,7 +267,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
             type: 'playerMove',
             x: this.localPlayer.sprite.x,
             y: this.localPlayer.sprite.y
-        });*/
+        });
 
         // Actualizar todo lo demás
         this.entitiesController.Update();
