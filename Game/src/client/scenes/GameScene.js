@@ -287,18 +287,24 @@ export class GameScene extends Phaser.Scene {
 
         //  Candy
         this.candy = new Candy(0.2, 'candy', this);
+        this.candy.setupOverlap(this.player1, this.player2, this);
         this.entitiesController.AddEntity(this.candy);
 
         //  Throwable Items
         this.item1 = new ThrowableItem(0.3, 'pumpkin1', this)
+        this.item1.setupOverlap(this.player1, this.player2, this);
         this.entitiesController.AddEntity(this.item1);
         this.item2 = new ThrowableItem(0.3, 'pumpkin2', this)
+        this.item2.setupOverlap(this.player1, this.player2, this);
         this.entitiesController.AddEntity(this.item2);
         this.item3 = new ThrowableItem(0.3, 'pumpkin3', this)
+        this.item3.setupOverlap(this.player1, this.player2, this);
         this.entitiesController.AddEntity(this.item3);
         this.item4 = new ThrowableItem(0.3, 'rock', this)
+        this.item4.setupOverlap(this.player1, this.player2, this);
         this.entitiesController.AddEntity(this.item4);
         this.item5 = new ThrowableItem(0.3, 'rock', this)
+        this.item5.setupOverlap(this.player1, this.player2, this);
         this.entitiesController.AddEntity(this.item5);
 
         //  Baskets
@@ -315,6 +321,7 @@ export class GameScene extends Phaser.Scene {
 
         // Power Up
         this.speedPowerUp = new SpeedPowerUp(600, 400, 0.3, this);
+        this.speedPowerUp.setupOverlap(this.player1, this.player2, this);
         this.entitiesController.AddEntity(this.speedPowerUp);
     }
 
