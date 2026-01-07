@@ -90,7 +90,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
     constructor() {
         super('MultiplayerGameScene');
     }
-
+    
     init(data) {
         this.ws = data.ws;                 // WebSocket
         this.playerRole = data.playerRole; // 'player1' | 'player2'
@@ -155,6 +155,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.add.tileSprite(0, 0, 1200, 800, 'floor').setOrigin(0, 0).setScale(3);
         const boundary = this.physics.add.image(600, 400, 'game_boundary').setScale(3).setImmovable(true);
         this.add.image(600, 400, 'leaves').setScale(3).setAlpha(0.75);
+        
 
         // Audio
         this.sound.volume = AudioManager.GetVolume();
@@ -242,11 +243,15 @@ export class MultiplayerGameScene extends Phaser.Scene {
 
         // Avisar al servidor que estamos listos
         this.send({ type: 'PLAYER_READY' });
-
         this.ws.inLobby = false;
+        this.ws.send(JSON.stringify({ type: "GAME_SCENE_READY" }));
+        this.gameStarted = true;
+
     }
 
     setupWebSocket() {
+        console.log("MultiplayerGameScene: handler activado");
+
         this.ws.onmessage = (event) => {
             if (this.gameEnded) return;
             const data = JSON.parse(event.data);
@@ -289,7 +294,8 @@ export class MultiplayerGameScene extends Phaser.Scene {
                     break;
 
                 case 'ITEM_SPAWN':
-                    console.log('ITEM_SPAWN recibido', data.item);
+                    console.log(`ITEM_SPAWN recibido → ID: ${data.item.id}, x: ${data.item.x}, y: ${data.item.y}`);
+
 
                     // Inicializar array si no existe
                     if (!this.items) this.items = [];
@@ -446,8 +452,10 @@ export class MultiplayerGameScene extends Phaser.Scene {
             this.ws.send(JSON.stringify(msg));
         }
     }
-
+    
     update() {
+        console.log("UPDATE ejecutándose");
+
         if (!this.gameStarted || this.gameEnded) return;
 
         // Actualizar local

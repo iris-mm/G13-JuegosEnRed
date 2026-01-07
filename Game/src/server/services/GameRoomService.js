@@ -27,9 +27,9 @@ export function createGameRoomService() {
         ready: false,
       },
       active: true, // Room is active
-
+      started: false,
       candy: null,
-      item: null,
+      items: [],
       speedPowerUp: null
 
     };
@@ -47,30 +47,37 @@ export function createGameRoomService() {
 
   function setPlayerReady(ws) {
     const room = Array.from(rooms.values()).find(r =>
-      r.player1.ws === ws || r.player2.ws === ws
+        r.player1.ws === ws || r.player2.ws === ws
     );
 
     if (!room || !room.active) return;
 
+    // Inicializar flag si no existe
+    if (room.started === undefined) {
+        room.started = false;
+    }
+
     if (room.player1.ws === ws) {
-      room.player1.ready = true;
-      console.log('Player 1 ready');
+        room.player1.ready = true;
+        console.log('Player 1 ready');
     } else if (room.player2.ws === ws) {
-      room.player2.ready = true;
-      console.log('Player 2 ready');
+        room.player2.ready = true;
+        console.log('Player 2 ready');
     }
 
     console.log(
-      'Ready status:',
-      room.player1.ready,
-      room.player2.ready
+        'Ready status:',
+        room.player1.ready,
+        room.player2.ready
     );
 
-    if (room.player1.ready && room.player2.ready) {
-      console.log('Both players ready → START_GAME');
-      startGame(room);
+    // 🚨 IMPORTANTE: solo iniciar si NO ha empezado antes
+    if (room.player1.ready && room.player2.ready && !room.started) {
+        room.started = true; // Marcar como iniciado
+        console.log('Both players ready → START_GAME');
+        startGame(room);
     }
-  }
+}
 
   function startGame(room) {
     //Notifica a los jugadores
@@ -234,6 +241,41 @@ export function createGameRoomService() {
     }, 1000); // 1 segundo de retraso antes de reaparecer
 
   }
+
+
+  function handleGameSceneReady(ws) {
+    const roomId = ws.roomId;
+    if (!roomId) return;
+
+    const room = rooms.get(roomId);
+    if (!room || !room.active) return;
+
+    // Enviar candy
+    if (room.candy) {
+        ws.send(JSON.stringify({
+            type: 'CANDY_SPAWN',
+            candy: room.candy
+        }));
+    }
+
+    // Enviar items
+    if (room.items && room.items.length > 0) {
+        room.items.forEach(item => {
+            ws.send(JSON.stringify({
+                type: 'ITEM_SPAWN',
+                item
+            }));
+        });
+    }
+
+    // Enviar power-up
+    if (room.speedPowerUp) {
+        ws.send(JSON.stringify({
+            type: 'POWERUP_SPAWN',
+            powerUp: room.speedPowerUp
+        }));
+    }
+}
 
 
   function handlePowerUpCollected(ws, powerUpId) {
@@ -437,6 +479,7 @@ export function createGameRoomService() {
   return {
     createRoom,
     setPlayerReady,
+    handleGameSceneReady,
     spawnCandy,
     handleCandyCollected,
     handlePowerUpCollected,
