@@ -35,15 +35,20 @@ A continuación, se presentan los dos personajes diseñados y los objetos implem
 ![Calabaza 2](/imagenes/obj_calabaza_2.png)
 ![Calabaza 3](/imagenes/obj_calabaza_3.png)
 ![Piedra](/imagenes/obj_piedra.png)
+![PoweUp](/imagenes/obj_foco_def.png)
 <br>
 
 Además de los personajes, también se han diseñado las pantallas:
 <br>
-![Pantalla de inicio](/imagenes/pantalla_de_inicio_2.png)
-![Pantalla de juego](/imagenes/pantalla_de_juego.png)
+![Pantalla de login](/imagenes/pantalla_de_login.png)
+![Pantalla de inicio](/imagenes/pantalla_de_inicio_3.png)
+![Pantalla de tutorial](/imagenes/pantalla_de_tutorial.png)
+![Pantalla de lobby](/imagenes/pantalla_de_lobby.png)
+![Pantalla de juego](/imagenes/pantalla_de_juego_3.png)
 ![Pantalla de pausa](/imagenes/pantalla_de_pausa.png)
 ![Pantalla de ajustes](/imagenes/pantalla_de_ajustes.png)
 ![Pantalla de créditos](/imagenes/pantalla_de_creditos.png)
+![Pantalla de desconexión](/imagenes/pantalla_de_desconexión.png)
 <br>
 
 También se ha creado un logo para la empresa ficticia de la que se forma parte:
@@ -57,14 +62,15 @@ Los sonidos y la música es estilo Halloween. Busca ser divertida y acorde con l
 
 ## Jugabilidad
 Una partida se compone de 3 rondas. En cada ronda, el tiempo de aparición de los objetos se reduce para que la duración sea menor. La primera ronda dura 45 segundos, y en cada una de las siguientes se disminuyen 10 segundos respecto a la duración anterior. 
-Varios objetos aparecerán en el mapa que los jugadores pueden coger y lanzar según su naturaleza. Existen 2 tipos de objetos:
+Varios objetos aparecerán en el mapa que los jugadores pueden coger y lanzar según su naturaleza. Existen 3 tipos de objetos:
 1. Caramelos: aparecen una vez por ronda. Los jugadores compiten por llevarlo a su cesta lo antes posible.
 2. Objetos del mapa: estos podrán ser recogidos por los jugadores y lanzados para aturdir a su enemigo por unos segundos, ya sea para generar una estrategia o para hacer que el enemigo suelte el ítem o caramelo que está sosteniendo.
+3. PowerUps: de vez en cuando irán apareciendo esferas consumibles que otorgan un pequeño plus a la velocidad del personaje
 
 El objetivo es recolectar la mayor cantidad de caramelos por ronda. El jugador ganador será el que consiga el mayor número de rondas ganadas.
 
 ## Controles
-El juego está diseñado para que puedan jugar 2 jugadores en local, con el mismo teclado
+El juego está diseñado para que puedan jugar 2 jugadores en local o en multijugador: 
 * Jugador izquierda: usará W A S D para moverse y E para recoger los caramelos y los objetos.
 * Jugador derecha: usará I J K L para moverse y O para recoger los caramelos y los objetos.
 Para lanzar los objetos se debe presionar la tecla para recoger y estar andando hacia la dirección donde se quiera tirar el objeto, si no, sólo sotará dicho objeto.
@@ -89,7 +95,7 @@ Mediante esta estrategia se espera crear expectación a la salida del juego, gen
 
 ## Diagramas de flujo
 Se han planeado dos diagramas de flujo. Uno de ellos muestra cómo el jugador puede moverse entre las escenas planteadas para el juego y otra muestra de forma visual la jugabilidad. 
-![Escenas](/imagenes/ddf_3.png)
+![Escenas](/imagenes/ddf_4.png)
 
 ![Jugabilidad](/imagenes/ddf_4.png)
 
@@ -107,6 +113,7 @@ Pantallas de menú, pausa, ajustes y créditos han sido realizadas con assets gr
 <br>
 Música del juego ha sido seleccionada de FreeSound.
 <br>
+
 
 
 
