@@ -290,25 +290,6 @@ export class MultiplayerGameScene extends Phaser.Scene {
             color: '#ff0000ff'
         }).setOrigin(0.5);
 
-        this.createMenuButton();
-    }
-
-    createMenuButton() {
-        const menuButton = this.add.text(600, 400, 'Volver al menú', {
-            fontSize: '32px',
-            color: '#ffffff',
-        }).setOrigin(0.5).setInteractive({ useHandCursor: true })
-            .on('pointerdown', () => {
-                if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-                    this.ws.close();
-                }
-                this.scene.start('MainMenu');
-            });
-        this.gameEnded=true;
-        this.gameStarted=false;
-        this.physics.pause();
-        //Para todas las entidades
-
         this.showDisconnectScreen();
     }
 
