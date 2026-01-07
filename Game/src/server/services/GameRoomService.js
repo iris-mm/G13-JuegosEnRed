@@ -154,6 +154,8 @@ export function createGameRoomService() {
   }
 
 
+
+
   //Crea y envía la posición del caramelo a ambos jugadores
   function spawnCandy(room) {
     const candy = {

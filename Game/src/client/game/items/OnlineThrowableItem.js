@@ -1,6 +1,6 @@
 import { Item } from "./Item.js";
 
-export class OnlineCandy extends Item {
+export class OnlineThrowableItem extends Item {
     /**
      * @param {number} x - Posición X enviada por el servidor
      * @param {number} y - Posición Y enviada por el servidor
@@ -20,19 +20,6 @@ export class OnlineCandy extends Item {
         super.Update();
         // No spawn, no spawnTime, nada de random
     }
-
-    setupOverlap(player, otherPlayer, scene) {
-    // Detecta colisión del caramelo con un jugador
-    scene.physics.add.overlap(player.gameObject, this.gameObject, () => {
-        // Solo si el jugador no tiene ya un caramelo y este caramelo está disponible
-        if (!player.hasCandy && this.hasSpawned) {
-            this.hasSpawned = false;        // caramelo ya no está en el mapa
-            this.holder = player;           // referencia a quién lo lleva
-            player.hasCandy = true;         // el jugador ahora tiene un caramelo
-            player.currentItemGrabbing = this; // referencia al caramelo que lleva
-        }
-    });
-}
 
     OnCollected() {
         this.ClearPlayer();
