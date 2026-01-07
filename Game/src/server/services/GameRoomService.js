@@ -19,12 +19,12 @@ export function createGameRoomService() {
       player1: {
         ws: player1Ws,
         score: 0,
-        ready: false
+        ready: false,
       },
       player2: {
         ws: player2Ws,
         score: 0,
-        ready: false
+        ready: false,
       },
       active: true, // Room is active
 
@@ -265,6 +265,7 @@ export function createGameRoomService() {
   return {
     createRoom,
     setPlayerReady,
+    spawnCandy,
     // handlePaddleMove,
     // handleGoal,
     handleDisconnect,

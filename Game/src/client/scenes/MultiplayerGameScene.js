@@ -86,6 +86,8 @@ export class MultiplayerGameScene extends Phaser.Scene {
     init(data) {
         this.ws = data.ws;                 // WebSocket
         this.playerRole = data.playerRole; // 'player1' | 'player2'
+        this.hasCandy = false;
+        this.currentItemGrabbing = null;
         this.gameStarted = false;
         this.gameEnded = false;
 
@@ -327,8 +329,22 @@ export class MultiplayerGameScene extends Phaser.Scene {
             y: this.localPlayer.y
         });
 
+        // Mover caramelo con el jugador que lo tiene
+        if (this.localPlayer.hasCandy && this.localPlayer.currentItemGrabbing) {
+            const candy = this.localPlayer.currentItemGrabbing;
+            candy.MoveTo(this.localPlayer.x, this.localPlayer.y);
+        }
+
+        if (this.remotePlayer.hasCandy && this.remotePlayer.currentItemGrabbing) {
+            const candy = this.remotePlayer.currentItemGrabbing;
+            candy.MoveTo(this.remotePlayer.x, this.remotePlayer.y);
+        }
+
+
+
         // Actualizar todo lo demás
         this.entitiesController.Update();
+        
     }
 
     endGame(reason) {
