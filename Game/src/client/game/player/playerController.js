@@ -13,6 +13,11 @@ export class Player extends Entity {
         this.cursors = cursors;
 
         this.grabItemKey = grabItemKey;
+         if (grabItemKey) {
+            this.grabKey = this.scene.input.keyboard.addKey(
+                Phaser.Input.Keyboard.KeyCodes[grabItemKey]
+            );
+        }
         this.currentItemGrabbing = null;
         this.isLocal = isLocal;
         this.hasCandy = false;
@@ -28,6 +33,9 @@ export class Player extends Entity {
         this.facingX = 0;
         this.facingY = 0;
 
+        this.hasCandy = false;
+
+        
         this.knockOutTimer = 0;
 
         // Escuchar tecla de recoger
@@ -40,6 +48,25 @@ export class Player extends Entity {
     }
 
     Update() {
+        super.Update();
+
+        if (!this.isLocal) return;
+
+        this.Movement();
+        this.ItemInputs();
+
+        // CheckPickup ahora depende de que grabKey esté presionada
+        this.CheckPickup();
+
+        // Para objetos que se lanzan
+        if(this.currentItemGrabbing && this.currentItemGrabbing instanceof ThrowableItem) {
+            this.GrabItem(this.currentItemGrabbing);
+        }
+    }
+
+
+    Movement(){
+        if(!this.cursors) return;
         if (this.isLocal) {
             this.Movement();
             this.ItemInputs();
@@ -130,6 +157,48 @@ export class Player extends Entity {
         if (this.itemInteractionCooldown > 0) this.itemInteractionCooldown--;
     }
 
+    CheckPickup() {
+    // Solo actuamos si el jugador presiona la tecla de recoger
+    if (!this.grabItemInputOn||!this.grabKey.isDown) return;
+
+    // Si ya tienes un objeto, no puedes recoger otro
+    if (this.currentItemGrabbing) return;
+
+    // Recorremos todas las entidades del escenario
+    const entities = this.scene.entitiesController.entities;
+
+    for (let entity of entities) {
+        // Solo caramelos
+        if (!(entity instanceof Candy || entity instanceof OnlineCandy)) continue;
+        if (!entity.hasSpawned) continue;
+
+        //  Verificar si estamos "cerca" del caramelo
+        const dx = Math.abs(this.x - entity.x);
+        const dy = Math.abs(this.y - entity.y);
+        const distanceThreshold = 50; // ajusta según el tamaño del sprite
+
+        if (dx < distanceThreshold && dy < distanceThreshold) {
+            //  Solo si estamos cerca y presionando la tecla
+            this.currentItemGrabbing = entity;
+            this.hasCandy = true;
+
+            // Si es OnlineCandy, avisamos que fue recogido
+            if (entity instanceof OnlineCandy) {
+                entity.OnCollected();
+                // Opcional: avisar al servidor que se recogió
+                if (this.scene.ws && this.scene.ws.readyState === WebSocket.OPEN) {
+                    this.scene.ws.send(JSON.stringify({
+                        type: 'POINT',
+                        candyId: entity.id
+                    }));
+                }
+            }
+
+            break; // Solo recoger uno a la vez
+        }
+    }
+
+}
     GrabItem(item) {
         if (this.itemInteractionCooldown > 0) return;
 
