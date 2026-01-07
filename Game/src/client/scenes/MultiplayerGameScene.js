@@ -306,7 +306,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
                             data.candy.id
                         );
                         this.entitiesController.AddEntity(this.candy);
-                        this.candy.setupOverlap(this.localPlayer, this.remotePlayer, this);
+                        //this.candy.setupOverlap(this.localPlayer, this.remotePlayer, this);
                     } else {
                         this.candy.MoveTo(data.candy.x, data.candy.y);
                         this.candy.hasSpawned = true;

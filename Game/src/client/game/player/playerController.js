@@ -43,7 +43,7 @@ export class Player extends Entity {
             this.Movement();
             this.ItemInputs();
             this.CheckPickup();
-            if (this.currentItemGrabbing) this.GrabItem(this.currentItemGrabbing)
+            //if (this.currentItemGrabbing) this.GrabItem(this.currentItemGrabbing)
         }
         
 
