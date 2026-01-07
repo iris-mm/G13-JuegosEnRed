@@ -2,8 +2,15 @@
 ## Descripción de la temática del juego
 Juego multijugador 1 vs 1 con temática de Halloween. Ambos jugadores se enfrentan para ver quién consigue la mayor cantidad de caramelos en cada ronda. Deben recoger los caramelos del suelo y llevarlos a su base. Se pueden tirar objetos del mapa y robarse entre ellos. 
 
+## Enlaces
+https://mr-sae.itch.io/crepusculones
+https://www.newgrounds.com/portal/view/1013796 
+
 ## Novedades
-Juego implementado en modo local.
+- Juego online y local!
+- Pantalla tutorial y recordario de controles al inicio de la partida
+- Timer y bases con assets originales
+- Power Ups
 
 ## Instalación
 Instalar dependencias ejecutando npm install en la terminal
