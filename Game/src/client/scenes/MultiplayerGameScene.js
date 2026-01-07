@@ -131,9 +131,9 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.load.image('disconectionScreen', desconectionScreenImg);
 
         //Cargar fuente
-        const font = new FontFace('ButtonsFont','url(fonts/alagard_font.ttf)');
+        const font = new FontFace('ButtonsFont', 'url(fonts/alagard_font.ttf)');
         font.load().then((loadedFont) => {
-        document.fonts.add(loadedFont);
+            document.fonts.add(loadedFont);
         });
     }
 
@@ -229,7 +229,6 @@ export class MultiplayerGameScene extends Phaser.Scene {
 
                 case 'CANDY_SPAWN':
                     console.log('CANDY_SPAWN recibido', data.candy);
-
                     if (!this.candy) {
                         this.candy = new OnlineCandy(
                             data.candy.x,
@@ -242,7 +241,6 @@ export class MultiplayerGameScene extends Phaser.Scene {
                         this.entitiesController.AddEntity(this.candy);
                         this.candy.setupOverlap(this.localPlayer, this.remotePlayer, this);
                     } else {
-                        // Si ya existe, solo moverlo a la posición enviada por el server
                         this.candy.MoveTo(data.candy.x, data.candy.y);
                         this.candy.hasSpawned = true;
                     }
@@ -304,26 +302,25 @@ export class MultiplayerGameScene extends Phaser.Scene {
                 }
                 this.scene.start('MainMenu');
             });
-        this.gameEnded=true;
-        this.gameStarted=false;
+        this.gameEnded = true;
+        this.gameStarted = false;
         this.physics.pause();
         //Para todas las entidades
 
         this.showDisconnectScreen();
     }
 
-    showDisconnectScreen(){
+    showDisconnectScreen() {
         // Mostrar imagen de desconexión
         const bg = this.add.image(600, 400, 'disconectionScreen');
         bg.setOrigin(0.5);
         bg.displayWidth = 1200;
         bg.displayHeight = 800;
-        
-        new Button(880, 600, this, 'SPR_Button', 'Menú',() => 
-                    {
-                        this.scene.start('MainMenu');
-                    }
-                );
+
+        new Button(880, 600, this, 'SPR_Button', 'Menú', () => {
+            this.scene.start('MainMenu');
+        }
+        );
     }
 
     send(msg) {

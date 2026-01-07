@@ -108,6 +108,18 @@ export function createGameRoomService() {
     return candy;
 }
 
+function handleCandyDelivered(ws, data) {
+    const roomId = ws.roomId;
+    if (!roomId) return;
+
+    const room = rooms.get(roomId);
+    if (!room || !room.active) return;
+
+    // Generar un nuevo candy
+    room.candy = spawnCandy(room); // spawnCandy ya envía CANDY_SPAWN a ambos
+}
+
+
   /**
    * Handle paddle movement from a player
    * @param {WebSocket} ws - Player's WebSocket
@@ -265,6 +277,7 @@ export function createGameRoomService() {
   return {
     createRoom,
     setPlayerReady,
+    handleCandyDelivered,
     // handlePaddleMove,
     // handleGoal,
     handleDisconnect,

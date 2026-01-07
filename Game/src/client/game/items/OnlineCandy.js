@@ -33,6 +33,31 @@ export class OnlineCandy extends Item {
             }));
         }
     }
+
+    setupOverlap(player1, player2, scene) {
+    scene.physics.add.overlap(
+        this.gameObject,
+        player1.gameObject,
+        () => this.onPlayerOverlap(player1)
+    );
+
+    scene.physics.add.overlap(
+        this.gameObject,
+        player2.gameObject,
+        () => this.onPlayerOverlap(player2)
+    );
+}
+
+onPlayerOverlap(player) {
+    if (!player.isLocal) return;
+    player.currentItemGrabbing = this;
+
+    // Auto-recoger si quieres que no haya tecla
+    if (player.grabItemInputOn) {
+        player.GrabItem(this);
+    }
+}
+
     
     Reset() {
         this.ClearPlayer();
