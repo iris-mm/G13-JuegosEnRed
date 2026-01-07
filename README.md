@@ -6,6 +6,8 @@ Juego multijugador 1 vs 1 con temática de Halloween. Ambos jugadores se enfrent
 https://mr-sae.itch.io/crepusculones
 <br>
 https://www.newgrounds.com/portal/view/1013796 
+<br>
+https://gamejolt.com/games/crepusculones/1041806
 
 ## Novedades
 - Juego online y local!
