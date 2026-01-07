@@ -170,6 +170,12 @@ wss.on('connection', (ws) => {
           }
           break;
 
+        case 'POWERUP_COLLECTED':
+          console.log('POWERUP_COLLECTED recibido del cliente:', data);
+          gameRoomService.handlePowerUpCollected(ws, data.powerUpId);
+          break;
+
+
 
         case 'UPDATE_TIME':
           wss.clients.forEach(client => {
@@ -186,11 +192,6 @@ wss.on('connection', (ws) => {
         case 'CANDY_DELIVERED':
           gameRoomService.handleCandyDelivered(ws, data);
           break;
-
-        case 'POWERUP_COLLECTED':
-          gameRoomService.handlePowerUpCollected(ws, data.powerUpId);
-          break;
-
 
         case 'POINT':
           //----Implementar lógica de puntuación-------------- 

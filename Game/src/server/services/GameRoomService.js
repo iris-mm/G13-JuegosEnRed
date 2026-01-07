@@ -235,13 +235,19 @@ export function createGameRoomService() {
 
   }
 
+
   function handlePowerUpCollected(ws, powerUpId) {
+    console.log('handlePowerUpCollected llamado');
+    console.log('ws.roomId:', ws.roomId);
+    console.log('powerUpId recibido:', powerUpId);
+    
+
     const roomId = ws.roomId;
     if (!roomId) return;
 
     const room = rooms.get(roomId);
     if (!room || !room.active) return;
-
+    console.log('powerUp en room:', room.speedPowerUp);
     if (!room.speedPowerUp || !room.speedPowerUp.active) return;
     if (room.speedPowerUp.id !== powerUpId) return;
 
