@@ -82,7 +82,9 @@ import { SpeedPowerUp } from '../../client/game/items/SpeedPowerUp.js';
 import { OnlineCandy } from '../../client/game/items/OnlineCandy.js';
 import { Button } from '../ui/Button.js';
 import { OnlineThrowableItem } from '../../client/game/items/OnlineThrowableItem.js';
+import { OnlineSpeedPowerUp } from '../../client/game/items/OnlineSpeedPowerUp.js';
 import { TimerController } from '../game/controllers/TimerController.js';
+
 
 export class MultiplayerGameScene extends Phaser.Scene {
     constructor() {
@@ -99,7 +101,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
 
         this.candy = null;
         this.item = null;
-
+        this.speedPowerUp = null;
 
     }
 
@@ -191,11 +193,11 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.basket2 = new CandyBasket(60, 400, 1200 - 90, 310, this.remotePlayer, this);
 
         this.player1Score = 0;
-        this.player1ScoreText = this.add.text(447, 80, "0", {fontSize: "48px",color: "#ffffff"})
-        .setDepth(100);
+        this.player1ScoreText = this.add.text(447, 80, "0", { fontSize: "48px", color: "#ffffff" })
+            .setDepth(100);
         this.player2Score = 0;
-        this.player2ScoreText = this.add.text(723, 80, "0", {fontSize: "48px",color: "#ffffff"})
-        .setDepth(100);
+        this.player2ScoreText = this.add.text(723, 80, "0", { fontSize: "48px", color: "#ffffff" })
+            .setDepth(100);
 
         // Agregar throwable items
         /* this.items = [
@@ -211,21 +213,21 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.basket1 = new CandyBasket(60, 400, 70, 310, this.localPlayer, this);
         this.basket2 = new CandyBasket(1200 - 60, 400, 1200 - 90, 310, this.remotePlayer, this);
 
-        this.speedPowerUp = new SpeedPowerUp(600, 400, 0.3, this);
+        /*this.speedPowerUp = new SpeedPowerUp(600, 400, 0.3, this);
         this.entitiesController.AddEntity(this.speedPowerUp);
-        this.speedPowerUp.setupOverlap(this.localPlayer, this.remotePlayer, this);
+        this.speedPowerUp.setupOverlap(this.localPlayer, this.remotePlayer, this);*/
 
         //  Temporizador
         const timerImage = this.add.image(600, 95, 'timerImg')
-        .setDepth(99)
-        .setScale(6)
-        .setAlpha(0.75);
-        this.timerText = this.add.text(600, 100, "45", {fontSize: "48px",color: "#ffffff"})
-        .setOrigin(0.5)
-        .setDepth(100);
+            .setDepth(99)
+            .setScale(6)
+            .setAlpha(0.75);
+        this.timerText = this.add.text(600, 100, "45", { fontSize: "48px", color: "#ffffff" })
+            .setOrigin(0.5)
+            .setDepth(100);
 
         this.countdown = new TimerController(this, this.timerText);
-        if(this.playerRole !== "player1") this.countdown.disableCountdown();
+        if (this.playerRole !== "player1") this.countdown.disableCountdown();
         this.round = 1;
         this.startRound(45000);
 
@@ -315,6 +317,43 @@ export class MultiplayerGameScene extends Phaser.Scene {
                         existingItem.MoveTo(data.item.x, data.item.y);
                         existingItem.hasSpawned = true;
                     }
+                    break;
+                case 'POWERUP_SPAWN':
+                    if (!this.speedPowerUp) {
+                        this.speedPowerUp = new OnlineSpeedPowerUp(
+                            data.powerUp.x,
+                            data.powerUp.y,
+                            0.3,
+                            this,
+                            data.powerUp.id
+                        );
+
+                        this.entitiesController.AddEntity(this.speedPowerUp);
+                        this.speedPowerUp.setupOverlap(this.localPlayer, this);
+                    }
+                    break;
+
+                case 'POWERUP_DESPAWN':
+                    if (this.speedPowerUp?.id === data.powerUpId) {
+                        this.speedPowerUp.deactivate();
+                    }
+
+                    // Aplicar efecto SOLO al jugador correcto
+                    if (data.player === this.playerRole) {
+                        const originalSpeed = this.localPlayer.speed;
+                        this.localPlayer.speed *= 1.5;
+
+                        this.time.delayedCall(5000, () => {
+                            this.localPlayer.speed = originalSpeed;
+                        });
+                    }
+                    break;
+
+                case 'POWERUP_RESPAWN':
+                    this.speedPowerUp.activate(
+                        data.powerUp.x,
+                        data.powerUp.y
+                    );
                     break;
 
 
@@ -428,19 +467,19 @@ export class MultiplayerGameScene extends Phaser.Scene {
 
 
 
-        if(this.countdown.canCountDown){
+        if (this.countdown.canCountDown) {
             // Enviar tiempo actualizado
             this.send({
-            type: 'UPDATE_TIME',
-            owner: this.playerRole,
-            timeLeft: this.countdown.remainingTime
+                type: 'UPDATE_TIME',
+                owner: this.playerRole,
+                timeLeft: this.countdown.remainingTime
             });
         }
 
         // Actualizar todo lo demás
         this.countdown.update();
         this.entitiesController.Update();
-        
+
     }
 
     shutdown() {
@@ -448,8 +487,8 @@ export class MultiplayerGameScene extends Phaser.Scene {
     }
 
     startRound(seconds) {
-        if(this.countdown.canCountDown) this.countdown.start(seconds, () => this.endRound());
-                                    else this.countdown.setNotCooldownEvent(() => this.endRound());
+        if (this.countdown.canCountDown) this.countdown.start(seconds, () => this.endRound());
+        else this.countdown.setNotCooldownEvent(() => this.endRound());
     }
 
     endGame(reason) {
@@ -459,13 +498,13 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.time.delayedCall(3000, () => this.scene.start('MenuScene'));
     }
 
-    endRound(){
+    endRound() {
         this.round++;
 
-        if(this.basket1.candies > this.basket2.candies) {
+        if (this.basket1.candies > this.basket2.candies) {
             this.player1ScoreText.text = `${++this.player1Score}`;
         }
-        else if(this.basket1.candies < this.basket2.candies) {
+        else if (this.basket1.candies < this.basket2.candies) {
             this.player2ScoreText.text = `${++this.player2Score}`;
         }
 
