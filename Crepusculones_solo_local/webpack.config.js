@@ -34,8 +34,8 @@ module.exports = {
             loader: 'file-loader',
             options: {
               name: '[name].[ext]',
-              outputPath: 'assets/music_sounds/',
-              publicPath: 'assets/music_sounds/'
+              outputPath: 'public/assets/music_sounds/',
+              publicPath: 'public/assets/music_sounds/'
             }
           }
         ]
@@ -51,7 +51,7 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: 'assets/Fuentes',
+          from: 'public/assets/Fuentes',
           to: 'Fuentes',
         }
       ]
