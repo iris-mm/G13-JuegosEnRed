@@ -300,7 +300,10 @@ export class MultiplayerGameScene extends Phaser.Scene {
                     }
                     break;
                 case 'POWERUP_SPAWN':
+                    console.log('Recibido POWERUP_SPAWN:', data.powerUp);
+
                     if (!this.speedPowerUp) {
+                        // Crear por primera vez
                         this.speedPowerUp = new OnlineSpeedPowerUp(
                             data.powerUp.x,
                             data.powerUp.y,
@@ -308,13 +311,17 @@ export class MultiplayerGameScene extends Phaser.Scene {
                             this,
                             data.powerUp.id
                         );
-
                         this.entitiesController.AddEntity(this.speedPowerUp);
                         this.speedPowerUp.setupOverlap(this.localPlayer, this);
+                    } else {
+                        // Ya existe → actualizar ID, posición y reactivarlo
+                        this.speedPowerUp.id = data.powerUp.id;
+                        this.speedPowerUp.activate(data.powerUp.x, data.powerUp.y);
                     }
                     break;
 
                 case 'POWERUP_DESPAWN':
+                    console.log('Recibido POWERUP_DESPAWN:', data.powerUpId);
                     if (this.speedPowerUp?.id === data.powerUpId) {
                         this.speedPowerUp.deactivate();
                     }
