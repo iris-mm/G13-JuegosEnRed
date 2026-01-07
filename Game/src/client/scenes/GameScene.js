@@ -133,7 +133,6 @@ export class GameScene extends Phaser.Scene {
         const boundary = this.physics.add.image(600, 400, 'game_boundary') // 1200/2 y 800/2 para que esté en el centro
         .setScale(3)
         .setImmovable(true);
-        // this.physics.add.collider(player, boundary);
 
         const leaves = this.add.image(600, 400, 'leaves')
         .setScale(3)
