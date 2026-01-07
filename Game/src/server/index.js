@@ -127,7 +127,7 @@ wss.on('connection', (ws) => {
       const msgString = message.toString();
       const data = JSON.parse(msgString);
       console.log('Mensaje recibido:', data);
-      
+
       // Manejar los diferentes tipos de mensajes ----
       switch (data.type) {
         case 'JOIN_QUEUE':
@@ -154,10 +154,10 @@ wss.on('connection', (ws) => {
           wss.clients.forEach(client => {
             if (client !== ws && client.readyState === 1) {
               client.send(JSON.stringify({
-              type: 'PLAYER_MOVED',
-              player: data.player,
-              x: data.x,
-              y: data.y 
+                type: 'PLAYER_MOVED',
+                player: data.player,
+                x: data.x,
+                y: data.y
               }));
             }
           });
@@ -168,6 +168,23 @@ wss.on('connection', (ws) => {
           if (room && room.candy && room.candy.id === data.candyId) {
             room.candy = gameRoomService.spawnCandy(room); // Genera nueva posición y envía CANDY_SPAWN a ambos
           }
+          break;
+
+          
+        case 'UPDATE_TIME':
+          wss.clients.forEach(client => {
+            if (client !== ws && client.readyState === 1) {
+              client.send(JSON.stringify({
+              type: 'UPDATE_TIMER',
+              owner: data.owner,
+              timeLeft: data.timeLeft
+              }));
+            }
+          });
+          break;
+
+        case 'CANDY_DELIVERED':
+          gameRoomService.handleCandyDelivered(ws, data);
           break;
 
         case 'POINT':

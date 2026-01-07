@@ -4,11 +4,11 @@ import { Candy } from "../items/Candy.js";
 import { OnlineCandy } from "../items/OnlineCandy.js";
 
 export class Player extends Entity {
-    constructor(x, y, scale, characterName, scene, cursors, grabItemKey, isLocal=true) {
+    constructor(x, y, scale, characterName, scene, cursors, grabItemKey, isLocal = true) {
         super(x, y, scale, `${characterName}_frontEst`, scene, true); //Default player al iniciar
 
         this.scene = scene;
-        this.speed = 200;      
+        this.speed = 200;
         this.characterName = characterName;
         this.cursors = cursors;
 
@@ -20,11 +20,14 @@ export class Player extends Entity {
         }
         this.currentItemGrabbing = null;
         this.isLocal = isLocal;
-        
+        this.hasCandy = false;
+
         this.hasInteractedWithItems = false;
         this.hasUpdatedItemInteraction = false;
-        this.scene.input.keyboard.on(`keydown-${this.grabItemKey}`, () => this.grabItemInputOn = true );
+        this.grabItemInputOn = false;
+        /*this.scene.input.keyboard.on(`keydown-${this.grabItemKey}`, () => this.grabItemInputOn = true );
         this.scene.input.keyboard.on(`keyup-${this.grabItemKey}`, () => this.grabItemInputOn = false );
+        */
         this.itemInteractionCooldown = 0;
 
         this.facingX = 0;
@@ -33,6 +36,13 @@ export class Player extends Entity {
         this.hasCandy = false;
 
         
+        this.knockOutTimer = 0;
+
+        // Escuchar tecla de recoger
+        if (this.grabItemKey) {
+            this.scene.input.keyboard.on(`keydown-${this.grabItemKey}`, () => this.grabItemInputOn = true);
+            this.scene.input.keyboard.on(`keyup-${this.grabItemKey}`, () => this.grabItemInputOn = false);
+        }
 
 
     }
@@ -57,6 +67,16 @@ export class Player extends Entity {
 
     Movement(){
         if(!this.cursors) return;
+        if (this.isLocal) {
+            this.Movement();
+            this.ItemInputs();
+            if (this.currentItemGrabbing) this.GrabItem(this.currentItemGrabbing)
+        }
+
+    }
+
+    Movement() {
+        if (!this.cursors) return;
 
         this.vx = 0;
         this.vy = 0;
@@ -67,32 +87,32 @@ export class Player extends Entity {
 
         //Para que soporte las diagonales, primero se detecta la dirección
         if (this.cursors.left?.isDown) {
-             this.vx = -this.speed; this.facingX = -1; moving = true; 
+            this.vx = -this.speed; this.facingX = -1; moving = true;
         }
         if (this.cursors.right?.isDown) {
-             this.vx = this.speed; this.facingX = 1; moving = true; 
+            this.vx = this.speed; this.facingX = 1; moving = true;
         }
         if (this.cursors.up?.isDown) {
-             this.vy = -this.speed; this.facingY = -1; moving = true; 
+            this.vy = -this.speed; this.facingY = -1; moving = true;
         }
         if (this.cursors.down?.isDown) {
-             this.vy = this.speed; this.facingY = 1; moving = true; 
+            this.vy = this.speed; this.facingY = 1; moving = true;
         }
         //y luego se elige la animación del personaje
         let animation = null;
-        if(moving){
-        if(this.vx !== 0 && this.vy !== 0){ //condición de la diagonal
-            animation = this.vx > 0 ? `${this.characterName}_right_anim` : `${this.characterName}_left_anim`;
-        } else if(this.vx !== 0){ //mvto normal izq/dcha
-            animation = this.vx > 0 ? `${this.characterName}_right_anim` : `${this.characterName}_left_anim`;
-        } else if(this.vy !== 0){ //mvto normal arriba/abajo
-            animation = this.vy > 0 ? `${this.characterName}_front_anim` : `${this.characterName}_back_anim`;
+        if (moving) {
+            if (this.vx !== 0 && this.vy !== 0) { //condición de la diagonal
+                animation = this.vx > 0 ? `${this.characterName}_right_anim` : `${this.characterName}_left_anim`;
+            } else if (this.vx !== 0) { //mvto normal izq/dcha
+                animation = this.vx > 0 ? `${this.characterName}_right_anim` : `${this.characterName}_left_anim`;
+            } else if (this.vy !== 0) { //mvto normal arriba/abajo
+                animation = this.vy > 0 ? `${this.characterName}_front_anim` : `${this.characterName}_back_anim`;
+            }
         }
-    }
-        if(animation) this.gameObject.anims.play(animation, true); //Se ejecuta la animación si el personaje se está moviendo
+        if (animation) this.gameObject.anims.play(animation, true); //Se ejecuta la animación si el personaje se está moviendo
         else this.gameObject.setTexture(`${this.characterName}_frontEst`); //si no, idle
 
-        if(this.knockOutTimer > 0){
+        if (this.knockOutTimer > 0) {
             this.knockOutTimer--
             this.vx = 0
             this.vy = 0
@@ -109,33 +129,32 @@ export class Player extends Entity {
         const halfWidth = this.gameObject.displayWidth / 2;
         const halfHeight = this.gameObject.displayHeight / 2;
 
-        if(this.x < halfWidth) this.MoveTo(halfWidth, this.y);
-        if(this.x > this.scene.sys.game.config.width - halfWidth) this.MoveTo(this.scene.sys.game.config.width - halfWidth, this.y);
-        if(this.y < halfHeight) this.MoveTo(this.x, halfHeight);
-        if(this.y > this.scene.sys.game.config.height - halfHeight) this.MoveTo(this.x, this.scene.sys.game.config.height - halfHeight);
+        if (this.x < halfWidth) this.MoveTo(halfWidth, this.y);
+        if (this.x > this.scene.sys.game.config.width - halfWidth) this.MoveTo(this.scene.sys.game.config.width - halfWidth, this.y);
+        if (this.y < halfHeight) this.MoveTo(this.x, halfHeight);
+        if (this.y > this.scene.sys.game.config.height - halfHeight) this.MoveTo(this.x, this.scene.sys.game.config.height - halfHeight);
     }
 
-    ItemInputs(){
-        
-        if(this.knockOutTimer > 0){
+    ItemInputs() {
+        if (this.knockOutTimer > 0) {
             this.hasUpdatedItemInteraction = false
             this.hasInteractedWithItems = false
             return;
         }
 
-        if(!this.hasUpdatedItemInteraction){
-            if(this.grabItemInputOn){
+        if (!this.hasUpdatedItemInteraction) {
+            if (this.grabItemInputOn) {
                 this.hasInteractedWithItems = true;
                 this.hasUpdatedItemInteraction = true;
             }
-        }else this.hasInteractedWithItems = false;
+        } else this.hasInteractedWithItems = false;
 
-        if(!this.grabItemInputOn){
+        if (!this.grabItemInputOn) {
             this.hasUpdatedItemInteraction = false;
             this.hasInteractedWithItems = false;
         }
 
-        if(this.itemInteractionCooldown > 0) this.itemInteractionCooldown--;
+        if (this.itemInteractionCooldown > 0) this.itemInteractionCooldown--;
     }
 
     CheckPickup() {
@@ -180,35 +199,72 @@ export class Player extends Entity {
     }
 
 }
-    GrabItem(item){
-        if(this.itemInteractionCooldown > 0) return;
+    GrabItem(item) {
+        if (this.itemInteractionCooldown > 0) return;
 
-        if(!this.hasInteractedWithItems) return;
+        if (!this.hasInteractedWithItems) return;
 
-        if(this.currentItemGrabbing != null){
-            if(this.currentItemGrabbing instanceof ThrowableItem){
+        if (this.currentItemGrabbing != null) {
+            if (this.currentItemGrabbing instanceof ThrowableItem) {
                 this.currentItemGrabbing.Throw(this.facingX, this.facingY);
                 this.currentItemGrabbing = null;
                 this.itemInteractionCooldown = 3;
             }
             return;
         }
-        
-        if(item.playerGrabbing != null) return;
+
+        if (item.playerGrabbing != null) return;
 
         item.GrabItem(this);
         this.currentItemGrabbing = item;
 
         this.itemInteractionCooldown = 3;
-        this.hasCandy = this.currentItemGrabbing instanceof Candy;
+
+         if (this.isLocal && item instanceof OnlineCandy) {
+            this.hasCandy = true;
+            if (this.scene.send) {
+                this.scene.send({
+                    type: 'CANDY_PICKUP',
+                    candyId: item.id,
+                });
+            }
+        }
+
+        this.hasCandy = this.currentItemGrabbing instanceof Candy || this.currentItemGrabbing instanceof OnlineCandy;
     }
 
-    KnockOut(){
-        if(this.knockOutTimer > 0) return;
+    // Llamar cuando el jugador sujeta un caramelo
+    DeliverCandy() {
+    if (!this.hasCandy) return;
+
+    const candy = this.currentItemGrabbing;
+    if (!candy) return;
+
+    this.hasCandy = false;
+    this.currentItemGrabbing = null;
+
+    candy.Reset();
+
+    if (this.isLocal) {
+        console.log(
+            'CANDY_DELIVERED enviado al server, candyId:',
+            candy.id
+        );
+
+        this.scene.send({
+            type: 'CANDY_DELIVERED',
+            candyId: candy.id,
+        });
+    }
+}
+
+
+    KnockOut() {
+        if (this.knockOutTimer > 0) return;
 
         this.knockOutTimer = 100;
 
-        if(this.currentItemGrabbing != null){
+        if (this.currentItemGrabbing != null) {
             this.currentItemGrabbing.MoveTo(this.x, this.y)
             this.currentItemGrabbing.ClearPlayer();
             this.currentItemGrabbing = null;
