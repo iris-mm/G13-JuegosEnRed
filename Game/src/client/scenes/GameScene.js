@@ -81,12 +81,6 @@ export class GameScene extends Phaser.Scene {
     constructor() {
         super('GameScene');
     }
-    
-    init(data){
-        //Pasa info del lobby a la game scene
-        this.socket = data.socket;
-        this.role = data.role;
-    }
 
     preload(){
         //Game
@@ -290,25 +284,6 @@ export class GameScene extends Phaser.Scene {
 
         this.entitiesController.AddEntity(this.player1);
         this.entitiesController.AddEntity(this.player2);
-        
-        //Determinar qué jugador es local y cuál remoto
-        if (this.role === 'player1') {
-            this.localPlayer = this.player1;
-            this.remotePlayer = this.player2;
-        } else {
-            this.localPlayer = this.player2;
-            this.remotePlayer = this.player1;
-        }
-
-        // Actualizamos solo la posición del jugador remoto
-        this.socket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-
-            if (data.type === 'PLAYER_MOVED') {
-                this.remotePlayer.x = data.x;
-                this.remotePlayer.y = data.y;
-            }
-        };
 
         //  Candy
         this.candy = new Candy(0.2, 'candy', this);
@@ -413,6 +388,4 @@ export class GameScene extends Phaser.Scene {
             this.startRound(newDuration);
         });
     }
-
-
 }
