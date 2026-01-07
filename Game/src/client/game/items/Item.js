@@ -13,10 +13,7 @@ export class Item extends Entity{
         scene.physics.add.overlap(player2.gameObject, this.gameObject, () => { player2.GrabItem(this) });
     }
 
-    
-
     GrabItem(player){
-        console.log('🧪 GrabItem llamado con:', Item);
         if(player == null) return;
 
         if(this.playerGrabbing != null) return;
