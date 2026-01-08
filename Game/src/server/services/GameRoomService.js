@@ -71,7 +71,7 @@ export function createGameRoomService() {
         room.player2.ready
     );
 
-    // 🚨 IMPORTANTE: solo iniciar si NO ha empezado antes
+    //IMPORTANTE: solo iniciar si NO ha empezado antes
     if (room.player1.ready && room.player2.ready && !room.started) {
         room.started = true; // Marcar como iniciado
         console.log('Both players ready → START_GAME');

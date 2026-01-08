@@ -187,6 +187,8 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.entitiesController = new EntitiesController();
 
         // Instanciar jugadores
+        this.createAnimations();
+
         this.keys1 = this.input.keyboard.addKeys({ up: 'W', down: 'S', left: 'A', right: 'D' });
         this.keys2 = this.input.keyboard.addKeys({ up: 'I', down: 'K', left: 'J', right: 'L' });
 
@@ -621,4 +623,35 @@ export class MultiplayerGameScene extends Phaser.Scene {
                 console.log('Win añadido:', user.wins);
             });
     }
+
+    createAnimations() {
+        const anims = this.anims;
+
+        const characters = ['zombi', 'vampiresa'];
+        const directions = [
+            { name: 'front', sheet: 'front' },
+            { name: 'back', sheet: 'back' },
+            { name: 'left', sheet: 'left' },
+            { name: 'right', sheet: 'right' },
+        ];
+
+        characters.forEach(char => {
+            directions.forEach(dir => {
+                const key = `${char}_${dir.name}_anim`;
+
+                if (anims.exists(key)) return;
+
+                anims.create({
+                    key,
+                    frames: anims.generateFrameNumbers(
+                        `${char}_${dir.sheet}`,
+                        { start: 0, end: 3 }
+                    ),
+                    frameRate: 8,
+                    repeat: -1
+                });
+            });
+        });
+    }
+
 }
