@@ -61,7 +61,7 @@ export class OnlineThrowableItem extends Item {
 
     onPlayerOverlap(player, picker) {
         if(!player.grabKey || !player.grabKey.isDown) return;
-        if(player.hasThrowable && this.playerGrabbing != null) return;
+        if(player.currentItemGrabbing != null || player.hasThrowable) return;
 
         // Avisar al servidor
         if (this.scene.ws && this.scene.ws.readyState === WebSocket.OPEN) {
