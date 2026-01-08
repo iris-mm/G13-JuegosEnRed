@@ -15,6 +15,7 @@ export class ThrowableItem extends Item{
 
     setupOverlap(player1, player2, scene) {
         super.setupOverlap(player1, player2, scene);
+        
         scene.physics.add.overlap(
             player1.gameObject,
             this.gameObject,

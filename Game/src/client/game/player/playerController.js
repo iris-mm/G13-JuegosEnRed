@@ -2,6 +2,7 @@ import { ThrowableItem } from "../items/ThrowableItem.js";
 import { Entity } from "../core/Entity.js";
 import { Candy } from "../items/Candy.js";
 import { OnlineCandy } from "../items/OnlineCandy.js";
+import { OnlineThrowableItem } from "../items/OnlineThrowableItem.js";
 
 export class Player extends Entity {
     constructor(x, y, scale, characterName, scene, cursors, grabItemKey, isLocal = true) {
@@ -43,10 +44,9 @@ export class Player extends Entity {
             this.Movement();
             this.ItemInputs();
             this.CheckPickup();
+            if(this.currentItemGrabbing instanceof OnlineThrowableItem) this.currentItemGrabbing.CheckThrow();
             //if (this.currentItemGrabbing) this.GrabItem(this.currentItemGrabbing)
         }
-
-
     }
 
     Movement() {

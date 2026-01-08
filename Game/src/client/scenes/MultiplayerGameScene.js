@@ -334,7 +334,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
                             data.item.id
                         );
                         this.entitiesController.AddEntity(newItem);
-                        newItem.setupOverlap(this.localPlayer, this.remotePlayer, this);
+                        newItem.setupOverlap(this.localPlayer, this.playerRole, this);
 
                         // Guardar en el array
                         this.items.push(newItem);
@@ -353,15 +353,22 @@ export class MultiplayerGameScene extends Phaser.Scene {
                     item.MoveTo(-9999, -9999);
 
                     // Asignar al jugador correcto
-                    if (data.owner === this.playerRole) {
+                    if (data.picker === this.playerRole) {
                         this.localPlayer.hasThrowable = true;
                         this.localPlayer.throwableItem = item;
+                        item.GrabItem(this.localPlayer);
                     } else {
                         this.remotePlayer.hasThrowable = true;
                         this.remotePlayer.throwableItem = item;
+                        item.GrabItem(this.remotePlayer);
                     }
                     break;
 
+                case 'ITEM_THROWN':
+                    const thrownItem = this.items.find(i => i.id === data.itemId);
+                    if (!thrownItem) return;
+                    thrownItem.ThrowItem(data);
+                    break;
 
                 case 'POWERUP_SPAWN':
                     console.log('Recibido POWERUP_SPAWN:', data.powerUp);

@@ -286,7 +286,7 @@ export function createGameRoomService() {
 }*/
 
 
-function handleThrowablePickup(ws, itemId) {
+function handleThrowablePickup(ws, itemId, picker) {
     const room = rooms.get(ws.roomId);
     if (!room) return;
 
@@ -302,13 +302,13 @@ function handleThrowablePickup(ws, itemId) {
     room.player1.ws.send(JSON.stringify({
         type: "THROWABLE_PICKED",
         itemId,
-        owner: ws.playerRole
+        picker
     }));
 
     room.player2.ws.send(JSON.stringify({
         type: "THROWABLE_PICKED",
         itemId,
-        owner: ws.playerRole
+        picker
     }));
 }
 

@@ -14,10 +14,17 @@ export class OnlineThrowableItem extends Item {
 
         this.id = id;
         this.hasSpawned = true;
+
+        this.throwSpeedX = 0;
+        this.throwSpeedY = 0;
+
+        this.isThrown = false;
+        this.throwOwner = null;
     }
 
     Update() {
         super.Update();
+        this.ThrowMovement();
         // No spawn, no spawnTime, nada de random
     }
 
@@ -34,45 +41,102 @@ export class OnlineThrowableItem extends Item {
         }
     }
 
-    setupOverlap(player1, player2, scene) {
+    setupOverlap(player, playerRole, scene) {
         scene.physics.add.overlap(
-            this.gameObject,
-            player1.gameObject,
-            () => this.onPlayerOverlap(player1)
-        );
+                this.gameObject,
+                player.gameObject,
+                () => this.onPlayerOverlap(player, playerRole)
+            );
 
         scene.physics.add.overlap(
-            this.gameObject,
-            player2.gameObject,
-            () => this.onPlayerOverlap(player2)
+            player.gameObject,
+                this.gameObject,
+                () => {
+                    if (this.throwOwner && this.throwOwner !== player) {
+                        player.KnockOut();
+                    }
+                }
         );
     }
 
-    onPlayerOverlap(player) {
-        if (!player.isLocal) return;
+    onPlayerOverlap(player, picker) {
+        if(!player.grabKey || !player.grabKey.isDown) return;
+        if(player.hasThrowable && this.playerGrabbing != null) return;
 
         // Avisar al servidor
         if (this.scene.ws && this.scene.ws.readyState === WebSocket.OPEN) {
             this.scene.ws.send(JSON.stringify({
                 type: "THROWABLE_PICKUP",
-                itemId: this.id
+                itemId: this.id,
+                picker
             }));
 
             this.scene.ws.send(JSON.stringify({
                 type: "REQUEST_THROWABLE_PICKUP",
-                itemId: this.id
+                itemId: this.id,
+                picker
             }));
-
         }
+
+        this.playerGrabbingId = picker
     }
-
-
-
-
     Reset() {
         this.ClearPlayer();
         // no mover a -64, -64
         // no spawnTime
     }
 
+    CheckThrow(){
+        if(!this.playerGrabbing.grabKey.isDown) return;
+        
+        if (this.scene.ws && this.scene.ws.readyState === WebSocket.OPEN) {
+            this.scene.ws.send(JSON.stringify({
+                type: "THROW_ITEM",
+                itemId: this.id,
+                owner: this.playerGrabbingId
+            }));
+        }
+        this.playerGrabbing.hasThrowable = null;
+        this.playerGrabbing.currentItemGrabbing = null;
+        this.playerGrabbingId = null;
+    }
+
+    ThrowItem(data){
+        this.Throw(data.owner.facingX, data.owner.facingY)
+        this.Reset();
+    }
+
+    Throw(xDir, yDir){
+        if(this.playerGrabbing == null) return;
+
+        const throwForce = 30;
+        this.throwSpeedX = throwForce * (xDir > 0 ? 1 : xDir == 0 ? 0 : -1);
+        this.throwSpeedY = throwForce * (yDir > 0 ? 1 : yDir == 0 ? 0 : -1);
+
+        this.MoveTo(this.playerGrabbing.x, this.playerGrabbing.y)
+        
+        this.isThrown = true;
+        this.throwOwner = this.playerGrabbing;
+        this.ClearPlayer();
+    }
+
+    ThrowMovement(){
+        if(Math.abs(this.throwSpeedX) < 1 && Math.abs(this.throwSpeedY) < 1){
+            this.throwOwner = null;
+            this.isThrown = false;
+            return;
+        }
+
+        const resistance = 0.9;
+        this.Move(this.throwSpeedX *= resistance, this.throwSpeedY *= resistance);
+
+        if(this.x < 50 || this.x > 1200 - 50) {
+            this.throwSpeedX *= -1;
+            this.Move(5 * Math.sign(this.throwSpeedX), 0)
+        }
+        if(this.y < 50 || this.y > 800 - 50) {
+            this.throwSpeedY *= -1;
+            this.Move(0, 5 * Math.sign(this.throwSpeedY))
+        }
+    }
 }
