@@ -80,9 +80,7 @@ import SFX_ButtonPress from '../../../public/assets/sfx/ButtonPress.mp3';
 import { Player } from '../../client/game/player/playerController.js';
 import { AudioManager } from '../../client/managers/AudioManager.js';
 import { EntitiesController } from '../../client/game/controllers/EntitiesController.js';
-import { ThrowableItem } from '../../client/game/items/ThrowableItem.js';
 import { CandyBasket } from '../../client/game/controllers/CandyBasket.js';
-import { SpeedPowerUp } from '../../client/game/items/SpeedPowerUp.js';
 import { OnlineCandy } from '../../client/game/items/OnlineCandy.js';
 import { Button } from '../ui/Button.js';
 import { OnlineThrowableItem } from '../../client/game/items/OnlineThrowableItem.js';
@@ -214,8 +212,16 @@ export class MultiplayerGameScene extends Phaser.Scene {
          this.entitiesController.AddEntity(this.candy);*/
 
         //  Baskets
-        this.basket1 = new CandyBasket((1200-base_SIZE)+ offset/2, 400, 70, 310, this.localPlayer, this);
-        this.basket2 = new CandyBasket((base_SIZE/2) + offset, 400, 1200 - 90, 310, this.remotePlayer, this);
+        if (this.playerRole === 'player1') {
+            this.basketPlayer1 = new CandyBasket((base_SIZE/2) + offset, 400, 70, 310, this.localPlayer, this); 
+            this.basketPlayer2 = new CandyBasket((1200-base_SIZE)+ offset/2, 400, 1200 - 90, 310, this.remotePlayer, this);
+        } else {
+            this.basketPlayer1 = new CandyBasket((base_SIZE/2) + offset, 400, 70, 310, this.remotePlayer, this);
+            this.basketPlayer2 = new CandyBasket((1200-base_SIZE)+ offset/2, 400, 1200 - 90, 310, this.localPlayer, this);
+        }
+
+        this.player1Rounds = 0;
+        this.player2Rounds = 0;
 
         this.player1Score = 0;
         this.player1ScoreText = this.add.text(447, 80, "0", { fontSize: "48px", color: "#ffffff" })
@@ -224,24 +230,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.player2ScoreText = this.add.text(723, 80, "0", { fontSize: "48px", color: "#ffffff" })
             .setDepth(100);
 
-        // Agregar throwable items
-        /* this.items = [
-            new ThrowableItem(0.3, 'pumpkin1', this),
-            new ThrowableItem(0.3, 'pumpkin2', this),
-            new ThrowableItem(0.3, 'pumpkin3', this),
-            new ThrowableItem(0.3, 'rock', this),
-            new ThrowableItem(0.3, 'rock', this)
-        ];
-        this.items.forEach(item => this.entitiesController.AddEntity(item));
-        this.items.forEach(item => item.setupOverlap(this.localPlayer, this.remotePlayer, this));*/
-
-        this.basket1 = new CandyBasket(60, 400, 70, 310, this.localPlayer, this);
-        this.basket2 = new CandyBasket(1200 - 60, 400, 1200 - 90, 310, this.remotePlayer, this);
-
-        /*this.speedPowerUp = new SpeedPowerUp(600, 400, 0.3, this);
-        this.entitiesController.AddEntity(this.speedPowerUp);
-        this.speedPowerUp.setupOverlap(this.localPlayer, this.remotePlayer, this);*/
-
+        
         //  Temporizador
         this.timerImage = this.add.image(600, 95, 'timerImg')
         .setDepth(99)
@@ -456,7 +445,21 @@ export class MultiplayerGameScene extends Phaser.Scene {
                     );
                     break;
 
+                case 'SCORE_UPDATE':
+                    // Actualizar textos de puntuación de cestas
+                    this.player1Score = data.player1Score;
+                    this.player2Score = data.player2Score;
 
+                    this.player1Candies = data.player1Score; 
+                    this.player2Candies = data.player2Score;
+
+                    if (this.basketPlayer1) {
+                        this.basketPlayer1.SetCandies(this.player1Candies);
+                    }
+                    if (this.basketPlayer2) {
+                        this.basketPlayer2.SetCandies(this.player2Candies);
+                    }
+                    break;
 
 
                 case 'gameOver':
@@ -623,15 +626,19 @@ export class MultiplayerGameScene extends Phaser.Scene {
     endRound() {
         this.round++;
 
-        if (this.basket1.candies > this.basket2.candies) {
-            this.player1ScoreText.text = `${++this.player1Score}`;
+        if (this.player1Candies > this.player2Candies) {
+            this.player1Rounds++;
+            this.player1ScoreText.text = this.player1Rounds.toString();
         }
-        else if (this.basket1.candies < this.basket2.candies) {
-            this.player2ScoreText.text = `${++this.player2Score}`;
+        else if (this.player2Candies > this.player1Candies) {
+            this.player2Rounds++;
+            this.player2ScoreText.text = this.player2Rounds.toString();
         }
 
-        this.basket1.Restart();
-        this.basket2.Restart();
+        this.basketPlayer1.Restart();
+        this.basketPlayer2.Restart();
+        this.player1Candies = 0; 
+        this.player2Candies = 0;
 
         // Si es la última ronda, mostrar GameOver
         if (this.round > 4) {
