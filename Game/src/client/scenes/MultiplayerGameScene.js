@@ -159,9 +159,6 @@ export class MultiplayerGameScene extends Phaser.Scene {
     }
 
     create() {
-        // Guardar ID del jugador
-        const localUserId = localStorage.getItem('userId');
-
         // Escenario
         this.add.tileSprite(0, 0, 1200, 800, 'floor').setOrigin(0, 0).setScale(3);
         const boundary = this.physics.add.image(600, 400, 'game_boundary').setScale(3).setImmovable(true);
@@ -210,10 +207,9 @@ export class MultiplayerGameScene extends Phaser.Scene {
         // Items, candy baskets, power-ups
         /* this.candy = new Candy(0.2, 'candy', this);
          this.entitiesController.AddEntity(this.candy);*/
-
-        //  Baskets
-        this.basket1 = new CandyBasket((1200-base_SIZE)+ offset/2, 400, 70, 310, this.localPlayer, this);
-        this.basket2 = new CandyBasket((base_SIZE/2) + offset, 400, 1200 - 90, 310, this.remotePlayer, this);
+        
+        this.player1Rounds = 0;
+        this.player2Rounds = 0;
 
         this.player1Score = 0;
         this.player1ScoreText = this.add.text(447, 80, "0", { fontSize: "48px", color: "#ffffff" })
@@ -233,8 +229,14 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.items.forEach(item => this.entitiesController.AddEntity(item));
         this.items.forEach(item => item.setupOverlap(this.localPlayer, this.remotePlayer, this));*/
 
-        this.basket1 = new CandyBasket(60, 400, 70, 310, this.localPlayer, this);
-        this.basket2 = new CandyBasket(1200 - 60, 400, 1200 - 90, 310, this.remotePlayer, this);
+        //  Baskets
+        if (this.playerRole === 'player1') {
+            this.basketPlayer1 = new CandyBasket((base_SIZE/2) + offset, 400, 70, 310, this.localPlayer, this); 
+            this.basketPlayer2 = new CandyBasket((1200-base_SIZE)+ offset/2, 400, 1200 - 90, 310, this.remotePlayer, this);
+        } else {
+            this.basketPlayer1 = new CandyBasket((base_SIZE/2) + offset, 400, 70, 310, this.remotePlayer, this);
+            this.basketPlayer2 = new CandyBasket((1200-base_SIZE)+ offset/2, 400, 1200 - 90, 310, this.localPlayer, this);
+        }
 
         /*this.speedPowerUp = new SpeedPowerUp(600, 400, 0.3, this);
         this.entitiesController.AddEntity(this.speedPowerUp);
@@ -284,7 +286,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
                     break;
 
                 case 'UPDATE_TIMER':
-                    if (data.owner !== this.playerRole) {
+                    if (this.playerRole === "player2") {
                         this.countdown.set(data.timeLeft);
                     }
                     break;
@@ -299,25 +301,18 @@ export class MultiplayerGameScene extends Phaser.Scene {
                 case 'CANDY_SPAWN':
                     console.log('CANDY_SPAWN recibido', data.candy);
                     if (!this.candy) {
-                        this.candy = new OnlineCandy(
-                            data.candy.x,
-                            data.candy.y,
-                            0.2,
-                            'candy',
-                            this,
-                            data.candy.id
-                        );
+                        this.candy = new OnlineCandy(data.candy.x, data.candy.y, 0.2, 'candy', this, data.candy.id);
                         this.entitiesController.AddEntity(this.candy);
-                        //this.candy.setupOverlap(this.localPlayer, this.remotePlayer, this);
+                        this.candy.setupOverlap(this.localPlayer, this.remotePlayer, this);
                     } else {
                         this.candy.MoveTo(data.candy.x, data.candy.y);
                         this.candy.hasSpawned = true;
                     }
                     break;
 
+
                 case 'ITEM_SPAWN':
                     console.log(`ITEM_SPAWN recibido → ID: ${data.item.id}, x: ${data.item.x}, y: ${data.item.y}`);
-
 
                     // Inicializar array si no existe
                     if (!this.items) this.items = [];
@@ -409,8 +404,23 @@ export class MultiplayerGameScene extends Phaser.Scene {
                         data.powerUp.y
                     );
                     break;
+                
+                    
+                case 'SCORE_UPDATE':
+                    // Actualizar textos de puntuación de cestas
+                    this.player1Score = data.player1Score;
+                    this.player2Score = data.player2Score;
 
+                    this.player1Candies = data.player1Score; 
+                    this.player2Candies = data.player2Score;
 
+                    if (this.basketPlayer1) {
+                        this.basketPlayer1.SetCandies(this.player1Candies);
+                    }
+                    if (this.basketPlayer2) {
+                        this.basketPlayer2.SetCandies(this.player2Candies);
+                    }
+                    break;
 
 
                 case 'gameOver':
@@ -422,8 +432,6 @@ export class MultiplayerGameScene extends Phaser.Scene {
                     break;
             }
         };
-
-
     }
 
     setupWebSocketListeners() {
@@ -534,9 +542,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
             this.remotePlayer.throwableItem.MoveTo(this.remotePlayer.x, this.remotePlayer.y);
         }
 
-
-        if (this.countdown.canCountDown) {
-            // Enviar tiempo actualizado
+        if (this.playerRole === "player1" && this.countdown.canCountDown) {
             this.send({
                 type: 'UPDATE_TIME',
                 owner: this.playerRole,
@@ -544,10 +550,10 @@ export class MultiplayerGameScene extends Phaser.Scene {
             });
         }
 
+
         // Actualizar todo lo demás
         this.countdown.update();
         this.entitiesController.Update();
-
     }
 
     shutdown() {
@@ -569,15 +575,19 @@ export class MultiplayerGameScene extends Phaser.Scene {
     endRound() {
         this.round++;
 
-        if (this.basket1.candies > this.basket2.candies) {
-            this.player1ScoreText.text = `${++this.player1Score}`;
+        if (this.player1Candies > this.player2Candies) {
+            this.player1Rounds++;
+            this.player1ScoreText.text = this.player1Rounds.toString();
         }
-        else if (this.basket1.candies < this.basket2.candies) {
-            this.player2ScoreText.text = `${++this.player2Score}`;
+        else if (this.player2Candies > this.player1Candies) {
+            this.player2Rounds++;
+            this.player2ScoreText.text = this.player2Rounds.toString();
         }
 
-        this.basket1.Restart();
-        this.basket2.Restart();
+        this.basketPlayer1.Restart();
+        this.basketPlayer2.Restart();
+        this.player1Candies = 0; 
+        this.player2Candies = 0;
 
         // Si es la última ronda, mostrar GameOver
         if (this.round > 4) {

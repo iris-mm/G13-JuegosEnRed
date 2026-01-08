@@ -24,23 +24,22 @@ export class OnlineCandy extends Item {
 
     OnCollected() {
         this.ClearPlayer();
-        this.MoveTo(-64, -64); // ocultarlo mientras llega la nueva posición
+        this.gameObject.destroy();
         this.hasSpawned = false;
+        this.collected = true;
 
+        // Avisar al servidor que este caramelo fue RECOGIDO
         if (this.scene.ws && this.scene.ws.readyState === WebSocket.OPEN) {
             this.scene.ws.send(JSON.stringify({
-                type: 'REQUEST_CANDY_RESPAWN',
+                type: 'CANDY_COLLECTED',
                 candyId: this.id
             }));
         }
     }
 
-
     
     Reset() {
         this.ClearPlayer();
-        // no mover a -64, -64
-        // no spawnTime
     }
 
 }
