@@ -173,23 +173,19 @@ wss.on('connection', (ws) => {
           break;
 
         case 'CANDY_DELIVERED':
-          gameRoomService.handleCandyDelivered(ws, data);
+          gameRoomService.handleCandyDelivered(ws);
           break;
 
-        case 'REQUEST_CANDY_RESPAWN':
-          const room = gameRoomService.getRoomByWebSocket(ws);
-          if (room && room.candy && room.candy.id === data.candyId) {
-            room.candy = gameRoomService.spawnCandy(room);
-          }
+        case 'CANDY_COLLECTED':
+          gameRoomService.handleCandyCollected(ws,data.candyId);
           break;
-
 
         case "THROWABLE_PICKUP":
-          gameRoomService.handleThrowablePickup(ws, data.itemId);
+          gameRoomService.handleThrowablePickup(ws, data.itemId, data.picker);
           break;
 
         case "REQUEST_THROWABLE_PICKUP":
-          gameRoomService.handleThrowablePickup(ws, data.itemId);
+          gameRoomService.handleThrowablePickup(ws, data.itemId, data.picker);
           break;
 
         case 'POWERUP_COLLECTED':
@@ -204,6 +200,18 @@ wss.on('connection', (ws) => {
                 type: 'UPDATE_TIMER',
                 owner: data.owner,
                 timeLeft: data.timeLeft
+              }));
+            }
+          });
+          break;
+
+        case 'THROW_ITEM':
+          wss.clients.forEach(client => {
+            if (client !== ws && client.readyState === 1) {
+              client.send(JSON.stringify({
+                type: 'ITEM_THROWN',
+                itemId: data.itemId,
+                owner: data.owner
               }));
             }
           });

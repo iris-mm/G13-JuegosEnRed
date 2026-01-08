@@ -5,18 +5,14 @@ export class Item extends Entity{
         super(x, y, scale, sprite, scene);
 
         this.playerGrabbing = null;
-
+        this.playerGrabbingId = null;
     }
 
-    setupOverlap(player1, player2, scene) {
-        scene.physics.add.overlap(player1.gameObject, this.gameObject, () => { player1.GrabItem(this) });
-        scene.physics.add.overlap(player2.gameObject, this.gameObject, () => { player2.GrabItem(this) });
+    setupOverlap(player, scene) {
+        scene.physics.add.overlap(player.gameObject, this.gameObject, () => { player.GrabItem(this) });
     }
-
-    
 
     GrabItem(player){
-        console.log('🧪 GrabItem llamado con:', Item);
         if(player == null) return;
 
         if(this.playerGrabbing != null) return;
@@ -27,6 +23,7 @@ export class Item extends Entity{
 
     ClearPlayer(){
         this.playerGrabbing = null;
+        this.playerGrabbingId = null;
     }
 
     Update(){

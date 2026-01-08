@@ -130,7 +130,6 @@ export function createGameRoomService() {
     return powerUp;
   }
 
-
   // Generar y enviar un item
   function spawnItem(room) {
     const itemTypes = ['pumpkin1', 'pumpkin2', 'pumpkin3', 'rock'];
@@ -160,15 +159,14 @@ export function createGameRoomService() {
     return item;
   }
 
-
-
-
   //Crea y envía la posición del caramelo a ambos jugadores
   function spawnCandy(room) {
     const candy = {
       id: `candy_${Date.now()}`, // ID único
       x: Math.floor(Math.random() * (1200 - 512) + 256), // entre 256 y 1200-256
-      y: Math.floor(Math.random() * (800 - 256) + 128)   // entre 128 y 800-128
+      y: Math.floor(Math.random() * (800 - 256) + 128), // entre 128 y 800-128
+      taken: false,
+      owner: null   
     };
 
     // Mandar a los dos jugadores
@@ -182,23 +180,18 @@ export function createGameRoomService() {
     return candy;
   }
 
-  function handleCandyDelivered(ws, data) {
-    const roomId = ws.roomId;
-    if (!roomId) return;
 
-    const room = rooms.get(roomId);
+  function handleCandyDelivered(ws) {
+    const room = rooms.get(ws.roomId);
     if (!room || !room.active) return;
 
-    let player;
-    if (room.player1.ws === ws) {
-      player = room.player1;
-    } else if (room.player2.ws === ws) {
-      player = room.player2;
-    } else {
-      return;
-    }
+    const player =
+      room.player1.ws === ws ? room.player1 :
+      room.player2.ws === ws ? room.player2 :
+      null;
 
-    // Sumar punto de CESTA (caramelo entregado)
+    if (!player) return;
+
     player.score = (player.score || 0) + 1;
 
     const scoreUpdate = {
@@ -210,40 +203,34 @@ export function createGameRoomService() {
     room.player1.ws.send(JSON.stringify(scoreUpdate));
     room.player2.ws.send(JSON.stringify(scoreUpdate));
 
-    // El caramelo desaparece
+    // Eliminar caramelo
     room.candy = null;
 
-    // Respawn del caramelo tras entregar
     setTimeout(() => {
       if (room.active) {
-          room.candy = spawnCandy(room);
+        room.candy = spawnCandy(room);
       }
-    }, 1000);
+    }, 3000);
   }
 
   function handleCandyCollected(ws, candyId) {
-    const roomId = ws.roomId;
-    if (!roomId) return;
+    const room = rooms.get(ws.roomId);
+    if (!room || !room.candy) return;
 
-    const room = rooms.get(roomId);
-    if (!room || !room.active) return;
+    const candy = room.candy;
+    if (candy.id !== candyId || candy.taken) return;
 
-    // Validar que el caramelo existe y coincide
-    if (!room.candy || room.candy.id !== candyId) {
-        return;
-    }
+    candy.taken = true;
+    candy.owner = ws.playerRole;
 
-    // Identificar jugador
-    let player;
-    if (room.player1.ws === ws) {
-        player = room.player1;
-    } else if (room.player2.ws === ws) {
-        player = room.player2;
-    } else {
-        return;
-    }
-    // Marcar que el jugador tiene un caramelo
-    player.hasCandy = true;
+    const msg = {
+        type: "CANDY_PICKED",
+        candyId,
+        picker: ws.playerRole
+    };
+
+    room.player1.ws.send(JSON.stringify(msg));
+    room.player2.ws.send(JSON.stringify(msg));
   }
 
 
@@ -281,16 +268,8 @@ export function createGameRoomService() {
     }
 }
 
-/*function getRoomByWebSocket(ws) {
-    for (const room of rooms.values()) {
-        if (room.player1 && room.player1.ws === ws) return room;
-        if (room.player2 && room.player2.ws === ws) return room;
-    }
-    return null;
-}*/
 
-
-function handleThrowablePickup(ws, itemId) {
+function handleThrowablePickup(ws, itemId, picker) {
     const room = rooms.get(ws.roomId);
     if (!room) return;
 
@@ -306,13 +285,13 @@ function handleThrowablePickup(ws, itemId) {
     room.player1.ws.send(JSON.stringify({
         type: "THROWABLE_PICKED",
         itemId,
-        owner: ws.playerRole
+        picker
     }));
 
     room.player2.ws.send(JSON.stringify({
         type: "THROWABLE_PICKED",
         itemId,
-        owner: ws.playerRole
+        picker
     }));
 }
 
@@ -359,115 +338,6 @@ function handleThrowablePickup(ws, itemId) {
       }
     }, 5000);
   }
-
-
-  /**
-   * Handle paddle movement from a player
-   * @param {WebSocket} ws - Player's WebSocket
-   * @param {number} y - y position
-   * @param {number} x - x position
-   */
-  // function handlePaddleMove(ws, y) {
-  //   const roomId = ws.roomId;
-  //   if (!roomId) return;
-
-  //   const room = rooms.get(roomId);
-  //   if (!room || !room.active) return;
-
-  //   // Relay to the other player
-  //   const opponent = room.player1.ws === ws ? room.player2.ws : room.player1.ws;
-
-  //   if (opponent.readyState === 1) { // WebSocket.OPEN
-  //     opponent.send(JSON.stringify({
-  //       type: 'paddleUpdate',
-  //       y
-  //     }));
-  //   }
-  // }
-
-  // /**
-  //  * Handle goal event from a player
-  //  * @param {WebSocket} ws - Player's WebSocket
-  //  * @param {string} side - Which side scored ('left' or 'right')
-  //  */
-  // function handleGoal(ws, side) {
-  //   const roomId = ws.roomId;
-  //   if (!roomId) return;
-
-  //   const room = rooms.get(roomId);
-  //   if (!room || !room.active) return;
-
-  //   // Prevent duplicate goal detection (both clients send goal event)
-  //   // Only process goal if ball is active
-  //   if (!room.ballActive) {
-  //     return; // Ball not in play, ignore goal
-  //   }
-  //   room.ballActive = false; // Mark ball as inactive until relaunched
-
-  //   // Update scores
-  //   // When ball hits LEFT goal (x=0), player2 scores (player1 missed)
-  //   // When ball hits RIGHT goal (x=800), player1 scores (player2 missed)
-  //   if (side === 'left') {
-  //     room.player2.score++;
-  //   } else if (side === 'right') {
-  //     room.player1.score++;
-  //   }
-
-  //   // Broadcast score update to both players
-  //   const scoreUpdate = {
-  //     type: 'scoreUpdate',
-  //     player1Score: room.player1.score,
-  //     player2Score: room.player2.score
-  //   };
-
-  //   room.player1.ws.send(JSON.stringify(scoreUpdate));
-  //   room.player2.ws.send(JSON.stringify(scoreUpdate));
-
-  //   // Check win condition (first to 2)
-  //   if (room.player1.score >= 2 || room.player2.score >= 2) {
-  //     const winner = room.player1.score >= 2 ? 'player1' : 'player2';
-
-  //     const gameOverMsg = {
-  //       type: 'gameOver',
-  //       winner,
-  //       player1Score: room.player1.score,
-  //       player2Score: room.player2.score
-  //     };
-
-  //     room.player1.ws.send(JSON.stringify(gameOverMsg));
-  //     room.player2.ws.send(JSON.stringify(gameOverMsg));
-
-  //     // Mark room as inactive
-  //     room.active = false;
-  //   } else {
-  //     // Relaunch ball after 1 second delay
-  //     setTimeout(() => {
-  //       if (room.active) {
-  //         // Generate new ball direction
-  //         const angle = (Math.random() * 60 - 30) * (Math.PI / 180); // -30 to 30 degrees
-  //         const speed = 300;
-  //         const ballData = {
-  //           x: 400,
-  //           y: 300,
-  //           vx: speed * Math.cos(angle),
-  //           vy: speed * Math.sin(angle)
-  //         };
-
-  //         // Send ball relaunch to both players
-  //         const relaunchMsg = {
-  //           type: 'ballRelaunch',
-  //           ball: ballData
-  //         };
-
-  //         room.player1.ws.send(JSON.stringify(relaunchMsg));
-  //         room.player2.ws.send(JSON.stringify(relaunchMsg));
-
-  //         // Mark ball as active again
-  //         room.ballActive = true;
-  //       }
-  //     }, 1000);
-  //   }
-  // }
 
   /**
    * Handle player disconnection
