@@ -86,6 +86,10 @@ export class Player extends Entity {
         if (animation) this.gameObject.anims.play(animation, true); //Se ejecuta la animación si el personaje se está moviendo
         else this.gameObject.setTexture(`${this.characterName}_frontEst`); //si no, idle
 
+        this.currentAnimation = animation || `${this.characterName}_frontEst`;
+
+        this.isMoving = moving;
+        
         if (this.knockOutTimer > 0) {
             this.knockOutTimer--
             this.vx = 0

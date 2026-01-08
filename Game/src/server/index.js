@@ -162,7 +162,11 @@ wss.on('connection', (ws) => {
                 type: 'PLAYER_MOVED',
                 player: data.player,
                 x: data.x,
-                y: data.y
+                y: data.y,
+                anim: data.anim,
+                facingX: data.facingX, 
+                facingY: data.facingY,
+                isMoving: data.isMoving
               }));
             }
           });
