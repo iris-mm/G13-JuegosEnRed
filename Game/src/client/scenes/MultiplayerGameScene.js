@@ -329,18 +329,19 @@ export class MultiplayerGameScene extends Phaser.Scene {
                     const item = this.items.find(i => i.id === data.itemId);
                     if (!item) return;
 
-                    // Si lo cogió el otro → destruirlo del mapa
-                    if (data.owner !== this.playerRole) {
-                        item.destroy();
-                    }
+                    // Ocultar del mapa
+                    item.MoveTo(-9999, -9999);
 
-                    // Si lo cogí yo → asignarlo a mi jugador
+                    // Asignar al jugador correcto
                     if (data.owner === this.playerRole) {
-                        this.localPlayer.pickThrowable(item);
+                        this.localPlayer.hasThrowable = true;
+                        this.localPlayer.throwableItem = item;
                     } else {
-                        this.remotePlayer.pickThrowable(item);
+                        this.remotePlayer.hasThrowable = true;
+                        this.remotePlayer.throwableItem = item;
                     }
                     break;
+
 
                 case 'POWERUP_SPAWN':
                     console.log('Recibido POWERUP_SPAWN:', data.powerUp);
@@ -472,8 +473,6 @@ export class MultiplayerGameScene extends Phaser.Scene {
     }
 
     update() {
-        console.log("UPDATE ejecutándose");
-
         if (!this.gameStarted || this.gameEnded) return;
 
         // Actualizar local
@@ -497,6 +496,17 @@ export class MultiplayerGameScene extends Phaser.Scene {
             const candy = this.remotePlayer.currentItemGrabbing;
             candy.MoveTo(this.remotePlayer.x, this.remotePlayer.y);
         }
+
+        // Mover throwable si lo lleva el jugador local
+        if (this.localPlayer.hasThrowable && this.localPlayer.throwableItem) {
+            this.localPlayer.throwableItem.MoveTo(this.localPlayer.x, this.localPlayer.y);
+        }
+
+        // Mover throwable si lo lleva el jugador remoto
+        if (this.remotePlayer.hasThrowable && this.remotePlayer.throwableItem) {
+            this.remotePlayer.throwableItem.MoveTo(this.remotePlayer.x, this.remotePlayer.y);
+        }
+
 
         if (this.countdown.canCountDown) {
             // Enviar tiempo actualizado

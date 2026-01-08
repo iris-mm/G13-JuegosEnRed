@@ -277,17 +277,24 @@ export function createGameRoomService() {
     }
 }
 
+/*function getRoomByWebSocket(ws) {
+    for (const room of rooms.values()) {
+        if (room.player1 && room.player1.ws === ws) return room;
+        if (room.player2 && room.player2.ws === ws) return room;
+    }
+    return null;
+}*/
+
+
 function handleThrowablePickup(ws, itemId) {
-    const room = getRoomByWebSocket(ws);
+    const room = rooms.get(ws.roomId);
     if (!room) return;
 
     const item = room.items.find(i => i.id === itemId);
     if (!item) return;
 
-    // Si ya está cogido → ignorar
     if (item.taken) return;
 
-    // Marcar como cogido
     item.taken = true;
     item.owner = ws.playerRole;
 
@@ -304,6 +311,7 @@ function handleThrowablePickup(ws, itemId) {
         owner: ws.playerRole
     }));
 }
+
 
   function handlePowerUpCollected(ws, powerUpId) {
     console.log('handlePowerUpCollected llamado');

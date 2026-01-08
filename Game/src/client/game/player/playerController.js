@@ -32,7 +32,7 @@ export class Player extends Entity {
 
         // Escuchar tecla de recoger
         if (this.grabItemKey) {
-            this.grabKey = this.scene.input.keyboard.addKey( Phaser.Input.Keyboard.KeyCodes[grabItemKey]
+            this.grabKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes[grabItemKey]
             );
         }
 
@@ -45,7 +45,7 @@ export class Player extends Entity {
             this.CheckPickup();
             if (this.currentItemGrabbing) this.GrabItem(this.currentItemGrabbing)
         }
-        
+
 
     }
 
@@ -166,82 +166,88 @@ export class Player extends Entity {
     // }
 
     GrabItem(item) {
-    if (this.itemInteractionCooldown > 0) return;
+        if (this.itemInteractionCooldown > 0) return;
 
-    if (item instanceof OnlineCandy || item instanceof Candy) {
-        this.currentItemGrabbing = item;
-        this.hasCandy = true;
-        this.itemInteractionCooldown = 10;
-        return;
-    }
+        if (item instanceof OnlineCandy || item instanceof Candy) {
+            this.currentItemGrabbing = item;
+            this.hasCandy = true;
+            this.itemInteractionCooldown = 10;
+            return;
+        }
     }
 
     CheckPickup() {
 
-    // Solo recoger si la tecla está presionada
-    if (!this.grabKey || !this.grabKey.isDown) return;
+        // Solo recoger si la tecla está presionada
+        if (!this.grabKey || !this.grabKey.isDown) return;
 
-    // Si ya tienes un objeto, no puedes recoger otro
-    if (this.currentItemGrabbing) return;
+        // Si ya tienes un objeto, no puedes recoger otro
+        if (this.currentItemGrabbing) return;
 
-    const entities = this.scene.entitiesController.entities;
+        const entities = this.scene.entitiesController.entities;
 
-    for (let entity of entities) {
+        for (let entity of entities) {
 
-        if (!(entity instanceof Candy || entity instanceof OnlineCandy)) continue;
-        if (!entity.hasSpawned) continue;
+            if (!(entity instanceof Candy || entity instanceof OnlineCandy)) continue;
+            if (!entity.hasSpawned) continue;
 
-        const dx = Math.abs(this.x - entity.x);
-        const dy = Math.abs(this.y - entity.y);
-        const distanceThreshold = 50;
+            const dx = Math.abs(this.x - entity.x);
+            const dy = Math.abs(this.y - entity.y);
+            const distanceThreshold = 50;
 
-        // SOLO recoger si estás cerca Y presionas la tecla
-        if (dx < distanceThreshold && dy < distanceThreshold) {
+            // SOLO recoger si estás cerca Y presionas la tecla
+            if (dx < distanceThreshold && dy < distanceThreshold) {
 
-            this.currentItemGrabbing = entity;
-            this.hasCandy = true;
+                this.currentItemGrabbing = entity;
+                this.hasCandy = true;
 
-            if (entity instanceof OnlineCandy) {
-                entity.OnCollected();
+                if (entity instanceof OnlineCandy) {
+                    entity.OnCollected();
 
-                if (this.scene.ws && this.scene.ws.readyState === WebSocket.OPEN) {
-                    this.scene.ws.send(JSON.stringify({
-                        type: 'POINT',
-                        candyId: entity.id
-                    }));
+                    if (this.scene.ws && this.scene.ws.readyState === WebSocket.OPEN) {
+                        this.scene.ws.send(JSON.stringify({
+                            type: 'POINT',
+                            candyId: entity.id
+                        }));
+                    }
                 }
-            }
 
-            break;
+                break;
+            }
         }
     }
-}
 
 
     // Llamar cuando el jugador sujeta un caramelo
     DeliverCandy() {
-    if (!this.hasCandy) return;
+        if (!this.hasCandy) return;
 
-    const candy = this.currentItemGrabbing;
-    if (!candy) return;
+        const candy = this.currentItemGrabbing;
+        if (!candy) return;
 
-    this.hasCandy = false;
-    this.currentItemGrabbing = null;
+        this.hasCandy = false;
+        this.currentItemGrabbing = null;
 
-    candy.Reset();
+        candy.Reset();
 
-    if (this.isLocal) {
-        console.log(
-            'CANDY_DELIVERED enviado al server, candyId:',
-            candy.id
-        );
+        if (this.isLocal) {
+            console.log(
+                'CANDY_DELIVERED enviado al server, candyId:',
+                candy.id
+            );
 
-        this.scene.send({
-            type: 'CANDY_DELIVERED',
-            candyId: candy.id,
-        });
+            this.scene.send({
+                type: 'CANDY_DELIVERED',
+                candyId: candy.id,
+            });
+        }
     }
-}
+
+    pickThrowable(item) {
+        this.hasThrowable = true;
+        this.throwableItem = item;
+    }
+
 
 
     KnockOut() {

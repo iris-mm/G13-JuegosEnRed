@@ -179,6 +179,9 @@ wss.on('connection', (ws) => {
           gameRoomService.handleThrowablePickup(ws, data.itemId);
           break;
 
+        case "REQUEST_THROWABLE_PICKUP":
+          gameRoomService.handleThrowablePickup(ws, data.itemId);
+          break;
 
         case 'POWERUP_COLLECTED':
           console.log('POWERUP_COLLECTED recibido del cliente:', data);
