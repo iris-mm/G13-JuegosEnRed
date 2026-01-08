@@ -19,7 +19,7 @@ https://gamejolt.com/games/crepusculones/1041806
 Instalar dependencias ejecutando npm install en la terminal
 
 ## Controles
-El juego está diseñado para que puedan jugar 2 jugadores en local, con el mismo teclado
+El juego está diseñado para que puedan jugar 2 jugadores en local con el mismo teclado y también en online.
 * Jugador izquierda: usará W A S D para moverse y E para recoger los caramelos y los objetos.
 * Jugador derecha: usará I J K L para moverse y O para recoger los caramelos y los objetos.       
 Para lanzar los objetos se debe presionar la tecla para recoger y estar andando hacia la dirección donde se quiera tirar el objeto, si no, sólo soltará dicho objeto.
