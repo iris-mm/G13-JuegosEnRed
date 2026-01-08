@@ -114,12 +114,3 @@ Pantallas de menú, pausa, ajustes y créditos han sido realizadas con assets gr
 <br>
 Música del juego ha sido seleccionada de FreeSound.
 <br>
-
-
-
-
-
-
-
-
-

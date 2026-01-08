@@ -85,7 +85,7 @@ import { CandyBasket } from '../../client/game/controllers/CandyBasket.js';
 import { SpeedPowerUp } from '../../client/game/items/SpeedPowerUp.js';
 import { OnlineCandy } from '../../client/game/items/OnlineCandy.js';
 import { Button } from '../ui/Button.js';
-//import { OnlineThrowableItem } from '../../client/game/items/ThrowableItem.js';
+import { OnlineThrowableItem } from '../../client/game/items/OnlineThrowableItem.js';
 import { OnlineSpeedPowerUp } from '../../client/game/items/OnlineSpeedPowerUp.js';
 import { TimerController } from '../game/controllers/TimerController.js';
 
@@ -94,7 +94,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
     constructor() {
         super('MultiplayerGameScene');
     }
-    
+
     init(data) {
         this.ws = data.ws;                 // WebSocket
         this.playerRole = data.playerRole; // 'player1' | 'player2'
@@ -166,7 +166,7 @@ export class MultiplayerGameScene extends Phaser.Scene {
         this.add.tileSprite(0, 0, 1200, 800, 'floor').setOrigin(0, 0).setScale(3);
         const boundary = this.physics.add.image(600, 400, 'game_boundary').setScale(3).setImmovable(true);
         this.add.image(600, 400, 'leaves').setScale(3).setAlpha(0.75);
-        
+
 
         // Bases de jugadores
         const base_SIZE = 96;
@@ -346,6 +346,25 @@ export class MultiplayerGameScene extends Phaser.Scene {
                         existingItem.hasSpawned = true;
                     }
                     break;
+
+                case "THROWABLE_PICKED":
+                    const item = this.items.find(i => i.id === data.itemId);
+                    if (!item) return;
+
+                    // Ocultar del mapa
+                    item.MoveTo(-9999, -9999);
+
+                    // Asignar al jugador correcto
+                    if (data.owner === this.playerRole) {
+                        this.localPlayer.hasThrowable = true;
+                        this.localPlayer.throwableItem = item;
+                    } else {
+                        this.remotePlayer.hasThrowable = true;
+                        this.remotePlayer.throwableItem = item;
+                    }
+                    break;
+
+
                 case 'POWERUP_SPAWN':
                     console.log('Recibido POWERUP_SPAWN:', data.powerUp);
 
@@ -479,10 +498,8 @@ export class MultiplayerGameScene extends Phaser.Scene {
             this.ws.send(JSON.stringify(msg));
         }
     }
-    
-    update() {
-        console.log("UPDATE ejecutándose");
 
+    update() {
         if (!this.gameStarted || this.gameEnded) return;
 
         // Actualizar local
@@ -506,6 +523,17 @@ export class MultiplayerGameScene extends Phaser.Scene {
             const candy = this.remotePlayer.currentItemGrabbing;
             candy.MoveTo(this.remotePlayer.x, this.remotePlayer.y);
         }
+
+        // Mover throwable si lo lleva el jugador local
+        if (this.localPlayer.hasThrowable && this.localPlayer.throwableItem) {
+            this.localPlayer.throwableItem.MoveTo(this.localPlayer.x, this.localPlayer.y);
+        }
+
+        // Mover throwable si lo lleva el jugador remoto
+        if (this.remotePlayer.hasThrowable && this.remotePlayer.throwableItem) {
+            this.remotePlayer.throwableItem.MoveTo(this.remotePlayer.x, this.remotePlayer.y);
+        }
+
 
         if (this.countdown.canCountDown) {
             // Enviar tiempo actualizado

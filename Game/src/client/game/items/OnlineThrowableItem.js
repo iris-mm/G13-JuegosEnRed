@@ -35,30 +35,40 @@ export class OnlineThrowableItem extends Item {
     }
 
     setupOverlap(player1, player2, scene) {
-    scene.physics.add.overlap(
-        this.gameObject,
-        player1.gameObject,
-        () => this.onPlayerOverlap(player1)
-    );
+        scene.physics.add.overlap(
+            this.gameObject,
+            player1.gameObject,
+            () => this.onPlayerOverlap(player1)
+        );
 
-    scene.physics.add.overlap(
-        this.gameObject,
-        player2.gameObject,
-        () => this.onPlayerOverlap(player2)
-    );
-}
-
-onPlayerOverlap(player) {
-    if (!player.isLocal) return;
-    player.currentItemGrabbing = this;
-
-    // Auto-recoger si quieres que no haya tecla
-    if (player.grabItemInputOn) {
-        player.GrabItem(this);
+        scene.physics.add.overlap(
+            this.gameObject,
+            player2.gameObject,
+            () => this.onPlayerOverlap(player2)
+        );
     }
-}
 
-    
+    onPlayerOverlap(player) {
+        if (!player.isLocal) return;
+
+        // Avisar al servidor
+        if (this.scene.ws && this.scene.ws.readyState === WebSocket.OPEN) {
+            this.scene.ws.send(JSON.stringify({
+                type: "THROWABLE_PICKUP",
+                itemId: this.id
+            }));
+
+            this.scene.ws.send(JSON.stringify({
+                type: "REQUEST_THROWABLE_PICKUP",
+                itemId: this.id
+            }));
+
+        }
+    }
+
+
+
+
     Reset() {
         this.ClearPlayer();
         // no mover a -64, -64

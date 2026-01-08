@@ -277,6 +277,41 @@ export function createGameRoomService() {
     }
 }
 
+/*function getRoomByWebSocket(ws) {
+    for (const room of rooms.values()) {
+        if (room.player1 && room.player1.ws === ws) return room;
+        if (room.player2 && room.player2.ws === ws) return room;
+    }
+    return null;
+}*/
+
+
+function handleThrowablePickup(ws, itemId) {
+    const room = rooms.get(ws.roomId);
+    if (!room) return;
+
+    const item = room.items.find(i => i.id === itemId);
+    if (!item) return;
+
+    if (item.taken) return;
+
+    item.taken = true;
+    item.owner = ws.playerRole;
+
+    // Avisar a ambos jugadores
+    room.player1.ws.send(JSON.stringify({
+        type: "THROWABLE_PICKED",
+        itemId,
+        owner: ws.playerRole
+    }));
+
+    room.player2.ws.send(JSON.stringify({
+        type: "THROWABLE_PICKED",
+        itemId,
+        owner: ws.playerRole
+    }));
+}
+
 
   function handlePowerUpCollected(ws, powerUpId) {
     console.log('handlePowerUpCollected llamado');
@@ -482,6 +517,7 @@ export function createGameRoomService() {
     handleGameSceneReady,
     spawnCandy,
     handleCandyCollected,
+    handleThrowablePickup,
     handlePowerUpCollected,
     handleDisconnect,
     getActiveRoomCount
