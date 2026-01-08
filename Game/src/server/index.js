@@ -168,12 +168,17 @@ wss.on('connection', (ws) => {
           });
           break;
 
+        case 'CANDY_DELIVERED':
+          gameRoomService.handleCandyDelivered(ws, data);
+          break;
+
         case 'REQUEST_CANDY_RESPAWN':
           const room = gameRoomService.getRoomByWebSocket(ws);
           if (room && room.candy && room.candy.id === data.candyId) {
-            room.candy = gameRoomService.spawnCandy(room); // Genera nueva posición y envía CANDY_SPAWN a ambos
+            room.candy = gameRoomService.spawnCandy(room);
           }
           break;
+
 
         case "THROWABLE_PICKUP":
           gameRoomService.handleThrowablePickup(ws, data.itemId);
@@ -188,8 +193,6 @@ wss.on('connection', (ws) => {
           gameRoomService.handlePowerUpCollected(ws, data.powerUpId);
           break;
 
-
-
         case 'UPDATE_TIME':
           wss.clients.forEach(client => {
             if (client !== ws && client.readyState === 1) {
@@ -200,15 +203,6 @@ wss.on('connection', (ws) => {
               }));
             }
           });
-          break;
-
-        case 'CANDY_DELIVERED':
-          gameRoomService.handleCandyDelivered(ws, data);
-          break;
-
-        case 'POINT':
-          //----Implementar lógica de puntuación-------------- 
-          gameRoomService.handleCandyCollected(ws);
           break;
 
         default:
