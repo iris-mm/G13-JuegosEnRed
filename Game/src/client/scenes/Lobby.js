@@ -37,10 +37,10 @@ export class Lobby extends Phaser.Scene {
 
         new Button(600, 750, this, 'SPR_Button', "Salir", () => this.Leave());
 
-        this.player1Icon = this.add.image(300, 300, 'SPR_Vampire');
+        this.player1Icon = this.add.image(1200 - 300, 300, 'SPR_Vampire');
         this.player1Name = this.add.text(300, 120, "...", { fontSize: "32px" }).setOrigin(0.5);
 
-        this.player2Icon = this.add.image(1200 - 300, 300, 'SPR_Zombie');
+        this.player2Icon = this.add.image(300, 300, 'SPR_Zombie');
         this.player2Name = this.add.text(1200 - 300, 120, "...", { fontSize: "32px" }).setOrigin(0.5);
 
         this.stateText = this.add.text(600, 500, "...", { fontSize: "32px" }).setOrigin(0.5);
