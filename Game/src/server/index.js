@@ -127,7 +127,7 @@ wss.on('connection', (ws) => {
       const msgString = message.toString();
       const data = JSON.parse(msgString);
       console.log('Mensaje recibido:', data);
-      
+
       // Manejar los diferentes tipos de mensajes ----
       switch (data.type) {
         case 'JOIN_QUEUE':
@@ -144,6 +144,11 @@ wss.on('connection', (ws) => {
           gameRoomService.setPlayerReady(ws);
           break;
 
+        case 'GAME_SCENE_READY':
+          gameRoomService.handleGameSceneReady(ws);
+          break;
+
+
         case 'PLAYER_ACTION':
           //----Implementar lógica de acción del jugador-------------- 
           gameRoomService.handlePlayerAction(ws, data.action);
@@ -154,33 +159,43 @@ wss.on('connection', (ws) => {
           wss.clients.forEach(client => {
             if (client !== ws && client.readyState === 1) {
               client.send(JSON.stringify({
-              type: 'PLAYER_MOVED',
-              player: data.player,
-              x: data.x,
-              y: data.y 
+                type: 'PLAYER_MOVED',
+                player: data.player,
+                x: data.x,
+                y: data.y
               }));
             }
           });
           break;
-         
+
         case 'REQUEST_CANDY_RESPAWN':
-          const room = gameRoomService.getRoomByWebSocket(ws); 
+          const room = gameRoomService.getRoomByWebSocket(ws);
           if (room && room.candy && room.candy.id === data.candyId) {
             room.candy = gameRoomService.spawnCandy(room); // Genera nueva posición y envía CANDY_SPAWN a ambos
           }
           break;
 
-          
+        case 'POWERUP_COLLECTED':
+          console.log('POWERUP_COLLECTED recibido del cliente:', data);
+          gameRoomService.handlePowerUpCollected(ws, data.powerUpId);
+          break;
+
+
+
         case 'UPDATE_TIME':
           wss.clients.forEach(client => {
             if (client !== ws && client.readyState === 1) {
               client.send(JSON.stringify({
-              type: 'UPDATE_TIMER',
-              owner: data.owner,
-              timeLeft: data.timeLeft
+                type: 'UPDATE_TIMER',
+                owner: data.owner,
+                timeLeft: data.timeLeft
               }));
             }
           });
+          break;
+
+        case 'CANDY_DELIVERED':
+          gameRoomService.handleCandyDelivered(ws, data);
           break;
 
         case 'POINT':
