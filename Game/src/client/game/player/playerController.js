@@ -206,7 +206,7 @@ export class Player extends Entity {
 
                     if (this.scene.ws && this.scene.ws.readyState === WebSocket.OPEN) {
                         this.scene.ws.send(JSON.stringify({
-                            type: 'POINT',
+                            type: 'CANDY_COLLECTED',
                             candyId: entity.id
                         }));
                     }

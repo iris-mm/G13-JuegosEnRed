@@ -169,16 +169,12 @@ wss.on('connection', (ws) => {
           break;
 
         case 'CANDY_DELIVERED':
-          gameRoomService.handleCandyDelivered(ws, data);
+          gameRoomService.handleCandyDelivered(ws);
           break;
 
-        case 'REQUEST_CANDY_RESPAWN':
-          const room = gameRoomService.getRoomByWebSocket(ws);
-          if (room && room.candy && room.candy.id === data.candyId) {
-            room.candy = gameRoomService.spawnCandy(room);
-          }
+        case 'CANDY_COLLECTED':
+          gameRoomService.handleCandyCollected(ws,data.candyId);
           break;
-
 
         case "THROWABLE_PICKUP":
           gameRoomService.handleThrowablePickup(ws, data.itemId, data.picker);
@@ -217,14 +213,6 @@ wss.on('connection', (ws) => {
           });
           break;
 
-        case 'CANDY_DELIVERED':
-          gameRoomService.handleCandyDelivered(ws, data);
-          break;
-
-        case 'POINT':
-          //----Implementar lógica de puntuación-------------- 
-          gameRoomService.handleCandyCollected(ws);
-          break;
         default:
           console.log('Mensaje desconocido:', data.type);
       }

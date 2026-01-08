@@ -24,9 +24,7 @@ export class OnlineCandy extends Item {
 
     OnCollected() {
         this.ClearPlayer();
-        this.gameObject.destroy();
         this.hasSpawned = false;
-        this.collected = true;
 
         // Avisar al servidor que este caramelo fue RECOGIDO
         if (this.scene.ws && this.scene.ws.readyState === WebSocket.OPEN) {
